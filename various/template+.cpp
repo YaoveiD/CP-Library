@@ -1,8 +1,26 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <array>
+#include <bitset>
+#include <cassert>
+#include <chrono>
+#include <cmath>
+#include <cstdint>
+#include <cstring>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <random>
+#include <set>
+#include <vector>
 
-#pragma GCC optimize("O3")
-#pragma GCC target("sse4")
-#pragma GCC optimize("unroll-loops")
+using namespace std;
+
+// #pragma GCC optimize("O3")
+// #pragma GCC target("sse4")
+// #pragma GCC optimize("unroll-loops")
  
 using namespace std;
 
@@ -17,10 +35,6 @@ typedef tuple<int, int, int> tiii;
 typedef vector<int> vi;
 typedef vector<double> vd;
 typedef vector<LL> vll;
-typedef vector<pii> vpii;
-typedef vector<pdd> vpdd;
-typedef vector<pll> vpll;
-typedef vector<tiii> vtiii;
 
 //templates
 template<class T> using pq = priority_queue<T>;
@@ -61,31 +75,6 @@ vector<T>& operator++(vector<T> &v){
   for (auto& i : v) ++i;
   return  v;
 }
-template <typename T, typename Iter>
-int find_position(Iter b, Iter e, const T& x) {
-  auto it = lower_bound(b, e, x);
-  if (it != e && *it == x) {
-    return it - b;
-  } else {
-    return -1;
-  }
-}
-template<typename T>
-inline T median(T a,T b,T c) {
-  return 1LL*(a + b + c) - max({a, b, c}) - min({a, b, c});
-}
-template<typename T>
-inline long long max(const T& v) {
-  return *max_element(v.begin(), v.end());
-}
-template<typename T>
-inline long long min(const T& v) {
-  return *min_element(v.begin(), v.end());
-}
-template<typename T>
-inline long long sum(const T& v) {
-  return accumulate(v.begin(), v.end(), 0LL);
-}
 
 //seldom use source https://codeforces.com/contest/1545/submission/122090297 Benq
 constexpr int pct(int x) {
@@ -111,21 +100,17 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 #define ALL(X) (X).begin(), (X).end()
 #define RALL(X) (X).rbegin(), (X).rend()
-#define UNIQUE_SORT(V) (sort(ALL(V)), V.resize(distance(V.begin(), unique(ALL(V)))))
-#define SZ(X) (int)(X).size()
-#define LB lower_bound
-#define UB upper_bound
-#define MP make_pair
+#define UNIQUE_SORT(V) do { sort(ALL(V)); V.erase(unique(V.begin(), V.end()), V.end); } while (0)
+#define SZ(X) int((X).size())
 
 //constexpr
-const int SIZE = 1 << 19;
-const LL infll = (LL) 1e18;
-const int inf = 0x3f3f3f3f;
+const int SIZE = 1048571;
+const LL INF64 = INT64_MAX / 2;
+const int INF = INT32_MAX / 2;
 
 // make sure to intialize all global vars
 // uncomment cin >> tt? 
 void solve() {
-  
 }
  
 int main() {
