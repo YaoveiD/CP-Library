@@ -1,4 +1,4 @@
-// verification : https://atcoder.jp/contests/practice2/submissions/26093709
+// verification: https://atcoder.jp/contests/practice2/submissions/26093709
 
 template<typename T>
 class segtree {
