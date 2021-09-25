@@ -1,7 +1,4 @@
-// verification : https://leetcode-cn.com/problems/ipo/
-// a basic segment tree
-
-const int INF = (int) 1e9 + 123;
+// verification : https://atcoder.jp/contests/practice2/submissions/26093709
 
 template<typename T>
 class segtree {
@@ -11,13 +8,11 @@ private:
   #define rs (i << 1) + 2
 public:
   struct node {
-    int idx;
-    T val;
+    T val = INF;
     // TODO: don't forget to set a default value
 
-    void apply(int _val, int _idx) {
+    void apply(int _val) {
         val = _val;
-        idx = _idx;
     }
   };
   vector<node> tree;
@@ -50,11 +45,7 @@ public:
 
   // TODO: combine two nodes
   inline node combine(const node& A, const node& B) {
-    if (A.val > B.val) {
-        return A;
-    } else {
-        return B;
-    }
+    return A.val > B.val ? A : B;
   }
 
   inline void pull(int i) {
@@ -63,7 +54,7 @@ public:
 
   void build(int i, int L, int R, vector<T>& A) {
     if (L == R) {
-      tree[i].apply(A[L], L); // TODO: apply
+      tree[i].apply(A[L]); // TODO: apply
       return;
     }
     
@@ -112,7 +103,7 @@ public:
     }
     
     if (from == to) {
-      tree[i].apply(val, from); // TODO: apply when 
+      tree[i].apply(val); // TODO: apply when 
       return;
     }
     
@@ -131,4 +122,65 @@ public:
   void update(int p, T val) {
     update(0, 0 , N - 1, p, p, val);
   }
+
+  int find_first_knowingly(int i, int from, int to, int L, int R, const function<bool(const node&)>& func) {
+    if (!func(tree[i])) {
+      return -1;
+    }
+
+    if (from > R or to < L) {
+      return -1;
+    }
+
+    if (from == to) {
+      return from;
+    }
+
+    int mid = (from + to) / 2;
+    int index = find_first_knowingly(ls, from, mid, L, R, func);
+    if (index == -1) {
+      index = find_first_knowingly(rs, mid + 1, to, L, R, func);
+    }
+
+    return index;
+  }
+
+  int find_first(int L, int R, const function<bool(const node&)>& func) {
+    return find_first_knowingly(0, 0, N - 1, L, R, func);
+  }
+
+  int find_first(const function<bool(const node&)>& func) {
+    return find_first_knowingly(0, 0, N - 1, 0, N - 1, func);
+  }
+
+  int find_last_knowingly(int i, int from, int to, int L, int R, const function<bool(const node&)>& func) {
+    if (!func(tree[i])) {
+      return -1;
+    }
+
+    if (from > R or to < L) {
+      return -1;
+    }
+
+    if (from == to) {
+      return from;
+    }
+
+    int mid = (from + to) / 2;
+    int index = find_first_knowingly(rs, mid + 1, to, L, R, func);
+    if (index == -1) {
+      index = find_first_knowingly(ls, from, mid, L, R, func);
+    }
+
+    return index;
+  }
+
+  int find_last(int L, int R, const function<bool(const node&)>& func) {
+    return find_last_knowingly(0, 0, N - 1, L, R, func);
+  }
+
+  int find_last(const function<bool(const node&)>& func) {
+    return find_last_knowingly(0, 0, N - 1, 0, N - 1, func);
+  }
+
 };
