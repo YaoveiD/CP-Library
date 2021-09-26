@@ -15,18 +15,17 @@
 #include <random>
 #include <set>
 #include <vector>
-
+ 
 using namespace std;
 
+// BUFFS?
 // #pragma GCC optimize("O3")
 // #pragma GCC target("sse4")
 // #pragma GCC optimize("unroll-loops")
- 
-using namespace std;
 
 //typedef
-typedef long long LL;
- 
+typedef int64_t LL;
+
 typedef pair<int, int> pii;
 typedef pair<LL,LL> pll;
 typedef pair<double, double> pdd;
@@ -54,19 +53,10 @@ vector<T>& operator--(vector<T> &v) { for (auto& i : v) --i; return  v; }
 template<typename T>
 vector<T>& operator++(vector<T> &v) { for (auto& i : v) ++i; return  v; }
 
-//seldom use source https://codeforces.com/contest/1545/submission/122090297 Benq
-constexpr int pct(int x) {
-  return __builtin_popcount(x);
-} // # of bits set
-constexpr int bits(int x) {
-  return x == 0 ? 0 : 31-__builtin_clz(x);
-} // floor(log2(x)) 
-int64_t cdiv(int64_t a, int64_t b) {
-  return a/b + ((a^b)>0 && a%b);
-} // divide a by b rounded up
-int64_t fdiv(int64_t a, int64_t b) {
-  return a/b - ((a^b)<0 && a%b);
-} // divide a by b rounded down
+constexpr int pct(int x) { return __builtin_popcount(x); } // # of bits set
+constexpr int bits(int x) { return x == 0 ? 0 : 31-__builtin_clz(x); } // floor(log2(x)) 
+LL cdiv(LL a, LL b) { return a/b + ((a^b)>0 && a%b); } // divide a by b rounded up
+LL fdiv(LL a, LL b) { return a/b - ((a^b)<0 && a%b); } // divide a by b rounded down
 
 //macro
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
@@ -78,28 +68,9 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 #define ALL(X) (X).begin(), (X).end()
 #define RALL(X) (X).rbegin(), (X).rend()
-#define UNIQUE_SORT(V) do { sort(ALL(V)); V.erase(unique(V.begin(), V.end()), V.end); } while (0)
 #define SZ(X) int((X).size())
 
 //constexpr
 const int SIZE = 1048571;
 const LL INF64 = INT64_MAX / 2;
 const int INF = INT32_MAX / 2;
-
-// make sure to intialize all global vars
-// uncomment cin >> tt? 
-void solve() {
-}
- 
-int main() {
-  ios::sync_with_stdio(false);
-  cin.tie(0);
-
-  int tt = 1;
-  //cin >> tt;
-  while (tt--) {
-    solve();
-  }
-
-  return 0;
-}
