@@ -42,39 +42,17 @@ template<class T> using pqg = priority_queue<T, vector<T>, greater<T>>;
 template<class T> inline bool ckmin(T& a, const T& b) { return b < a ? a = b, 1 : 0; }
 template<class T> inline bool ckmax(T& a, const T& b) { return a < b ? a = b, 1 : 0; }
 template<typename T, typename U>
-istream& operator>>(istream& is, pair<T, U>& p) {
-  is >> p.first >> p.second;
-  return is;
-}
+istream& operator>>(istream& is, pair<T, U>& p) { is >> p.first >> p.second; return is; }
 template<typename T, typename U>
-ostream& operator<<(ostream& os, const pair<T, U>& p) {
-  os << p.first << ' ' << p.second;
-  return os;
-}
+ostream& operator<<(ostream& os, const pair<T, U>& p) { os << p.first << ' ' << p.second; return os; }
 template<typename T>
-istream& operator>>(istream& is, vector<T>& v) {
-  for (auto& i : v) is >> i;
-  return is;
-}
+istream& operator>>(istream& is, vector<T>& v) { for (auto& i : v) is >> i; return is; }
 template<typename T>
-ostream& operator<<(ostream& os, const vector<T>& v) {
-  int f = 0;
-  for (auto& i : v) {
-    if (f++) os << ' ';
-    os << i;
-  }
-  return os;
-}
+ostream& operator<<(ostream& os, const vector<T>& v) { int f = 0; for (auto& i : v) { if (f++) os << ' '; os << i; } return os; }
 template<typename T>
-vector<T>& operator--(vector<T> &v){
-  for (auto& i : v) --i;
-  return  v;
-}
+vector<T>& operator--(vector<T> &v) { for (auto& i : v) --i; return  v; }
 template<typename T>
-vector<T>& operator++(vector<T> &v){
-  for (auto& i : v) ++i;
-  return  v;
-}
+vector<T>& operator++(vector<T> &v) { for (auto& i : v) ++i; return  v; }
 
 //seldom use source https://codeforces.com/contest/1545/submission/122090297 Benq
 constexpr int pct(int x) {
