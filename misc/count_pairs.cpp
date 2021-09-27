@@ -1,3 +1,23 @@
+#include <algorithm>
+#include <array>
+#include <bitset>
+#include <cassert>
+#include <chrono>
+#include <cmath>
+#include <cstring>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <random>
+#include <set>
+#include <vector>
+
+using namespace std;
+
+
 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0200r0.html
 template<class Fun> class y_combinator_result {
     Fun fun_;
@@ -48,6 +68,9 @@ int main() {
     for (auto &v : values)
         cin >> v;
 
+    cout << count_pairs(values,[&](auto i, auto j) {
+        return i < j;
+    }) << '\n';
     cout << count_pairs(values, less<int64_t>()) << '\n';
     cout << count_pairs(values, greater<int64_t>()) << '\n';
     cout << count_pairs(values, less_equal<int64_t>()) << '\n';
