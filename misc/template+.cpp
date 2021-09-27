@@ -69,8 +69,3 @@ mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #define ALL(X) (X).begin(), (X).end()
 #define RALL(X) (X).rbegin(), (X).rend()
 #define SZ(X) int((X).size())
-
-//constexpr
-const int SIZE = 1048571;
-const LL INF64 = INT64_MAX / 2;
-const int INF = INT32_MAX / 2;
