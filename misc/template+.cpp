@@ -40,18 +40,12 @@ template<class T> using pq = priority_queue<T>;
 template<class T> using pqg = priority_queue<T, vector<T>, greater<T>>;
 template<class T> inline bool ckmin(T& a, const T& b) { return b < a ? a = b, 1 : 0; }
 template<class T> inline bool ckmax(T& a, const T& b) { return a < b ? a = b, 1 : 0; }
-template<typename T, typename U>
-istream& operator>>(istream& is, pair<T, U>& p) { is >> p.first >> p.second; return is; }
-template<typename T, typename U>
-ostream& operator<<(ostream& os, const pair<T, U>& p) { os << p.first << ' ' << p.second; return os; }
-template<typename T>
-istream& operator>>(istream& is, vector<T>& v) { for (auto& i : v) is >> i; return is; }
-template<typename T>
-ostream& operator<<(ostream& os, const vector<T>& v) { int f = 0; for (auto& i : v) { if (f++) os << ' '; os << i; } return os; }
-template<typename T>
-vector<T>& operator--(vector<T> &v) { for (auto& i : v) --i; return  v; }
-template<typename T>
-vector<T>& operator++(vector<T> &v) { for (auto& i : v) ++i; return  v; }
+template<typename T, typename U> istream& operator>>(istream& is, pair<T, U>& p) { is >> p.first >> p.second; return is; }
+template<typename T, typename U> ostream& operator<<(ostream& os, const pair<T, U>& p) { os << p.first << ' ' << p.second; return os; }
+template<typename T> istream& operator>>(istream& is, vector<T>& v) { for (auto& i : v) is >> i; return is; }
+template<typename T> ostream& operator<<(ostream& os, const vector<T>& v) { int f = 0; for (auto& i : v) { if (f++) os << ' '; os << i; } return os; }
+template<typename T> vector<T>& operator--(vector<T> &v) { for (auto& i : v) --i; return  v; }
+template<typename T> vector<T>& operator++(vector<T> &v) { for (auto& i : v) ++i; return  v; }
 
 constexpr int pct(int x) { return __builtin_popcount(x); } // # of bits set
 constexpr int bits(int x) { return x == 0 ? 0 : 31-__builtin_clz(x); } // floor(log2(x)) 
