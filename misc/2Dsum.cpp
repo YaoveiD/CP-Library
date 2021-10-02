@@ -42,7 +42,7 @@ struct range_sum {
     }
 
     // upper-left, lower-right -> closed, open   
-    T query(int r1, int c1, int r2, int c2) {
+    inline T query(int r1, int c1, int r2, int c2) {
         return sum[r2][c2] - sum[r1][c2] - sum[r2][c1] + sum[r1][c1];
     }
 };
