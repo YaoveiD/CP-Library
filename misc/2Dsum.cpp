@@ -41,9 +41,9 @@ struct range_sum {
                 sum[r + 1][c + 1] = matrix[r][c] + sum[r + 1][c] + sum[r][c + 1] - sum[r][c];
     }
 
-    // upper-left, lower-right  closed interval 
+    // upper-left, lower-right -> closed, open   
     T query(int r1, int c1, int r2, int c2) {
-        return sum[r2 + 1][c2 + 1] - sum[r1][c2 + 1] - sum[r2 + 1][c1] + sum[r1][c1];
+        return sum[r2][c2] - sum[r1][c2] - sum[r2][c1] + sum[r1][c1];
     }
 };
 
@@ -66,7 +66,7 @@ int main() {
   while (q--) {
     int x1, y1, x2, y2;
     cin >> x1 >> y1 >> x2 >> y2;
-    cout << rs.query(x1, y1, x2, y2) << '\n';
+    cout << rs.query(x1, y1, x2 + 1, y2 + 1) << '\n';
   }
   return 0;
 }
