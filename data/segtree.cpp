@@ -1,4 +1,5 @@
 // verification: https://atcoder.jp/contests/practice2/submissions/26093709
+// kind of slow I think
 
 template<typename T>
 class segtree {
@@ -16,7 +17,7 @@ public:
     }
   };
   vector<node> tree;
-  static const node identify;
+  node identify; // consider make it static?
   int N;
 
   segtree(int n) {
@@ -115,12 +116,30 @@ public:
     pull(i);
   }
 
+  void update(int i, int from, int to, int p, T val) {
+    if (from == to) {
+      tree[i].apply(val);
+      return;
+    }
+
+    int mid = (from + to) / 2;
+
+    if (p <= mid) {
+      update(ls, from, mid, p, val);
+    } else {
+      update(rs, mid + 1, to, p, val);
+    }
+
+    pull(i);
+  }
+
   void update(int L, int R, T val) {
     update(0, 0, N - 1, L, R, val);
   }
 
+  // query single
   void update(int p, T val) {
-    update(0, 0 , N - 1, p, p, val);
+    update(0, 0, N - 1, p, val);
   }
 
   int find_first_knowingly(int i, int from, int to, int L, int R, const function<bool(const node&)>& func) {
