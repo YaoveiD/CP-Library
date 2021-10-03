@@ -16,7 +16,7 @@ public:
     }
   };
   vector<node> tree;
-  node identify;
+  static const node identify;
   int N;
 
   segtree(int n) {

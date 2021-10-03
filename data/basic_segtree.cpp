@@ -1,0 +1,195 @@
+#include <algorithm>
+#include <array>
+#include <bitset>
+#include <cassert>
+#include <chrono>
+#include <cmath>
+#include <cstdint>
+#include <cstring>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <limits>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <random>
+#include <set>
+#include <vector>
+ 
+using namespace std;
+
+// source : https://github.com/nealwu/competitive-programming/blob/master/seg_tree/basic_seg_tree.cc
+// I never use this.How it works?
+
+// TODO: segment_change can be eliminated entirely in favor of just updating with a new segment instead.
+struct segment_change {
+    // Use a sentinel value rather than a boolean to save significant memory (4-8 bytes per object).
+    static const int SENTINEL = numeric_limits<int>::lowest();
+
+    // Note that to_set goes first, and to_add goes after.
+    // TODO: check if these values can overflow int.
+    int to_set, to_add;
+
+    // TODO: make sure the default constructor is the identity segment_change.
+    segment_change(int _to_add = 0, int _to_set = SENTINEL) : to_set(_to_set), to_add(_to_add) {}
+
+    bool has_set() const {
+        return to_set != SENTINEL;
+    }
+};
+
+struct segment {
+    // TODO: check if these values can overflow int.
+    int maximum;
+
+    // TODO: make sure the default constructor is the identity segment.
+    segment(int _maximum = numeric_limits<int>::lowest()) : maximum(_maximum) {}
+
+    bool empty() const {
+        return maximum == numeric_limits<int>::lowest();
+    }
+
+    void apply(const segment_change &change) {
+        if (change.has_set()) {
+            maximum = change.to_set;
+        }
+
+        maximum += change.to_add;
+    }
+
+    void join(const segment &other) {
+        if (empty()) {
+            *this = other;
+            return;
+        } else if (other.empty()) {
+            return;
+        }
+
+        maximum = max(maximum, other.maximum);
+    }
+
+    // TODO: decide whether to re-implement this for better performance. Mainly relevant when segments contain arrays.
+    void join(const segment &a, const segment &b) {
+        *this = a;
+        join(b);
+    }
+};
+
+int right_half[32];
+
+struct basic_seg_tree {
+    // TODO: POWER_OF_TWO_MODE is necessary in order to call query_full() or to binary search the tree.
+    static const bool POWER_OF_TWO_MODE = true;
+
+    int tree_n = 0;
+    vector<segment> tree;
+
+    basic_seg_tree(int n = -1) {
+        if (n >= 0)
+            init(n);
+    }
+
+    void init(int n) {
+        if (POWER_OF_TWO_MODE) {
+            tree_n = 1;
+
+            while (tree_n < n)
+                tree_n *= 2;
+        } else {
+            tree_n = n;
+        }
+
+        tree.assign(2 * tree_n, segment());
+    }
+
+    // Builds our tree from an array in O(n).
+    void build(const vector<segment> &initial) {
+        int n = int(initial.size());
+        init(n);
+        assert(n <= tree_n);
+
+        for (int i = 0; i < n; i++)
+            tree[tree_n + i] = initial[i];
+
+        for (int position = tree_n - 1; position > 0; position--)
+            tree[position].join(tree[2 * position], tree[2 * position + 1]);
+    }
+
+    segment query(int a, int b) const {
+        assert(0 <= a && a <= b && b <= tree_n);
+        segment answer;
+        int r_size = 0;
+
+        for (a += tree_n, b += tree_n; a < b; a /= 2, b /= 2) {
+            if (a & 1)
+                answer.join(tree[a++]);
+
+            if (b & 1)
+                right_half[r_size++] = --b;
+        }
+
+        for (int i = r_size - 1; i >= 0; i--)
+            answer.join(tree[right_half[i]]);
+
+        return answer;
+    }
+
+    segment query_full() const {
+        assert(POWER_OF_TWO_MODE);
+        return tree[1];
+    }
+
+    segment query_single(int index) const {
+        assert(0 <= index && index < tree_n);
+        return tree[tree_n + index];
+    }
+
+    void join_up(int position) {
+        while (position > 1) {
+            position /= 2;
+            tree[position].join(tree[2 * position], tree[2 * position + 1]);
+        }
+    }
+
+    void update(int index, const segment_change &change) {
+        assert(0 <= index && index < tree_n);
+        int position = tree_n + index;
+        tree[position].apply(change);
+        join_up(position);
+    }
+
+    void update(int index, const segment &seg) {
+        assert(0 <= index && index < tree_n);
+        int position = tree_n + index;
+        tree[position] = seg;
+        join_up(position);
+    }
+
+    // Finds the last subarray starting at `first` that satisifes `should_join` via binary search in O(log n).
+    template<typename T_bool>
+    int find_last_subarray(T_bool &&should_join, int n, int first = 0) const {
+        assert(POWER_OF_TWO_MODE);
+        assert(0 <= first && first <= n);
+        segment current;
+
+        // Check the degenerate case.
+        if (!should_join(current, current))
+            return first - 1;
+
+        return y_combinator([&](auto search, int position, int start, int end) -> int {
+            if (end <= first) {
+                return end;
+            } else if (first <= start && end <= n && should_join(current, tree[position])) {
+                current.join(tree[position]);
+                return end;
+            } else if (end - start == 1) {
+                return start;
+            }
+
+            int mid = (start + end) / 2;
+            int left = search(2 * position, start, mid);
+            return left < mid ? left : search(2 * position + 1, mid, end);
+        })(1, 0, tree_n);
+    }
+};
