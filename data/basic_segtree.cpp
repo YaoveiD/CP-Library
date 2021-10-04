@@ -16,11 +16,10 @@
 #include <random>
 #include <set>
 #include <vector>
- 
+
 using namespace std;
 
 // source : https://github.com/nealwu/competitive-programming/blob/master/seg_tree/basic_seg_tree.cc
-// I never use this.How it works?
 
 // TODO: segment_change can be eliminated entirely in favor of just updating with a new segment instead.
 struct segment_change {
@@ -116,23 +115,20 @@ struct basic_seg_tree {
             tree[position].join(tree[2 * position], tree[2 * position + 1]);
     }
 
-    segment query(int a, int b) const {
-        assert(0 <= a && a <= b && b <= tree_n);
-        segment answer;
-        int r_size = 0;
+    // [L, R]
+    segment query(int L, int R) const {
+        assert(0 <= L && L <= R && R < tree_n);
+        segment ret;
 
-        for (a += tree_n, b += tree_n; a < b; a /= 2, b /= 2) {
-            if (a & 1)
-                answer.join(tree[a++]);
+        for (L += tree_n - 1, R += tree_n + 1; L ^ R ^ 1; L /= 2, R /= 2) {
+            if (!(L & 1))
+                ret.join(tree[L ^ 1]);
 
-            if (b & 1)
-                right_half[r_size++] = --b;
+            if (R & 1)
+                ret.join(tree[R ^ 1]);
         }
 
-        for (int i = r_size - 1; i >= 0; i--)
-            answer.join(tree[right_half[i]]);
-
-        return answer;
+        return ret;
     }
 
     segment query_full() const {
@@ -164,32 +160,5 @@ struct basic_seg_tree {
         int position = tree_n + index;
         tree[position] = seg;
         join_up(position);
-    }
-
-    // Finds the last subarray starting at `first` that satisifes `should_join` via binary search in O(log n).
-    template<typename T_bool>
-    int find_last_subarray(T_bool &&should_join, int n, int first = 0) const {
-        assert(POWER_OF_TWO_MODE);
-        assert(0 <= first && first <= n);
-        segment current;
-
-        // Check the degenerate case.
-        if (!should_join(current, current))
-            return first - 1;
-
-        return y_combinator([&](auto search, int position, int start, int end) -> int {
-            if (end <= first) {
-                return end;
-            } else if (first <= start && end <= n && should_join(current, tree[position])) {
-                current.join(tree[position]);
-                return end;
-            } else if (end - start == 1) {
-                return start;
-            }
-
-            int mid = (start + end) / 2;
-            int left = search(2 * position, start, mid);
-            return left < mid ? left : search(2 * position + 1, mid, end);
-        })(1, 0, tree_n);
     }
 };
