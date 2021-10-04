@@ -1,30 +1,10 @@
-#include <algorithm>
-#include <array>
-#include <bitset>
-#include <cassert>
-#include <chrono>
-#include <cmath>
-#include <cstdint>
-#include <cstring>
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <limits>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <random>
-#include <set>
-#include <vector>
-
-using namespace std;
-
 // source : https://github.com/nealwu/competitive-programming/blob/master/seg_tree/basic_seg_tree.cc
+// verification : https://atcoder.jp/contests/practice2/submissions/26352976
 
 // TODO: segment_change can be eliminated entirely in favor of just updating with a new segment instead.
 struct segment_change {
     // Use a sentinel value rather than a boolean to save significant memory (4-8 bytes per object).
-    static const int SENTINEL = numeric_limits<int>::lowest();
+    static const int SENTINEL = ;
 
     // Note that to_set goes first, and to_add goes after.
     // TODO: check if these values can overflow int.
@@ -43,10 +23,10 @@ struct segment {
     int maximum;
 
     // TODO: make sure the default constructor is the identity segment.
-    segment(int _maximum = numeric_limits<int>::lowest()) : maximum(_maximum) {}
+    segment() {}
 
     bool empty() const {
-        return maximum == numeric_limits<int>::lowest();
+        return ;
     }
 
     void apply(const segment_change &change) {
@@ -65,7 +45,7 @@ struct segment {
             return;
         }
 
-        maximum = max(maximum, other.maximum);
+        // TODO
     }
 
     // TODO: decide whether to re-implement this for better performance. Mainly relevant when segments contain arrays.
@@ -115,20 +95,24 @@ struct basic_seg_tree {
             tree[position].join(tree[2 * position], tree[2 * position + 1]);
     }
 
-    // [L, R]
-    segment query(int L, int R) const {
-        assert(0 <= L && L <= R && R < tree_n);
-        segment ret;
+    // [a, b]
+    segment query(int a, int b) const {
+        assert(0 <= a && a <= b && b < tree_n);
+        segment answer;
+        int r_size = 0;
 
-        for (L += tree_n - 1, R += tree_n + 1; L ^ R ^ 1; L /= 2, R /= 2) {
-            if (!(L & 1))
-                ret.join(tree[L ^ 1]);
+        for (a += tree_n, b += tree_n + 1; a < b; a /= 2, b /= 2) {
+            if (a & 1)
+                answer.join(tree[a++]);
 
-            if (R & 1)
-                ret.join(tree[R ^ 1]);
+            if (b & 1)
+                right_half[r_size++] = --b;
         }
 
-        return ret;
+        for (int i = r_size - 1; i >= 0; i--)
+            answer.join(tree[right_half[i]]);
+
+        return answer;
     }
 
     segment query_full() const {
@@ -161,4 +145,69 @@ struct basic_seg_tree {
         tree[position] = seg;
         join_up(position);
     }
+    int find_first_knowingly(int i, int from, int to, int L, int R, const function<bool(const segment&)>& func) {
+        if (!func(tree[i])) {
+            return -1;
+        }
+
+        if (from > R or to < L) {
+            return -1;
+        }
+
+        if (from == to) {
+            return from;
+        }
+
+        int mid = (from + to) / 2;
+        int index = find_first_knowingly(i * 2, from, mid, L, R, func);
+        if (index == -1) {
+            index = find_first_knowingly(i * 2 + 1, mid + 1, to, L, R, func);
+        }
+
+        return index;
+    }
+
+    template<typename func_t>
+    int find_first(int L, int R, const func_t& func) {
+        return find_first_knowingly(1, 0, tree_n - 1, L, R, func);
+    }
+
+    template<typename func_t>
+    int find_first(const func_t& func) {
+        return find_first_knowingly(1, 0, tree_n - 1, 0, tree_n - 1, func);
+    }
+
+    template<typename func_t>
+    int find_last_knowingly(int i, int from, int to, int L, int R, const func_t& func) {
+        if (!func(tree[i])) {
+            return -1;
+        }
+
+        if (from > R or to < L) {
+            return -1;
+        }
+
+        if (from == to) {
+            return from;
+        }
+
+        int mid = (from + to) / 2;
+        int index = find_first_knowingly(i * 2 + 1, mid + 1, to, L, R, func);
+        if (index == -1) {
+            index = find_first_knowingly(i * 2, from, mid, L, R, func);
+        }
+
+        return index;
+    }
+
+    template<typename func_t>
+    int find_last(int L, int R, const func_t& func) {
+        return find_last_knowingly(1, 0, tree_n - 1, L, R, func);
+    }
+
+    template<typename func_t>
+    int find_last(const func_t& func) {
+        return find_last_knowingly(0, 0, tree_n - 1, 0, tree_n - 1, func);
+    }
+
 };
