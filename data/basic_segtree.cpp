@@ -6,7 +6,6 @@ struct segment_change {
     // Use a sentinel value rather than a boolean to save significant memory (4-8 bytes per object).
     static const int SENTINEL = ;
 
-    // Note that to_set goes first, and to_add goes after.
     // TODO: check if these values can overflow int.
     int to_set, to_add;
 
@@ -120,7 +119,7 @@ struct basic_seg_tree {
         return tree[1];
     }
 
-    segment query_single(int index) const {
+    segment query(int index) const {
         assert(0 <= index && index < tree_n);
         return tree[tree_n + index];
     }
@@ -145,6 +144,7 @@ struct basic_seg_tree {
         tree[position] = seg;
         join_up(position);
     }
+
     int find_first_knowingly(int i, int from, int to, int L, int R, const function<bool(const segment&)>& func) {
         if (!func(tree[i])) {
             return -1;
@@ -167,6 +167,9 @@ struct basic_seg_tree {
         return index;
     }
 
+    // assuming func is non-decreasing.
+    // find first index in [L, R] that func(initial[index]) returns true.
+    // Note: returns -1 if no such index
     template<typename func_t>
     int find_first(int L, int R, const func_t& func) {
         return find_first_knowingly(1, 0, tree_n - 1, L, R, func);
@@ -200,6 +203,10 @@ struct basic_seg_tree {
         return index;
     }
 
+    // havn't verified. I don't know if it works?
+    // assuming func is non-increasing.
+    // find last index in [L, R] that func(initial[index]) returns true.
+    // Note: returns -1 if no such index
     template<typename func_t>
     int find_last(int L, int R, const func_t& func) {
         return find_last_knowingly(1, 0, tree_n - 1, L, R, func);
@@ -209,5 +216,4 @@ struct basic_seg_tree {
     int find_last(const func_t& func) {
         return find_last_knowingly(1, 0, tree_n - 1, 0, tree_n - 1, func);
     }
-
 };
