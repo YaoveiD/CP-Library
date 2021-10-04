@@ -54,6 +54,8 @@ struct segment {
     }
 };
 
+// Note: ensures segs join in right order
+// unnecessary when the order of join doesn't matter
 int right_half[32];
 
 struct basic_seg_tree {
