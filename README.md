@@ -1,4 +1,4 @@
 # CP-Library
 
-Library code for competitive programing.
+Library code for competitive programming.
 Some not written by me.
