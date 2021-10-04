@@ -207,7 +207,7 @@ struct basic_seg_tree {
 
     template<typename func_t>
     int find_last(const func_t& func) {
-        return find_last_knowingly(0, 0, tree_n - 1, 0, tree_n - 1, func);
+        return find_last_knowingly(1, 0, tree_n - 1, 0, tree_n - 1, func);
     }
 
 };
