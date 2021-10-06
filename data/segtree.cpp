@@ -17,8 +17,11 @@
 #include <vector>
  
 using namespace std;
+
 // verification: https://atcoder.jp/contests/practice2/submissions/26093709
 // kind of slow I think
+
+const int INF = int(1e9) + 5;
 
 template<typename T>
 class segtree {
@@ -27,44 +30,41 @@ private:
   #define ls i << 1 | 1
   #define rs (i << 1) + 2
 public:
-  struct node {
-    T val = INF;
-    // TODO: don't forget to set a default value
+  struct segment {
+    T val;
 
-    void apply(int _val) {
-        val = _val;
+    // TODO: default value should be identity
+    segment(T _val = INF) {}
+
+    void apply(T _val) {
+      val = _val;
     }
   };
-  vector<node> tree;
-  node identify; // consider make it static?
+
+  vector<segment> tree;
+  segment identify;
   int N;
 
   segtree(int n) {
-    N = n;
-
-    int _N = 1;
-    while (_N < n) {
-      _N *= 2;
-    }
-    
-    tree.resize(2 * _N - 1);
-    build(0, 0, n - 1);
+    init(n);
   }
 
-  segtree(int n, vector<T>& A) {
-    N = n;
-    
-    int _N = 1;
-    while (_N < n) {
-      _N *= 2;
-    }
-    
-    tree.resize(_N * 2 - 1);
+  template<typename U>
+  segtree(int n, vector<U>& A) {
+    init(n);
     build(0, 0, n - 1, A);
   }
 
-  // TODO: combine two nodes
-  inline node combine(const node& A, const node& B) {
+  void init(int n) {
+    N = n;
+    int _N = 1;
+    while (_N < n)
+      _N *= 2;
+    tree.assign(2 * _N - 1, segment()); // or 4*N?
+  }
+
+  // TODO: combine two segments
+  inline segment combine(const segment& A, const segment& B) {
     return A.val > B.val ? A : B;
   }
 
@@ -72,9 +72,10 @@ public:
     tree[i] = combine(tree[ls], tree[rs]);
   }
 
-  void build(int i, int L, int R, vector<T>& A) {
+  template<typename U>
+  void build(int i, int L, int R, vector<U>& A) {
     if (L == R) {
-      tree[i].apply(A[L]); // TODO: apply
+      tree[i].apply(A[L]); // TODO: apply initial
       return;
     }
     
@@ -86,20 +87,8 @@ public:
     pull(i);
   }
 
-  void build(int i, int L, int R) {
-    tree[i] = identify;
-    
-    if (L == R) {
-      return;
-    }
-    
-    int mid = L + (R - L) / 2;
-    
-    build(ls, L, mid);
-    build(rs, mid + 1, R);
-  }
-
-  node query(int i, int from, int to, int L, int R) {
+  // [L, R]
+  segment query(int i, int from, int to, int L, int R) {
     if (to < L or from > R) {
       return identify; // Note: correctly set identify ?
     }
@@ -113,17 +102,18 @@ public:
     return combine(query(ls, from, mid, L, R), query(rs, mid + 1, to, L, R));
   }
 
-  node query(int L, int R) {
+  segment query(int L, int R) {
     return query(0, 0, N - 1, L, R);
   }
 
+  // [L, R] consider using lazy segment tree?
   void update(int i, int from, int to, int L, int R, T val) {
     if (to < L or from > R) {
       return;
     }
     
     if (from == to) {
-      tree[i].apply(val); // TODO: apply when 
+      tree[i].apply(val); // TODO: apply range change
       return;
     }
     
@@ -135,9 +125,10 @@ public:
     pull(i);
   }
 
+  // update single
   void update(int i, int from, int to, int p, T val) {
     if (from == to) {
-      tree[i].apply(val);
+      tree[i].apply(val); // TODO: apply single change
       return;
     }
 
@@ -156,12 +147,13 @@ public:
     update(0, 0, N - 1, L, R, val);
   }
 
-  // query single
+  // update single
   void update(int p, T val) {
     update(0, 0, N - 1, p, val);
   }
+// }; // basic segtree
 
-  int find_first_knowingly(int i, int from, int to, int L, int R, const function<bool(const node&)>& func) {
+  int find_first_knowingly(int i, int from, int to, int L, int R, const function<bool(const segment&)>& func) {
     if (!func(tree[i])) {
       return -1;
     }
@@ -183,15 +175,15 @@ public:
     return index;
   }
 
-  int find_first(int L, int R, const function<bool(const node&)>& func) {
+  int find_first(int L, int R, const function<bool(const segment&)>& func) {
     return find_first_knowingly(0, 0, N - 1, L, R, func);
   }
 
-  int find_first(const function<bool(const node&)>& func) {
+  int find_first(const function<bool(const segment&)>& func) {
     return find_first_knowingly(0, 0, N - 1, 0, N - 1, func);
   }
 
-  int find_last_knowingly(int i, int from, int to, int L, int R, const function<bool(const node&)>& func) {
+  int find_last_knowingly(int i, int from, int to, int L, int R, const function<bool(const segment&)>& func) {
     if (!func(tree[i])) {
       return -1;
     }
@@ -213,11 +205,11 @@ public:
     return index;
   }
 
-  int find_last(int L, int R, const function<bool(const node&)>& func) {
+  int find_last(int L, int R, const function<bool(const segment&)>& func) {
     return find_last_knowingly(0, 0, N - 1, L, R, func);
   }
 
-  int find_last(const function<bool(const node&)>& func) {
+  int find_last(const function<bool(const segment&)>& func) {
     return find_last_knowingly(0, 0, N - 1, 0, N - 1, func);
   }
 
