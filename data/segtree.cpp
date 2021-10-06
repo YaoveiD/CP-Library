@@ -99,6 +99,7 @@ public:
     
     int mid = (from + to) / 2;
     
+    // Note: calls query(rs, ...) first
     return combine(query(ls, from, mid, L, R), query(rs, mid + 1, to, L, R));
   }
 
