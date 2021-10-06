@@ -167,6 +167,7 @@ struct seg_tree {
         if (needs_join) tree[position].join(tree[2 * position], tree[2 * position + 1]);
     }
 
+    // [a, b)
     segment query(int a, int b) {
         assert(0 <= a && a <= b && b <= tree_n);
         segment answer;
@@ -182,6 +183,7 @@ struct seg_tree {
         return tree[1];
     }
 
+    // [a, b)
     void update(int a, int b, const segment_change &change) {
         assert(0 <= a && a <= b && b <= tree_n);
 

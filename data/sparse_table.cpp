@@ -1,12 +1,12 @@
 //source https://github.com/the-tourist/algo/tree/master/data
 template <typename T, class F = function<T(const T&, const T&)>>
-class SparseTable {
+class sparse_able {
  public:
   int n;
   vector<vector<T>> mat;
   F func;
  
-  SparseTable(const vector<T>& a, const F& f) : func(f) {
+  sparse_table(const vector<T>& a, const F& f) : func(f) {
     n = static_cast<int>(a.size());
     int max_log = 32 - __builtin_clz(n);
     mat.resize(max_log);
@@ -19,6 +19,7 @@ class SparseTable {
     }
   }
  
+  // [from, to]
   T get(int from, int to) const {
     assert(0 <= from && from <= to && to <= n - 1);
     int lg = 32 - __builtin_clz(to - from + 1) - 1;
