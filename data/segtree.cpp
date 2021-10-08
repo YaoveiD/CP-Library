@@ -42,7 +42,7 @@ public:
   };
 
   vector<segment> tree;
-  segment identify;
+  segment identity;
   int N;
 
   segtree(int n) {
@@ -90,7 +90,7 @@ public:
   // [L, R]
   segment query(int i, int from, int to, int L, int R) {
     if (to < L or from > R) {
-      return identify; // Note: correctly set identify ?
+      return identity; // Note: correctly set identity ?
     }
     
     if (L <= from and to <= R) {
