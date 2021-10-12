@@ -214,5 +214,3 @@ namespace IO {
             lookup[i] = uint8_t((i / 10 << 4) + i % 10);
     }
 }
-
-// using namespace IO;
