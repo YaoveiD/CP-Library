@@ -6,5 +6,5 @@ template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { ce
 #ifdef LOCAL
 #define debug(...) cerr << "[" << #__VA_ARGS__ << "]:", debug_out(__VA_ARGS__)
 #else
-#define debug(...) 42
+#define debug(...) 
 #endif

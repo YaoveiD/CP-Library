@@ -67,7 +67,7 @@ private:
             vector<int> new_nums2 = neigh_state(nums2);
             int current = evaluate(nums1, new_nums2);
 
-            if (current < last)
+            if ((current < last) ^ maximum_mode)
                 best = current;
 
             if (prob(last, current, temp) > URD)
