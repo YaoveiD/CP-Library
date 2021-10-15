@@ -4,6 +4,7 @@
 #include <cassert>
 #include <chrono>
 #include <cmath>
+#include <cstdlib>
 #include <cstring>
 #include <functional>
 #include <iomanip>
@@ -18,69 +19,108 @@
 using namespace std;
 
 // verification https://leetcode-cn.com/submissions/detail/228175390/
+// verification https://www.luogu.com.cn/record/59921549
 
 auto random_address = [] { char *p = new char; delete p; return uint64_t(p); };
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count() * (random_address() | 1));
 #define UID(L, R) uniform_int_distribution<int>(L, R)(rng)
 #define URD uniform_real_distribution<double>(0.0, 1.0)(rng)
 
-const double CUTOFF = 1e-5;
-const double INITIAL = 1e9;
-const double STEP = 0.98;
+const double CUTOFF = 1e-15;
+const double INITIAL = 3412;
+const double STEP = 0.996;
 const int ITERATIONS = 10;
+const int MX = 37823899;
 
-template<bool maximum_mode = false>
+struct stuff {
+    int x, y, w;
+};
+
+int N;
+vector<stuff> A;
+
+struct state {
+    double x, y;
+
+    state(double _x = 0, double _y = 0) : x(_x), y(_y) {}
+};
+
+template<typename T, bool maximum_mode = false>
 class simulate_anneal {
 private:
-    int evaluate(const vector<int>& nums1, const vector<int>& nums2) {
-        int result = 0;
-
-        for (int i = 0; i < int(nums1.size()); ++i)
-            result += (nums1[i] ^ nums2[i]);
-
-        return result;
+    double dist(double x, double y) {
+        return sqrt(x * x + y * y);
     }
 
-    vector<int> neigh_state(const vector<int>& nums) {
-        vector<int> neigh = nums;
-        
-        int i = UID(0, int(nums.size()) - 1);
-        int j = UID(0, int(nums.size()) - 1);
-        swap(neigh[i], neigh[j]);
-        
-        return neigh;
+    T evaluate(const state& s) {
+        double E = 0;
+
+        for (const auto& a : A)
+            E += a.w * dist(a.x - s.x, a.y - s.y);
+
+        return E;
     }
 
-    double prob(int last, int current, double temp) {
+    state neigh_state(const state& curr, double temp) {
+        double dx = (rand() * 2 - RAND_MAX) * temp;
+        double dy = (rand() * 2 - RAND_MAX) * temp;
+
+        return state(curr.x + dx, curr.y + dy);
+    }
+
+    double prob(T last, T current, double temp) {
         if ((current < last) ^ maximum_mode) // we want to minimize
             return 1.0;
         return exp((last - current) / temp);
     }
 
-    int simulate(vector<int>& nums1, vector<int>& nums2) {
-        nums2 = neigh_state(nums2);
-        int best = evaluate(nums1, nums2);
+    void simulate(const state& _src) {
+        state src = _src;
 
-        for (double temp = INITIAL; temp >= CUTOFF; temp *= STEP) {
-            int last = evaluate(nums1, nums2);
+        for (double temp = INITIAL; temp > CUTOFF; temp *= STEP) {
+            T last = evaluate(src);
 
-            vector<int> new_nums2 = neigh_state(nums2);
-            int current = evaluate(nums1, new_nums2);
+            state new_state = neigh_state(src, temp);
+            T current = evaluate(new_state);
 
-            if ((current < last) ^ maximum_mode)
+            if ((current < last) ^ maximum_mode) {
                 best = current;
+                finally = new_state;
+            }
 
             if (prob(last, current, temp) > URD)
-                nums2.swap(new_nums2);
+                swap(src, new_state);
         }
-
-        return best;
     }
 public:
-    int minimumXORSum(vector<int>& nums1, vector<int>& nums2) {
-        int best = INT32_MAX;
+    state finally;
+    T best = 1e20;
+
+    simulate_anneal() {}
+
+    state solve(const state& _initial) {
         for (int iter = 0; iter < ITERATIONS; ++iter)
-            best = min(best, simulate(nums1, nums2));
-        return best;
+            simulate(finally);
+
+        return finally;
     }
 };
+
+int main() {
+    ios::sync_with_stdio(false);
+#ifndef LOCAL
+    cin.tie(0);
+#endif
+    cout << fixed << setprecision(3);
+
+    cin >> N;
+    A.resize(N);
+    for (stuff& a : A)
+        cin >> a.x >> a.y >> a.w;
+
+    simulate_anneal<double> SA;
+    state initial;
+    state finally = SA.solve(initial);
+
+    cout << finally.x << ' ' << finally.y << '\n';
+}
