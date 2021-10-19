@@ -58,7 +58,8 @@ struct LCA {
                 parent[i][j] = parent[i - 1][parent[i - 1][j]];
     }
 
-    int get_lca(int u, int v) {
+    // make sure to run `build`
+    int get_lca(int u, int v) const {
         assert(0 <= u && u < n && 0 <= v && v < n);
 
         if (depth[u] < depth[v])
@@ -80,7 +81,7 @@ struct LCA {
         return parent[0][u];
     }
 
-    int get_dist(int u, int v) {
+    int get_dist(int u, int v) const {
         int lca = get_lca(u, v);
         return depth[u] + depth[v] - depth[lca];
     }
