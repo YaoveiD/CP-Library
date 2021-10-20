@@ -83,7 +83,7 @@ struct LCA {
 
     int get_dist(int u, int v) const {
         int lca = get_lca(u, v);
-        return depth[u] + depth[v] - depth[lca];
+        return depth[u] + depth[v] - 2 * depth[lca];
     }
 };
 
