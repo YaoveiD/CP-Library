@@ -85,6 +85,20 @@ struct LCA {
         int lca = get_lca(u, v);
         return depth[u] + depth[v] - 2 * depth[lca];
     }
+
+    int go_up(int v, int step) {
+        int bit = 0;
+
+        while (step) {
+            if (step & 1)
+                v = parent[bit-1][v];
+
+            bit += 1;
+            step >>= 1;
+        }
+
+        return v;
+    }
 };
 
 template<typename T, typename T_iterable>
