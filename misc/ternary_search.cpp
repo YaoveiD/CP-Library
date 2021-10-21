@@ -48,15 +48,15 @@ double ternary_search_min(LL low, LL high) {
 
 double ternary_search_max(LL low, LL high) {
     //求凸函数最大值
-    double ans = 100000000000000;
+    double ans = -INF;
     while (low < high) {
         LL m1 = (2 * low + high) / 3;
         LL m2 = (2 * high + low + 2) / 3;
         if (evaluate(m1) > evaluate(m2)) {
-            ans = min(ans, evaluate(m1));
+            ans = max(ans, evaluate(m1));
             high = m2 - 1;
         } else {
-            ans = min(ans, evaluate(m2));
+            ans = max(ans, evaluate(m2));
             low = m1 + 1;
         }
     }
@@ -66,12 +66,12 @@ double ternary_search_max(LL low, LL high) {
 double ternary_search(double low, double high) {
     //求凸函数最大值
     double rmid, mid;
-    while(fabs(high - low) > eps){
+    while (fabs(high - low) > eps) {
         mid = (low + high) / 2;
         rmid = (mid + high) / 2;
-        if(evaluate(mid) > evaluate(rmid)){
+        if (evaluate(mid) > evaluate(rmid)) {
             high = rmid;
-        }else {
+        } else {
             low = mid;
         }
     }
