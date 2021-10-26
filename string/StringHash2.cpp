@@ -16,6 +16,7 @@ public:
     assert(hash_count <= HASH_COUNT);
     N = (int) str.size();
     for (int h = 0; h < hash_count; ++h) {
+      prefix_hash[h].resize(N+1);
       compute_hash(str);
     }
   }
