@@ -50,7 +50,7 @@ template<typename T> struct Prim {
     g[u][v] = min(g[u][v], w);
   }
   
-  int64_t prim(int src = 0) {
+  int64_t mst(int src = 0) {
     int64_t sum = 0;
     vis.assign(n, false);
     d.assign(n, INF);
