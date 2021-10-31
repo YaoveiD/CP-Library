@@ -1,4 +1,5 @@
 // https://codeforces.com/contest/1567/standings/friends/true
+// opps, where is source. from codeforce neal.
 
 struct check_bipartite {
     int V;
