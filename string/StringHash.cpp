@@ -33,7 +33,7 @@ public:
   void build(const string& S) {
     N = (int) S.size();
     assert(N > 0);
-    prefix_hash.resize(N + 1);
+    prefix_hash.assign(N + 1, 0);
     for (int i = 0; i < N; ++i) {
       prefix_hash[i + 1] = prefix_hash[i] * base + S[i];
     }
