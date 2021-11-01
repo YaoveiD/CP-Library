@@ -25,8 +25,9 @@ public:
     hash_t value = 0;
 
     for (int i = 0; i < N; ++i) {
-      int c = str[i];
-      value = (BASE * value + c) % HASH_MOD[h];
+      value = BASE * value % HASH_MOD[h] + str[i];
+      if (value >= HASH_MOD[h])
+        value -= HASH_MOD[h];
       prefix_hash[h][i + 1] = value;
     }
  

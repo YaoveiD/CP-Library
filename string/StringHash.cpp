@@ -40,6 +40,7 @@ public:
     if (pows.size() == 0) {
       pows.push_back(1);
     }
+    pows.reserve(N + N/32 + 1);
     while ((int) pows.size() <= N + N/32) {
       hash_t last = pows.back();
       pows.push_back(last * base);
