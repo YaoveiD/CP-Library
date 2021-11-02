@@ -28,7 +28,7 @@ struct LCA {
         return x == 0 ? -1 : 31 - __builtin_clz(x);
     }
 
-    LCA(const vector<vector<int>> _tree = {}) {
+    LCA(const vector<vector<int>>& _tree = {}) {
         int _n = int(_tree.size());
         if (_n > 0)
             init(_n, _tree);
