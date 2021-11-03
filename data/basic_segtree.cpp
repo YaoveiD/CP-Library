@@ -133,17 +133,17 @@ struct basic_seg_tree {
         }
     }
 
-    void update(int index, const segment_change &change) {
-        assert(0 <= index && index < tree_n);
-        int position = tree_n + index;
-        tree[position].apply(change);
-        join_up(position);
-    }
-
     void update(int index, const segment &seg) {
         assert(0 <= index && index < tree_n);
         int position = tree_n + index;
         tree[position] = seg;
+        join_up(position);
+    }
+
+    void update(int index, const segment_change &change) {
+        assert(0 <= index && index < tree_n);
+        int position = tree_n + index;
+        tree[position].apply(change);
         join_up(position);
     }
 
