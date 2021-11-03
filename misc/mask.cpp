@@ -67,7 +67,14 @@ vector<T_out> supermask_sums(int n, vector<T_in> values) {
 void submasks(int mask) {
     for (int s = mask; s != 0; s = (s - 1) & mask) {
         int submask = mask ^ s;
-        debug(submask);
+        debug(submask, s);
+    }
+}
+
+// suppermask of mask in [mask, 1 << n) from small to big
+void superrmasks(int mask, int n) {
+    for (int s = mask; s < 1 << n; s = (s + 1) | mask) {
+        debug(s);
     }
 }
 
@@ -86,7 +93,7 @@ inline int reset(int mask, int k) {
     return mask & (~(1 << k));
 }
 
-// minus lowbit of mask from mask
+// minus the lowest bit `1` from mask
 inline int reset_last(int mask) {
     return mask & (mask - 1);
 }
@@ -102,4 +109,6 @@ inline bool has_adj(int mask) {
 }
 
 int main() {
+    submasks(22);
+    superrmasks(22, 5);
 }
