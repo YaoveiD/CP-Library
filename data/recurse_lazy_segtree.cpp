@@ -67,16 +67,16 @@ const segment identity(INF);
 // 2. find the minimum on segment fomr a to b O(logn)
 
 struct seg_tree {
-    int n;
+    int tree_n;
     vector<segment> tree;
     vector<segment_change> changes;
 
     // full 
     void init(int _n) {
-        n = 1;
-        while (n < _n) n *= 2;
-        tree.assign(n * 2, segment());
-        changes.assign(n * 2, segment_change());
+        tree_n = 1;
+        while (tree_n < _n) tree_n *= 2;
+        tree.assign(tree_n * 2, segment());
+        changes.assign(tree_n * 2, segment_change());
     }
 
     // combine two segments
@@ -88,7 +88,7 @@ struct seg_tree {
     void apply_and_combine(int p, const segment_change& change) {
         tree[p].apply(change);
 
-        if (p < n)
+        if (p < tree_n)
             changes[p].combine(change);
     }
 
@@ -104,6 +104,19 @@ struct seg_tree {
             apply_and_combine(p * 2 + 1, changes[p]);
             changes[p] = segment_change();
         }
+    }
+
+    // Builds our tree from an array in O(tree_n).
+    void build(const vector<segment> &initial) {
+        int n = int(initial.size());
+        init(n);
+        assert(n <= tree_n);
+
+        for (int i = 0; i < tree_n; i++)
+            tree[tree_n + i] = initial[i];
+
+        for (int position = tree_n - 1; position > 0; position--)
+            tree[position] = join(tree[2 * position], tree[2 * position + 1]);
     }
 
     void update(int p, int L, int R, int a, int b, const segment_change& change) {
@@ -124,7 +137,7 @@ struct seg_tree {
 
     // Note: [a, b]
     void update(int a, int b, int add) {
-        update(1, 0, n - 1, a, b, segment_change(add));
+        update(1, 0, tree_n - 1, a, b, segment_change(add));
     }
 
     segment query(int p, int L, int R, int a, int b) {
@@ -142,7 +155,7 @@ struct seg_tree {
 
     // Note: [a, b]
     int64_t query(int a, int b) {
-        return query(1, 0, n - 1, a, b).minima;
+        return query(1, 0, tree_n - 1, a, b).minima;
     }
 };
 
