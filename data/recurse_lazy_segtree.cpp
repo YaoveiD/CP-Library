@@ -112,7 +112,7 @@ struct seg_tree {
         init(n);
         assert(n <= tree_n);
 
-        for (int i = 0; i < tree_n; i++)
+        for (int i = 0; i < n; i++)
             tree[tree_n + i] = initial[i];
 
         for (int position = tree_n - 1; position > 0; position--)
