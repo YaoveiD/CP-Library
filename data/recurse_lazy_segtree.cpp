@@ -42,6 +42,10 @@ struct segment_change {
 
     segment_change(int64_t _add = 0) : to_add(_add) {}
 
+    bool has_change() const {
+        return to_add != 0;
+    }
+
     void combine(const segment_change& other) {
         to_add += other.to_add;
     }
@@ -56,6 +60,11 @@ struct segment {
 
     void apply(const segment_change& change) {
         minima += change.to_add;
+    }
+
+    // combine two segments
+    friend segment join(const segment& a, const segment& b) {
+        return a.minima < b.minima ? a : b; // TODO
     }
 };
 
@@ -79,11 +88,6 @@ struct seg_tree {
         changes.assign(tree_n * 2, segment_change());
     }
 
-    // combine two segments
-    segment join(const segment& a, const segment& b) {
-        return a.minima < b.minima ? a : b; // TODO
-    }
-
     // apply the change on segment and combine the changes
     void apply_and_combine(int p, const segment_change& change) {
         tree[p].apply(change);
@@ -99,7 +103,7 @@ struct seg_tree {
 
     // push down the segment change
     void push(int p, int L, int R) {
-        if (changes[p].to_add != 0) {
+        if (changes[p].has_change()) {
             apply_and_combine(p * 2, changes[p]);
             apply_and_combine(p * 2 + 1, changes[p]);
             changes[p] = segment_change();
@@ -157,6 +161,8 @@ struct seg_tree {
     int64_t query(int a, int b) {
         return query(1, 0, tree_n - 1, a, b).minima;
     }
+
+// }; // basic lazy segment tree.
 };
 
 int main() {
