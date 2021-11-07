@@ -37,6 +37,11 @@ template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { ce
 #define debug(...) 
 #endif
 
+// solution to https://codeforces.com/edu/course/2/lesson/5/3/practice/status
+// this data structure can handle the follow two operations
+// 1. set v to to all elements on the segment from l to r
+// 2. find the segment with maximal sum
+
 const int SENTINEL = -1000000009;
 
 struct segment_change {
