@@ -171,6 +171,32 @@ struct seg_tree {
     }
 
 // }; // basic lazy segment tree.
+
+    template<typename T_bool>
+    int find_first(int p, int L, int R, int a, T_bool&& pred) {
+        if (!pred(tree[p]) || R < a)
+            return -1;
+
+        if (L == R) 
+            return L;
+
+        push(p, R - L + 1);
+        int mid = L + (R - L) / 2;
+        int index = -1;
+
+        if (pred(tree[p]))
+            index = find_first(p * 2, L, mid, a, pred);
+        if (index == -1)
+            index = find_first(p * 2 + 1, mid + 1, R, a, pred);
+
+        return index;
+    }
+
+    // find first element returns true on segment [a, tree_n)
+    template<typename T_bool>
+    int find_first(int a, T_bool&& pred) {
+        return find_first(1, 0, tree_n - 1, a, pred);
+    }
 };
 
 int main() {
