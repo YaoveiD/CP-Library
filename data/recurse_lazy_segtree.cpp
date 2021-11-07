@@ -37,43 +37,36 @@ template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { ce
 #define debug(...) 
 #endif
 
-struct segment_change {
-    int64_t to_add;
+const int SENTINEL = -1000000009;
 
-    segment_change(int64_t _add = 0) : to_add(_add) {}
+struct segment_change {
+    int64_t to_set;
+
+    segment_change(int64_t _set = SENTINEL) : to_set(_set) {}
 
     bool has_change() const {
-        return to_add != 0;
+        return to_set != SENTINEL;
     }
 
     void combine(const segment_change& other) {
-        to_add += other.to_add;
+        to_set = other.to_set;
     }
 };
-
-const int64_t INF = int64_t(1e18);
 
 struct segment {
-    int64_t minima;
+    int64_t sum, prefix_max, suffix_max, mx;
 
-    segment(int64_t _minima = 0) : minima(_minima) {}
+    segment(int64_t value = 0) : sum(value), prefix_max(value), suffix_max(value), mx(value) {}
 
-    void apply(const segment_change& change) {
-        minima += change.to_add;
-    }
-
-    // combine two segments
-    friend segment join(const segment& a, const segment& b) {
-        return a.minima < b.minima ? a : b; // TODO
+    void apply(int length, const segment_change& change) {
+        sum = change.to_set * length;
+        prefix_max = max<int64_t>(0, sum);
+        suffix_max = prefix_max;
+        mx = prefix_max;
     }
 };
 
-const segment identity(INF);
-
-// solution to https://codeforces.com/edu/course/2/lesson/5/2/practice/contest/279653/problem/A
-// this can handle the following two operations
-// 1. add v to segment from a to b O(logn)
-// 2. find the minimum on segment fomr a to b O(logn)
+const segment identity;
 
 struct seg_tree {
     int tree_n;
@@ -88,9 +81,19 @@ struct seg_tree {
         changes.assign(tree_n * 2, segment_change());
     }
 
+    // combine two segments
+    segment join(const segment& a, const segment& b) {
+        segment c;
+        c.sum = a.sum + b.sum;
+        c.prefix_max = max(a.prefix_max, a.sum + b.prefix_max);
+        c.suffix_max = max(b.suffix_max, b.sum + a.suffix_max);
+        c.mx = max({a.suffix_max + b.prefix_max, a.mx, b.mx});
+        return c;
+    }
+
     // apply the change on segment and combine the changes
-    void apply_and_combine(int p, const segment_change& change) {
-        tree[p].apply(change);
+    void apply_and_combine(int p, int length, const segment_change& change) {
+        tree[p].apply(length, change);
 
         if (p < tree_n)
             changes[p].combine(change);
@@ -102,10 +105,10 @@ struct seg_tree {
     }
 
     // push down the segment change
-    void push(int p, int L, int R) {
+    void push(int p, int length) {
         if (changes[p].has_change()) {
-            apply_and_combine(p * 2, changes[p]);
-            apply_and_combine(p * 2 + 1, changes[p]);
+            apply_and_combine(p * 2, length / 2, changes[p]);
+            apply_and_combine(p * 2 + 1, length / 2, changes[p]);
             changes[p] = segment_change();
         }
     }
@@ -125,14 +128,14 @@ struct seg_tree {
 
     void update(int p, int L, int R, int a, int b, const segment_change& change) {
         if (a <= L && R <= b) {
-            apply_and_combine(p, change); // Note : don't use apply
+            apply_and_combine(p, R - L + 1, change); // Note : don't use apply
             return;
         }
 
         if (b < L || a > R)
             return;
 
-        push(p, L, R);
+        push(p, R - L + 1);
         int mid = (L + R) / 2;
         update(p * 2, L, mid, a, b, change);
         update(p * 2 + 1, mid + 1, R, a, b, change);
@@ -140,8 +143,8 @@ struct seg_tree {
     }
 
     // Note: [a, b]
-    void update(int a, int b, int add) {
-        update(1, 0, tree_n - 1, a, b, segment_change(add));
+    void update(int a, int b, int to_set) {
+        update(1, 0, tree_n - 1, a, b, segment_change(to_set));
     }
 
     segment query(int p, int L, int R, int a, int b) {
@@ -152,14 +155,14 @@ struct seg_tree {
         if (b < L || a > R)
             return identity;
 
-        push(p, L, R);
+        push(p, R - L + 1);
         int mid = (L + R) / 2;
         return join(query(p * 2, L, mid, a, b), query(p * 2 + 1, mid + 1, R, a, b));
     }
 
     // Note: [a, b]
     int64_t query(int a, int b) {
-        return query(1, 0, tree_n - 1, a, b).minima;
+        return query(1, 0, tree_n - 1, a, b).mx;
     }
 
 // }; // basic lazy segment tree.
@@ -176,17 +179,10 @@ int main() {
     seg_tree segtree;
     segtree.init(N);
 
-    for (int m = 0; m < M; ++m) {
-        int type, a, b;
-        cin >> type >> a >> b;
-        --b;
-
-        if (type == 1) {
-            int v;
-            cin >> v;
-            segtree.update(a, b, v);
-        } else {
-            cout << segtree.query(a, b) << '\n';
-        }
+    while (M--) {
+        int a, b, v;
+        cin >> a >> b >> v;
+        segtree.update(a, b - 1, v);
+        cout << segtree.query(0, N - 1) << '\n';
     }
 }
