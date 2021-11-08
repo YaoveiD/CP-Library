@@ -71,6 +71,17 @@ struct segment {
     }
 };
 
+// combine two segments
+// consider to rewrite this for better performance
+segment join(const segment& a, const segment& b) {
+    segment c;
+    c.sum = a.sum + b.sum;
+    c.prefix_max = max(a.prefix_max, a.sum + b.prefix_max);
+    c.suffix_max = max(b.suffix_max, b.sum + a.suffix_max);
+    c.mx = max({a.suffix_max + b.prefix_max, a.mx, b.mx});
+    return c;
+}
+
 const segment identity;
 
 struct seg_tree {
@@ -78,22 +89,17 @@ struct seg_tree {
     vector<segment> tree;
     vector<segment_change> changes;
 
+    seg_tree(int n = -1) {
+        if (n > 0)
+            init(n);
+    }
+
     // full 
     void init(int _n) {
         tree_n = 1;
         while (tree_n < _n) tree_n *= 2;
         tree.assign(tree_n * 2, segment());
-        changes.assign(tree_n * 2, segment_change());
-    }
-
-    // combine two segments
-    segment join(const segment& a, const segment& b) {
-        segment c;
-        c.sum = a.sum + b.sum;
-        c.prefix_max = max(a.prefix_max, a.sum + b.prefix_max);
-        c.suffix_max = max(b.suffix_max, b.sum + a.suffix_max);
-        c.mx = max({a.suffix_max + b.prefix_max, a.mx, b.mx});
-        return c;
+        changes.assign(tree_n, segment_change());
     }
 
     // apply the change on segment and combine the changes
@@ -148,8 +154,8 @@ struct seg_tree {
     }
 
     // Note: [a, b]
-    void update(int a, int b, int to_set) {
-        update(1, 0, tree_n - 1, a, b, segment_change(to_set));
+    void update(int a, int b, const segment_change& change) {
+        update(1, 0, tree_n - 1, a, b, change);
     }
 
     segment query(int p, int L, int R, int a, int b) {
@@ -166,8 +172,9 @@ struct seg_tree {
     }
 
     // Note: [a, b]
-    int64_t query(int a, int b) {
-        return query(1, 0, tree_n - 1, a, b).mx;
+    // consider to change the return type for better performance
+    segment query(int a, int b) {
+        return query(1, 0, tree_n - 1, a, b);
     }
 
 // }; // basic lazy segment tree.
@@ -207,13 +214,12 @@ int main() {
 
     int N, M;
     cin >> N >> M;
-    seg_tree segtree;
-    segtree.init(N);
+    seg_tree segtree(N);
 
     while (M--) {
         int a, b, v;
         cin >> a >> b >> v;
-        segtree.update(a, b - 1, v);
-        cout << segtree.query(0, N - 1) << '\n';
+        segtree.update(a, b - 1, segment_change(v));
+        cout << segtree.query(0, N - 1).mx << '\n';
     }
 }
