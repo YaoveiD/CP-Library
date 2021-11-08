@@ -32,7 +32,7 @@ template<typename T_container, typename T = typename enable_if<!is_same<T_contai
 void debug_out() { cerr << endl; }
 template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { cerr << ' ' << H; debug_out(T...); }
 #ifdef LOCAL
-#define debug(...) cerr << "[" << #__VA_ARGS__ << "]:", debug_out(__VA_ARGS__)
+#define debug(...) cerr << "[" << #__VA_AendGS__ << "]:", debug_out(__VA_AendGS__)
 #else
 #define debug(...) 
 #endif
@@ -137,19 +137,19 @@ struct seg_tree {
             tree[position] = join(tree[2 * position], tree[2 * position + 1]);
     }
 
-    void update(int p, int L, int R, int a, int b, const segment_change& change) {
-        if (a <= L && R <= b) {
-            apply_and_combine(p, R - L + 1, change); // Note : don't use apply
+    void update(int p, int start, int end, int a, int b, const segment_change& change) {
+        if (a <= start && end <= b) {
+            apply_and_combine(p, end - start + 1, change); // Note : don't use apply
             return;
         }
 
-        if (b < L || a > R)
+        if (b < start || a > end)
             return;
 
-        push(p, R - L + 1);
-        int mid = (L + R) / 2;
-        update(p * 2, L, mid, a, b, change);
-        update(p * 2 + 1, mid + 1, R, a, b, change);
+        push(p, end - start + 1);
+        int mid = (start + end) / 2;
+        update(p * 2, start, mid, a, b, change);
+        update(p * 2 + 1, mid + 1, end, a, b, change);
         pull(p);
     }
 
@@ -158,17 +158,17 @@ struct seg_tree {
         update(1, 0, tree_n - 1, a, b, change);
     }
 
-    segment query(int p, int L, int R, int a, int b) {
-        if (a <= L && R <= b) {
+    segment query(int p, int start, int end, int a, int b) {
+        if (a <= start && end <= b) {
             return tree[p];
         }
 
-        if (b < L || a > R)
+        if (b < start || a > end)
             return identity;
 
-        push(p, R - L + 1);
-        int mid = (L + R) / 2;
-        return join(query(p * 2, L, mid, a, b), query(p * 2 + 1, mid + 1, R, a, b));
+        push(p, end - start + 1);
+        int mid = (start + end) / 2;
+        return join(query(p * 2, start, mid, a, b), query(p * 2 + 1, mid + 1, end, a, b));
     }
 
     // Note: [a, b]
@@ -180,21 +180,21 @@ struct seg_tree {
 // }; // basic lazy segment tree.
 
     template<typename T_bool>
-    int find_first(int p, int L, int R, int a, T_bool&& pred) {
-        if (!pred(tree[p]) || R < a)
+    int find_first(int p, int start, int end, int a, T_bool&& pred) {
+        if (!pred(tree[p]) || end < a)
             return -1;
 
-        if (L == R) 
-            return L;
+        if (start == end) 
+            return start;
 
-        push(p, R - L + 1);
-        int mid = L + (R - L) / 2;
+        push(p, end - start + 1);
+        int mid = start + (end - start) / 2;
         int index = -1;
 
         if (pred(tree[p]))
-            index = find_first(p * 2, L, mid, a, pred);
+            index = find_first(p * 2, start, mid, a, pred);
         if (index == -1)
-            index = find_first(p * 2 + 1, mid + 1, R, a, pred);
+            index = find_first(p * 2 + 1, mid + 1, end, a, pred);
 
         return index;
     }
