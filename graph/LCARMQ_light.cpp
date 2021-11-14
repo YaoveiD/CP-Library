@@ -55,7 +55,7 @@ struct RMQ {
                 mat[k][j] = min(mat[k - 1][j], mat[k - 1][j + pw]);
         }
     }
-    
+
     T query(int a, int b) {
         assert(a < b); // or return inf if a == b
         int dep = 31 - __builtin_clz(b - a);
@@ -70,6 +70,7 @@ struct LCA {
     RMQ<int> rmq;
  
     LCA(vector<vi>& C) : time(sz(C)), parent(sz(C)), rmq((dfs(C,0,-1), ret)) {}
+    
     void dfs(vector<vi>& C, int v, int par) {
         parent[v] = par;
         time[v] = T++;
@@ -84,5 +85,6 @@ struct LCA {
         tie(a, b) = minmax(time[a], time[b]);
         return path[rmq.query(a, b)];
     }
-    // dist(a,b){return depth[a] + depth[b] - 2*depth[lca(a,b)];}
-};
+    
+    // int dist(a,b) { return depth[a] + depth[b] - 2 * depth[lca(a, b)]; }
+};  
