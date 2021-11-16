@@ -29,6 +29,20 @@ double evaluate(LL x) {
     return 0;
 }
 
+// I don't konw if it works better.
+LL ternary_search_min(LL low, LL high) {
+    while (low < high) {
+        LL mid = low + (high - low) / 2;
+
+        if (evaluate(mid) < evaluate(mid + 1))
+            high = mid;
+        else
+            low = mid + 1;
+    }
+
+    return evaluate(low);
+}
+
 double ternary_search_min(LL low, LL high) {
     //求凹函数最小值
     double ans = INF;
