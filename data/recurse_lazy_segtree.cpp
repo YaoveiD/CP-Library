@@ -191,9 +191,9 @@ struct seg_tree {
         int mid = start + (end - start) / 2;
         int index = -1;
 
-        if (pred(tree[p]))
+        if (pred(tree[p * 2]))
             index = find_first(p * 2, start, mid, a, pred);
-        if (index == -1)
+        else
             index = find_first(p * 2 + 1, mid + 1, end, a, pred);
 
         return index;
