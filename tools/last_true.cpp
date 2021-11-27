@@ -1,6 +1,6 @@
 
 template<typename func_T>
-int last_true(int low, int high, func_T check) { // assuming check is increasing
+int last_true(int low, int high, func_T&& check) { // assuming check is increasing
     int ptr = -1;
 
     while (low <= high) {

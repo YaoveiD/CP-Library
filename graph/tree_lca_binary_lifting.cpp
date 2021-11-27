@@ -87,7 +87,7 @@ struct LCA {
     }
 
     int go_up(int v, int step) {
-        int bit = 0;
+        int bit = 1;
 
         while (step) {
             if (step & 1)
