@@ -3,7 +3,7 @@
 *  date:   2021-06-22 23:15:20
 */
 template <typename T>
-//make sure dis has been filled with inf
+//make sure dist has been filled with inf
 void dijkstra(const graph<T> &g, vector<T>& dist, int start = 0) {
   assert(0 <= start && start < g.n);
   priority_queue<pair<T, int>, vector<pair<T, int> >, greater<pair<T, int> > > s;
@@ -28,23 +28,25 @@ void dijkstra(const graph<T> &g, vector<T>& dist, int start = 0) {
   // returns inf if there's no path
 }
 
-template<typename T>
-//make sure dis has been filled with inf
-void dijkstra(vector<vector<pair<int, T>>>& edge, vector<T>& dis, int start = 0) {
-  priority_queue<pair<T, int>, vector<pair<T, int>>, greater<pair<T, int>>> pq;
-  vector<bool> vis(dis.size(), false);
-  dis[start] = 0;
-  pq.emplace(dis[start], start);
+template<typename edge_t, typename dist_t>
+void dijkstra(vector<vector<pair<int, edge_t>>>& edge, vector<dist_t>& dist, int start = 0) {
+  priority_queue<pair<dist_t, int>, vector<pair<dist_t, int>>, greater<pair<dist_t, int>>> pq;
+  vector<bool> vis(dist.size(), false);
+  dist.assign(edge.size(), INF);
+  dist[start] = 0;
+  pq.emplace(dist[start], start);
+
   while (!pq.empty()) {
     int u = pq.top().second;
     pq.pop();
     if (vis[u]) { continue; }
     vis[u] = true;
-    for (auto e : edge[u]) {
+  
+    for (const auto &e : edge[u]) {
       int v = e.first;
-      if (dis[u] + e.second < dis[v]) {
-        dis[v] = dis[u] + e.second;
-        pq.emplace(dis[v], v);
+      if (dist[u] + e.second < dist[v]) {
+        dist[v] = dist[u] + e.second;
+        pq.emplace(dist[v], v);
       }
     }
   }
