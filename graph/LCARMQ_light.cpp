@@ -86,5 +86,13 @@ struct LCA {
         return path[rmq.query(a, b)];
     }
     
-    // int dist(a,b) { return depth[a] + depth[b] - 2 * depth[lca(a, b)]; }
+    int lt(int a, int b) {
+        int lc = lca(a, b);
+        if (lc == a)
+            return -1;
+        else if (lc == b)
+            return 1;
+        else
+            return 0;
+    }
 };
