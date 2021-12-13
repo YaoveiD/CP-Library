@@ -3,6 +3,7 @@
 #include <map>
 #include <unordered_map>
 #include <chrono>
+#include <ext/pb_ds/assoc_container.hpp>
 using namespace std;
 
 const int N = 200005;
@@ -22,6 +23,12 @@ struct custom_hash {
         return splitmix64(x + FIXED_RANDOM);
     }
 };
+
+template <typename K, typename V, typename Hash = custom_hash>
+using hash_map = __gnu_pbds::gp_hash_table<K, V, Hash>;
+ 
+template <typename K, typename Hash = custom_hash>
+using hash_set = hash_map<K, __gnu_pbds::null_type, Hash>;
 
 void safe_insert(long long x) {
     clock_t begin = clock();
