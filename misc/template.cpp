@@ -4,7 +4,6 @@
 #include <cassert>
 #include <chrono>
 #include <cmath>
-#include <cstdint>
 #include <cstring>
 #include <functional>
 #include <iomanip>
@@ -16,15 +15,14 @@
 #include <set>
 #include <vector>
 using namespace std;
- 
-typedef int64_t LL;
+
 typedef pair<int, int> pii;
 typedef vector<int> vi;
-typedef vector<LL> vl;
- 
-#define FOR(i, a, b) for(int i=a; i<(b); ++i)
-#define F0R(i, a) for(int i=0; i<(a); ++i)
-#define each(i, C) for(auto &i : C)
+typedef vector<int64_t> vl;
+
+#define FOR(i, a, b) for (int i=a; i<(b); ++i)
+#define F0R(i, a) for (int i=0; i<(a); ++i)
+#define each(i, C) for (auto &i : C)
 #define sz(x) int((x).size())
 #define pb push_back
 #define eb emplace_back
@@ -37,10 +35,10 @@ typedef vector<LL> vl;
 vi range(int n, int start = 0) { vi r(n); iota(all(r), start); return r; }
 template<class T> bool setmin(T& a, T b) { return b < a ? a = b, true : false; }
 template<class T> bool setmax(T& a, T b) { return a < b ? a = b, true : false; }
- 
+
 template<typename A, typename B> ostream& operator<<(ostream &os, const pair<A, B> &p) { return os << '(' << p.first << ", " << p.second << ')'; }
 template<typename T_container, typename T = typename enable_if<!is_same<T_container, string>::value, typename T_container::value_type>::type> ostream& operator<<(ostream &os, const T_container &v) { os << '['; string sep; for (const T &x : v) os << sep << x, sep = ", "; return os << ']'; }
- 
+
 void debug_out() { cerr << endl; }
 template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { cerr << ' ' << H; debug_out(T...); }
 #ifdef LOCAL
@@ -52,6 +50,6 @@ template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { ce
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    
+
     int tests; cin >> tests; while (tests--) run_case();
 }
