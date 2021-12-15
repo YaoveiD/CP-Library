@@ -57,9 +57,9 @@ struct fenwick_tree {
         return index;
     }
 
-    // Note : returns the order of the first element of key.
+    // Note : returns the order of the last element of key.
     int order_of_key(int key) {
-        return query(key - 1);
+        return query(key) - 1;
     }
 };
 
