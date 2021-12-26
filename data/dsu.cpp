@@ -79,6 +79,48 @@ struct union_find {
     }
 };
 
+struct bi_union_find {
+    int n;
+    vector<int> parent;
+
+    bi_union_find(int _n) : n(_n), parent(n * 2) {
+        iota(parent.begin(), parent.end(), 0);
+    }
+
+    int find(int x) {
+        return x == parent[x] ? x : parent[x] = find(parent[x]);
+    }
+
+    bool same(int x, int y) {
+        return find(x) == find(y);
+    }
+
+    bool diff(int x, int y) {
+        return find(x) == find(y + n);
+    }
+
+    bool connected(int x, int y) {
+        return same(x, y) || diff(x, y);
+    }
+
+    bool unite(int x, int y) {
+        x = find(x);
+        y = find(y);
+
+        if (x == y)
+            return false;
+
+        parent[x] = y;
+        return true;
+    }
+
+    bool unite(int x, int y, bool same) {
+        if (same)
+            return unite(x, y) && unite(x + n, y + n);
+        else
+            return unite(x, y + n) && unite(x + n, y);
+    }
+};
 
 //weighted
 class Dsu {
