@@ -4,8 +4,6 @@
 #include <vector>
 using namespace std;
 
-#define FOR(i, a, b) for (int i=a; i<(b); ++i)
-#define F0R(i, a) for (int i=0; i<(a); ++i)
 #define sz(c) int(c.size())
 #define all(c) c.begin(), c.end()
 
