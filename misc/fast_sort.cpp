@@ -476,8 +476,7 @@ void test() {
     for (int i = 0; i < N; ++i)
         cin >> A[i];
 
-    // ska_sort(A, A + N);
-    sort(A, A + N);
+    ska_sort(A, A + N);
 }
 
 int main() {
@@ -486,12 +485,10 @@ int main() {
     cin.tie(0);
 #endif
   auto start = chrono::steady_clock::now();
-
   test();
-
   auto end = chrono::steady_clock::now();
   auto diff = end - start;
 #ifdef LOCAL
   cerr << chrono::duration <double, milli> (diff).count() << " ms" << '\n';
-#endif 
+#endif
 }
