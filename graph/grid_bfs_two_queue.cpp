@@ -48,6 +48,7 @@ struct grid_bfs {
             (add == 0 ? q : next_q).push(s);
         }
     }
+    
     void bfs(const vector<state> &source) {
         if (R == 0 || C == 0) return;
  
@@ -68,7 +69,8 @@ struct grid_bfs {
  
                 if (level > dist[r][c])
                     continue;
-                 for (int dir = 0; dir < DIRS; dir++) {
+                
+                for (int dir = 0; dir < DIRS; dir++) {
                     int nr = r + DR[dir];
                     int nc = c + DC[dir];
  

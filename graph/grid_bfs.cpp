@@ -34,9 +34,8 @@ public:
     }
 
     void bfs(const vector<state>& src) {
-        if (R == 0 or C == 0) {
+        if (R == 0 or C == 0)
             return;
-        }
 
         dist.assign(R, vector<int>(C, INF));
         queue<state> Q;
