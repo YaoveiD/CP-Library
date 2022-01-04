@@ -23,36 +23,35 @@ vector<hash_t> pows;
 
 class Hash {
 public:
-  vector<hash_t> prefix_hash;
-  int N;
+    vector<hash_t> prefix_hash;
+    int N;
 
-  Hash(const string& S) {
-    build(S);
-  }
-
-  void build(const string& S) {
-    N = (int) S.size();
-    assert(N > 0);
-    prefix_hash.assign(N + 1, 0);
-    for (int i = 0; i < N; ++i) {
-      prefix_hash[i + 1] = prefix_hash[i] * base + S[i];
+    Hash(const string& S) {
+        build(S);
     }
-    if (pows.size() == 0) {
-      pows.push_back(1);
-    }
-    pows.reserve(N + N/32 + 1);
-    while ((int) pows.size() <= N + N/32) {
-      hash_t last = pows.back();
-      pows.push_back(last * base);
-    }
-  }
 
-  hash_t sub_hash(int from, int to) {
-    assert(0 <= from and to < N);
-    to += 1;
-    return prefix_hash[to] - prefix_hash[from] * pows[to - from];
-  }
+    void build(const string& S) {
+        N = (int) S.size();
+        assert(N > 0);
+        prefix_hash.assign(N + 1, 0);
+        for (int i = 0; i < N; ++i) {
+            prefix_hash[i + 1] = prefix_hash[i] * base + S[i];
+        }
+        if (pows.size() == 0) {
+            pows.push_back(1);
+        }
+        pows.reserve(N + N/32 + 1);
+        while ((int) pows.size() <= N + N/32) {
+            hash_t last = pows.back();
+            pows.push_back(last * base);
+        }
+    }
 
+    hash_t sub_hash(int from, int to) {
+        assert(0 <= from and to < N);
+        to += 1;
+        return prefix_hash[to] - prefix_hash[from] * pows[to - from];
+    }
 };
 
 int main() {

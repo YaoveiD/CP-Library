@@ -9,43 +9,41 @@ vector<hash_t> hash_pow[HASH_COUNT];
 
 class Hash {
 public:
-  int N;
-  vector<hash_t> prefix_hash[HASH_COUNT];
-   
-  Hash(const string& str, int hash_count = 2) {
-    assert(hash_count <= HASH_COUNT);
-    N = (int) str.size();
-    for (int h = 0; h < hash_count; ++h) {
-      prefix_hash[h].resize(N+1);
-      compute_hash(str);
+    int N;
+    vector<hash_t> prefix_hash[HASH_COUNT];
+     
+    Hash(const string& str, int hash_count = 2) {
+        assert(hash_count <= HASH_COUNT);
+        N = (int) str.size();
+        for (int h = 0; h < hash_count; ++h) {
+            prefix_hash[h].resize(N+1);
+            compute_hash(str);
+        }
     }
-  }
 
-  hash_t compute_hash(const string& str, int h = 0) {
-    hash_t value = 0;
-
-    for (int i = 0; i < N; ++i) {
-      value = BASE * value % HASH_MOD[h] + str[i];
-      if (value >= HASH_MOD[h])
-        value -= HASH_MOD[h];
-      prefix_hash[h][i + 1] = value;
+    hash_t compute_hash(const string& str, int h = 0) {
+        hash_t value = 0;
+        for (int i = 0; i < N; ++i) {
+            value = BASE * value % HASH_MOD[h] + str[i];
+            if (value >= HASH_MOD[h])
+                value -= HASH_MOD[h];
+                prefix_hash[h][i + 1] = value;
+        }
+        return value;
     }
- 
-    return value;
-  }
-   
-  hash_t segment_hash(int start, int end, int h = 0) {
-    assert(0 <= start and end < N);
-    const hash_t mod = HASH_MOD[h];
-    end += 1;
-    int length = end - start;
-    hash_t value = prefix_hash[h][end] + mod - hash_pow[h][length] * prefix_hash[h][start] % mod;
-    return value >= mod ? value - mod : value;
-  }
+     
+    hash_t segment_hash(int start, int end, int h = 0) {
+        assert(0 <= start and end < N);
+        const hash_t mod = HASH_MOD[h];
+        end += 1;
+        int length = end - start;
+        hash_t value = prefix_hash[h][end] + mod - hash_pow[h][length] * prefix_hash[h][start] % mod;
+        return value >= mod ? value - mod : value;
+    }
 
-  hash_t combined_hash(int start, int end) {
-      return segment_hash(start, end, 0) + (segment_hash(start, end, 1) << 32);
-  }
+    hash_t combined_hash(int start, int end) {
+        return segment_hash(start, end, 0) + (segment_hash(start, end, 1) << 32);
+    }
 };
  
 void prepare_hashes() {
