@@ -4,13 +4,12 @@
 #include <vector>
 using namespace std;
 
-typedef int64_t ll;
+typedef int64_t LL;
 typedef pair<int, int> pii;
-typedef pair<ll,ll> pll; 
 typedef vector<int> vi;
-typedef vector<ll> vl;
+typedef vector<LL> vll;
 
-#define F0R(i, n) for (int i = 0; i < n; ++i)
+#define F0R(i, n) for (int i = 0; i < (n); ++i)
 #define FOR(i, a, b) for (int i = a; i < (b); ++i)
 #define sz(c) int(c.size())
 #define all(c) c.begin(), c.end()
@@ -26,7 +25,7 @@ template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { ce
 #ifdef LOCAL
 #define debug(...) cerr << "[" << #__VA_ARGS__ << "]:", debug_out(__VA_ARGS__)
 #else
-#define debug(...) 
+#define debug(...)
 #endif
 
 void run_case() {
