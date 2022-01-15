@@ -25,14 +25,9 @@ using namespace std;
 
 //typedef
 typedef int64_t LL;
-
 typedef pair<int, int> pii;
 typedef pair<LL,LL> pll;
-typedef pair<double, double> pdd;
-typedef tuple<int, int, int> tiii;
-
 typedef vector<int> vi;
-typedef vector<double> vd;
 typedef vector<LL> vll;
 
 //templates
@@ -44,22 +39,15 @@ template<typename T, typename U> istream& operator>>(istream& is, pair<T, U>& p)
 template<typename T, typename U> ostream& operator<<(ostream& os, const pair<T, U>& p) { os << p.first << ' ' << p.second; return os; }
 template<typename T> istream& operator>>(istream& is, vector<T>& v) { for (auto& i : v) is >> i; return is; }
 template<typename T> ostream& operator<<(ostream& os, const vector<T>& v) { int f = 0; for (auto& i : v) { if (f++) os << ' '; os << i; } return os; }
-template<typename T> vector<T>& operator--(vector<T> &v) { for (auto& i : v) --i; return  v; }
-template<typename T> vector<T>& operator++(vector<T> &v) { for (auto& i : v) ++i; return  v; }
 
-constexpr int pct(int x) { return __builtin_popcount(x); } // # of bits set
-constexpr int bits(int x) { return x == 0 ? 0 : 31-__builtin_clz(x); } // floor(log2(x)) 
-LL cdiv(LL a, LL b) { return a/b + ((a^b)>0 && a%b); } // divide a by b rounded up
-LL fdiv(LL a, LL b) { return a/b - ((a^b)<0 && a%b); } // divide a by b rounded down
+int64_t cdiv(int64_t a, int64_t b) { return a/b + ((a^b)>0 && a%b); } // divide a by b rounded up
+int64_t fdiv(int64_t a, int64_t b) { return a/b - ((a^b)<0 && a%b); } // divide a by b rounded down
 
 //macro
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 #define UID(L, R) uniform_int_distribution<int>(L, R)(rng)
-
-#define REP(I, A, B) for (int I = (A); I < (B); ++I)
-#define FOR(I, N) REP(I, 0, N)
-#define each(E, V) for (auto& E : V)
-
-#define ALL(X) (X).begin(), (X).end()
-#define RALL(X) (X).rbegin(), (X).rend()
-#define SZ(X) int((X).size())
+#define F0R(i, n) for (int i = 0; i < (n); ++i)
+#define FOR(i, a, b) for (int i = a; i < (b); ++i)
+#define each(i, c) for (auto &i : c)
+#define all(c) c.begin(), c.end()
+#define sz(c) int(c.size())

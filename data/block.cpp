@@ -79,7 +79,7 @@ int main() {
             }
     };
 
-    // [a, b)
+    // [a, b]
     auto query = [&](int a, int b) -> int {
         int ret = 0;
         int cutoff = min(b + 1, (which[a] + 1) * SQ);

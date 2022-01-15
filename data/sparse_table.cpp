@@ -1,28 +1,23 @@
-//source https://github.com/the-tourist/algo/tree/master/data
-template <typename T, class F = function<T(const T&, const T&)>>
-class sparse_able {
- public:
-  int n;
-  vector<vector<T>> mat;
-  F func;
+template <typename T, typename T_func = function<T(const T&, const T&)>>
+struct sparse_table {
+    int n;
+    vector<vector<T>> ranges;
+    T_func func;
  
-  sparse_table(const vector<T>& a, const F& f) : func(f) {
-    n = static_cast<int>(a.size());
-    int max_log = 32 - __builtin_clz(n);
-    mat.resize(max_log);
-    mat[0] = a;
-    for (int j = 1; j < max_log; j++) {
-      mat[j].resize(n - (1 << j) + 1);
-      for (int i = 0; i <= n - (1 << j); i++) {
-        mat[j][i] = func(mat[j - 1][i], mat[j - 1][i + (1 << (j - 1))]);
-      }
+    sparse_table(const vector<T> &a, const T_func &f) : ranges(1, a), func(f) {
+        n = static_cast<int>(a.size());
+        int levels = 32 - __builtin_clz(n);
+        for (int j = 1; j < levels; j++) {
+            ranges.emplace_back(n - (1 << j) + 1);
+            for (int i = 0; i <= n - (1 << j); i++)
+                ranges[j][i] = func(ranges[j - 1][i], ranges[j - 1][i + (1 << (j - 1))]);
+        }
     }
-  }
  
-  // [from, to]
-  T get(int from, int to) const {
-    assert(0 <= from && from <= to && to <= n - 1);
-    int lg = 32 - __builtin_clz(to - from + 1) - 1;
-    return func(mat[lg][from], mat[lg][to - (1 << lg) + 1]);
-  }
+    // [a, b)
+    T query(int a, int b) const {
+        assert(0 <= a && a < b && b <= n);
+        int level = 31 - __builtin_clz(b - a);
+        return func(ranges[level][a], ranges[level][b - (1 << level)]);
+    }
 };

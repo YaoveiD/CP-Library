@@ -1,266 +1,114 @@
+#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-// // https://github.com/nealwu/competitive-programming/tree/master/mod
+// fraction from https://github.com/nealwu/competitive-programming/blob/master/number_theory/fraction.cc
+struct fraction {
+    // TODO: set this to false if it's unnecessary and the time limit might be tight.
+    // CHECK_OVERFLOW64 = true can run up to 2 times slower (particularly on CF).
+    static const bool CHECK_OVERFLOW64 = false;
 
-// template<int md>
-// class _mod_int {
-// public:
-//   int val;
+    // TODO: consider setting AUTO_REDUCE = false for faster code. In this case, remember to call reduce() at the end.
+    static const bool AUTO_REDUCE = true;
 
-//   _mod_int(int64_t v = 0) {
-//     if (v < 0)
-//       v = v % md + md;
-//     if (v >= md)
-//       v %= md;
-//     val = int(v);
-//   }
+    static int cross_sign(const fraction &a, const fraction &b) {
+        if (CHECK_OVERFLOW64) {
+            long double double_value = (long double) a.numer * b.denom - (long double) b.numer * a.denom;
 
-//   _mod_int(int v) : _mod_int(int64_t(v)) {}
-//   _mod_int(unsigned v) : _mod_int(int64_t(v)) {}
-
-//   static int inv_mod(int a, int m = md) {
-//     // https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm#Example
-//     int g = m, r = a, x = 0, y = 1;
-
-//     while (r != 0) {
-//       int q = g / r;
-//       g %= r;
-//       swap(g, r);
-//       x -= q * y;
-//       swap(x, y);
-//     }
-
-//     return x < 0 ? x + m : x;
-//   }
-
-//   explicit operator int() const { return val; }
-//   explicit operator unsigned() const { return val; }
-//   explicit operator int64_t() const { return val; }
-
-//   _mod_int& operator+=(const _mod_int &other) {
-//     val -= md - other.val;
-//     if (val < 0)
-//       val += md;
-//     return *this;
-//   }
-//   _mod_int& operator-=(const _mod_int &other) {
-//     val -= other.val;
-//     if (val < 0)
-//       val += md;
-//     return *this;
-//   }
-//   _mod_int &operator*=(const _mod_int &other) {
-//     val = int64_t(val) * other.val % md;
-//     return *this;
-//   }
-//   _mod_int &operator/=(const _mod_int &other) { return *this *= other.inv(); }
-
-//   friend _mod_int operator+(const _mod_int &a, const _mod_int &b) {
-//     return _mod_int(a) += b;
-//   }
-//   friend _mod_int operator-(const _mod_int &a, const _mod_int &b) {
-//     return _mod_int(a) -= b;
-//   }
-//   friend _mod_int operator*(const _mod_int &a, const _mod_int &b) {
-//     return _mod_int(a) *= b;
-//   }
-//   friend _mod_int operator/(const _mod_int &a, const _mod_int &b) {
-//     return _mod_int(a) /= b;
-//   }
-
-//   _mod_int& operator++() {
-//     val = val == md - 1 ? 0 : val + 1;
-//     return *this;
-//   }
-//   _mod_int& operator--() {
-//     val = val == 0 ? md - 1 : val - 1;
-//     return *this;
-//   }
-
-//   _mod_int operator-() const { return val == 0 ? 0 : md - val; }
-
-//   friend bool operator==(const _mod_int &a, const _mod_int &b) {
-//     return a.val == b.val;
-//   }
-//   friend bool operator!=(const _mod_int &a, const _mod_int &b) {
-//     return a.val != b.val;
-//   }
-//   friend bool operator<(const _mod_int &a, const _mod_int &b) {
-//     return a.val < b.val;
-//   }
-
-//   _mod_int inv() const { return inv_mod(val); }
-
-//   _mod_int pow(int64_t p) const {
-//     if (p < 0)
-//       return inv().pow(-p);
-
-//     _mod_int a = *this, result = 1;
-
-//     while (p > 0) {
-//       if (p & 1)
-//         result *= a;
-
-//       p >>= 1;
-
-//       if (p > 0)
-//         a *= a;
-//     }
-
-//     return result;
-//   }
-
-//   friend string to_string(const _mod_int& m) {
-//     return to_string(m.val);
-//   }
-
-//   friend ostream& operator<<(ostream& os, const _mod_int& m) {
-//     return os << m.val;
-//   }
-// };
-
-// const int MOD = (int) 1e9 + 7;
-// using mint = _mod_int<MOD>;
-
-class fraction {
-private:
-    int64_t num, denom;
-
-public:
-    fraction(int64_t v = 0) : num(v), denom(1) {}
-    fraction(int v) : fraction(int64_t(v)) {}
-    fraction(int64_t a, int64_t b) : num(a), denom(b) {
-        assert(b != 0);
-        norm();
-    }
-
-    static int64_t gcd(int64_t a, int64_t b) {
-        return b == 0 ? a : gcd(b, a % b);
-    }
-
-    void norm() {
-        int64_t G = gcd(num, denom);
-        num /= G;
-        denom /= G;
-    }
-
-    explicit operator double() const { return double(num) / denom; }
-
-    fraction operator-() const { return fraction(-num, denom); }
-    fraction inv() const { return fraction(denom, num); }
-
-    // consider rewrite this if overflow
-    fraction& operator+=(const fraction& other) {
-        int64_t G = gcd(denom, other.denom);
-        num = other.denom / G * num + denom / G * other.num;
-        denom = denom / G * other.denom;
-        norm();
-        return *this;
-    }
-    fraction& operator-=(const fraction& other) {
-        *this += -other;
-        norm();
-        return *this;
-    }
-    fraction& operator*=(const fraction& other) {
-        int64_t G1 = gcd(num, other.denom);
-        int64_t G2 = gcd(other.num, denom);
-        num = (num / G1) * (other.num / G2);
-        denom = (denom / G2) * (other.denom / G1);
-        norm();
-        return *this;
-    }
-    fraction& operator/=(const fraction& other) {
-        assert(!other.zero());
-        *this *= other.inv();
-        norm();
-        return *this;
-    }
-
-    friend fraction operator+(const fraction& a, const fraction& b) {
-        return fraction(a) += b;
-    }
-    friend fraction operator-(const fraction& a, const fraction& b) {
-        return fraction(a) -= b;
-    }
-    friend fraction operator*(const fraction& a, const fraction& b) {
-        return fraction(a) *= b;
-    }
-    friend fraction operator/(const fraction& a, const fraction& b) {
-        return fraction(a) /= b;
-    }
-
-    bool zero() const { return num == 0; }
-    bool negtive() const { return num * denom < 0; } // overflow?
-    bool positive() const { return num * denom > 0; }
-    
-    friend fraction abs(const fraction& a) {
-        return a.negtive() ? -a : a;
-    }
-    friend bool operator==(const fraction& a, const fraction& b) {
-        return (a - b).zero();
-    }
-    friend bool operator!=(const fraction& a, const fraction& b) {
-        return !(a - b).zero();
-    }
-    friend bool operator<(const fraction& a, const fraction& b) {
-        return (a - b).negtive();        
-    }
-    friend bool operator>(const fraction& a, const fraction& b) {
-        return (a - b).positive();
-    }
-    friend bool operator<=(const fraction&a , const fraction& b) {
-        return !(a > b);
-    }
-    friend bool operator>=(const fraction&a , const fraction& b) {
-        return !(a < b);
-    }
-
-    // kind of complicated.
-    friend ostream& operator<<(ostream& os, const fraction& f) {
-        if (f.negtive())
-            os << '-';
-
-        if (f.denom == 1) {
-            os << abs(f.num);
-        } else {
-            os << abs(f.num) << '/' << abs(f.denom);
+            if (abs(double_value) > 1e18)
+                return double_value > 0 ? +1 : -1;
         }
 
-        return os;
+        uint64_t uint64_value = (uint64_t) a.numer * b.denom - (uint64_t) b.numer * a.denom;
+        int64_t actual = int64_t(uint64_value);
+        return (actual > 0) - (actual < 0);
     }
 
-    friend istream& operator>>(istream& is, fraction& f) {
-        string value;
-        cin >> value;
-        int64_t nums[2] = {0, 0};
-        bool negtive[2] = {false, false};
-        int ptr = 0;
+    int64_t numer, denom;
 
-        for (char c : value)
-            if (c == '/') {
-                ptr++;
-            } else {
-                if (c == '-')
-                    negtive[ptr] = true;
-                else
-                    nums[ptr] = nums[ptr] * 10 + c - '0';
-            }
+    fraction(int64_t n = 0, int64_t d = 1) : numer(n), denom(d) {
+        check_denom();
 
-        if (negtive[0])
-            nums[0] = -nums[0];
+        if (AUTO_REDUCE)
+            reduce();
+    }
 
-        if (ptr != 1)
-            nums[1] = 1;
-        else if (negtive[1])
-            nums[1] = -nums[1];
+    void check_denom() {
+        if (denom < 0) {
+            numer = -numer;
+            denom = -denom;
+        }
+    }
 
-        f = fraction(nums[0], nums[1]);
-        return is;
+    void reduce() {
+        int64_t g = __gcd(abs(numer), denom);
+        numer /= g;
+        denom /= g;
+    }
+
+    bool is_integer() const {
+        return denom == 1 || (!AUTO_REDUCE && denom != 0 && numer % denom == 0);
+    }
+
+    friend fraction operator+(const fraction &a, const fraction &b) {
+        return fraction(a.numer * b.denom + b.numer * a.denom, a.denom * b.denom);
+    }
+
+    friend fraction operator-(const fraction &a, const fraction &b) {
+        return fraction(a.numer * b.denom - b.numer * a.denom, a.denom * b.denom);
+    }
+
+    friend fraction operator*(const fraction &a, const fraction &b) {
+        return fraction(a.numer * b.numer, a.denom * b.denom);
+    }
+
+    friend fraction operator/(const fraction &a, const fraction &b) {
+        return fraction(a.numer * b.denom, a.denom * b.numer);
+    }
+
+    fraction& operator+=(const fraction &other) { return *this = *this + other; }
+    fraction& operator-=(const fraction &other) { return *this = *this - other; }
+    fraction& operator*=(const fraction &other) { return *this = *this * other; }
+    fraction& operator/=(const fraction &other) { return *this = *this / other; }
+
+    fraction& operator++() { numer += denom; return *this; }
+    fraction& operator--() { numer -= denom; return *this; }
+
+    fraction operator++(int) { fraction before = *this; ++*this; return before; }
+    fraction operator--(int) { fraction before = *this; --*this; return before; }
+
+    fraction operator-() const {
+        return fraction(-numer, denom);
+    }
+
+    fraction inv() const {
+        return fraction(denom, numer);
+    }
+
+    bool operator==(const fraction &other) const { return cross_sign(*this, other) == 0; }
+    bool operator!=(const fraction &other) const { return cross_sign(*this, other) != 0; }
+    bool operator<(const fraction &other) const { return cross_sign(*this, other) < 0; }
+    bool operator>(const fraction &other) const { return cross_sign(*this, other) > 0; }
+    bool operator<=(const fraction &other) const { return cross_sign(*this, other) <= 0; }
+    bool operator>=(const fraction &other) const { return cross_sign(*this, other) >= 0; }
+
+    explicit operator double() const {
+        return double(numer) / double(denom);
+    }
+
+    explicit operator long double() const {
+        return (long double) numer / (long double) denom;
+    }
+
+    friend fraction abs(const fraction &f) {
+        return fraction(abs(f.numer), f.denom);
+    }
+
+    friend ostream& operator<<(ostream& out, const fraction &frac) {
+        return out << frac.numer << '/' << frac.denom;
     }
 };
 

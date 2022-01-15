@@ -7,7 +7,7 @@ using namespace std;
 typedef int64_t LL;
 typedef pair<int, int> pii;
 typedef vector<int> vi;
-typedef vector<LL> vll;
+typedef vector<LL> vl;
 
 #define F0R(i, n) for (int i = 0; i < (n); ++i)
 #define FOR(i, a, b) for (int i = a; i < (b); ++i)
@@ -16,7 +16,6 @@ typedef vector<LL> vll;
 
 template<class T> inline bool setmin(T& a, T b) { return b < a ? a = b, true : false; }
 template<class T> inline bool setmax(T& a, T b) { return a < b ? a = b, true : false; }
-
 template<typename A, typename B> ostream& operator<<(ostream &os, const pair<A, B> &p) { return os << '(' << p.first << ", " << p.second << ')'; }
 template<typename T_container, typename T = typename enable_if<!is_same<T_container, string>::value, typename T_container::value_type>::type> ostream& operator<<(ostream &os, const T_container &v) { os << '['; string sep; for (const T &x : v) os << sep << x, sep = ", "; return os << ']'; }
 
@@ -28,7 +27,7 @@ template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { ce
 #define debug(...)
 #endif
 
-void run_case() {
+void gogo() {
     
 }
 
@@ -40,5 +39,5 @@ int main() {
     cin >> tests;
 
     while (tests--)
-        run_case();
+        gogo();
 }
