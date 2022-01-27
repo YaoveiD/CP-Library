@@ -21,7 +21,7 @@ struct base_ring {
     vector<int> next;
     vector<vector<int>> circles;
     vector<int> circle_size;
-    vector<int> need_start_max; // longest path need_start with node. Note: including node
+    vector<int> start_max; // longest path need_start with node. Note: including node
     vector<int> end_max; // longest path end with node. Note: not include circle node, but including node itself.
 
     base_ring(int _n = -1) {
@@ -81,12 +81,12 @@ struct base_ring {
             }
 
         if (need_start) {
-            need_start_max.assign(n, 0);
+            start_max.assign(n, 0);
 
             for (int i = int(que.size()) - 1; i >= 0; --i) {
                 int node = que[i];
                 int to = next[node];
-                need_start_max[node] += to == -1 ? 1 : need_start_max[to];
+                start_max[node] += to == -1 ? 1 : start_max[to];
             }
         }
 
