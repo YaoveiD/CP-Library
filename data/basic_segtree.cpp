@@ -96,13 +96,13 @@ struct basic_seg_tree {
             tree[position].join(tree[2 * position], tree[2 * position + 1]);
     }
 
-    // [a, b]
+    // [a, b)
     segment query(int a, int b) const {
-        assert(0 <= a && a <= b && b < tree_n);
+        assert(0 <= a && a <= b && b <= tree_n);
         segment answer;
         int r_size = 0;
 
-        for (a += tree_n, b += tree_n + 1; a < b; a /= 2, b /= 2) {
+        for (a += tree_n, b += tree_n; a < b; a /= 2, b /= 2) {
             if (a & 1)
                 answer.join(tree[a++]);
 

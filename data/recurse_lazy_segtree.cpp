@@ -38,7 +38,7 @@ template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { ce
 #endif
 
 // solution to https://codeforces.com/edu/course/2/lesson/5/3/practice/status
-// this data structure can handle the follow two operations
+// this data structure can handle the following two operations
 // 1. set v to to all elements on the segment from l to r
 // 2. find the segment with maximal sum
 
@@ -81,8 +81,6 @@ segment join(const segment& a, const segment& b) {
     c.mx = max({a.suffix_max + b.prefix_max, a.mx, b.mx});
     return c;
 }
-
-const segment identity;
 
 struct seg_tree {
     int tree_n;
@@ -164,7 +162,7 @@ struct seg_tree {
         }
 
         if (b < start || a > end)
-            return identity;
+            return segment();
 
         push(p, end - start + 1);
         int mid = (start + end) / 2;
