@@ -4,10 +4,10 @@
 */
 
 template<typename edge_t, typename dist_t>
-void dijkstra(vector<vector<pair<int, edge_t>>>& edge, vector<dist_t>& dist, int start = 0) {
+void dijkstra(vector<vector<pair<int, edge_t>>>& edge, int start = 0) {
   priority_queue<pair<dist_t, int>, vector<pair<dist_t, int>>, greater<pair<dist_t, int>>> pq;
   vector<bool> vis(dist.size(), false);
-  dist.assign(edge.size(), INF);
+  vector<dist_t> dist(edge.size(), INF);
   dist[start] = 0;
   pq.emplace(dist[start], start);
 
