@@ -41,146 +41,135 @@ template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { ce
 // source : https://codeforces.com/contest/86/submission/46163034
 
 using mo_value = int;
-using mo_answer = int64_t; 
+using mo_answer = int64_t;
 
-// TODO:
+// TODO: re-implement this struct.
 struct mo_state {
-    static const int A_MAX = 1e6 + 5;
- 
+    const vector<mo_value> &values;
+
     vector<int> freq;
     int64_t sum;
- 
-    // TODO:
-    mo_state() {
-        freq.assign(A_MAX, 0);
+
+    mo_state(const vector<mo_value> &_values) : values(_values) {
+        int maximum = values.empty() ? 0 : *max_element(values.begin(), values.end());
+        freq.assign(maximum + 1, 0);
         sum = 0;
     }
- 
-    // TODO:
-    void add_left(const mo_value &x) {
+
+    void add_left(int index) {
+        mo_value x = values[index];
         sum += int64_t(2 * freq[x] + 1) * x;
         freq[x]++;
     }
- 
-    void add_right(const mo_value &x) {
-        add_left(x);
+
+    void add_right(int index) {
+        add_left(index);
     }
- 
-    // TODO:
-    void remove_left(const mo_value &x) {
+
+    void remove_left(int index) {
+        mo_value x = values[index];
         freq[x]--;
         sum -= int64_t(2 * freq[x] + 1) * x;
     }
- 
-    void remove_right(const mo_value &x) {
-        remove_left(x);
+
+    void remove_right(int index) {
+        remove_left(index);
     }
- 
+
     mo_answer get_answer() const {
         return sum;
     }
 };
- 
+
 struct mo_query {
     int start, end, block, index;
-    mo_answer answer;
- 
-    mo_query(int _start = 0, int _end = 0) : start(_start), end(_end) {}
- 
+
+    mo_query() : start(0), end(0) {}
+
+    mo_query(int _start, int _end) : start(_start), end(_end) {}
+
     bool operator<(const mo_query &other) const {
         if (block != other.block)
             return block < other.block;
- 
-        return block % 2 == 0 ? end < other.end : other.end < end;
+
+        return block % 2 == 0 ? end < other.end : end > other.end;
     }
 };
- 
+
 struct mo {
-    int n, block_size;
+    int n;
     vector<mo_value> values;
- 
-    mo(vector<mo_value> initial = {}) {
-        if (!initial.empty())
-            init(initial);
+
+    mo(const vector<mo_value> &_values = {}) : values(_values) {
+        n = int(values.size());
     }
- 
-    void init(const vector<mo_value> &initial) {
-        values = initial;
-        n = values.size();
-        block_size = sqrt(n) + 1;
-    }
- 
+
     void update_state(mo_state &state, const mo_query &first, const mo_query &second) const {
-        int intersect_start = max(first.start, second.start);
-        int intersect_end = min(first.end, second.end);
- 
-        if (intersect_start >= intersect_end) {
+        if (max(first.start, second.start) >= min(first.end, second.end)) {
             for (int i = first.start; i < first.end; i++)
-                state.remove_left(values[i]);
- 
+                state.remove_left(i);
+
             for (int i = second.start; i < second.end; i++)
-                state.add_right(values[i]);
- 
+                state.add_right(i);
+
             return;
         }
- 
-        for (int i = first.start; i < intersect_start; i++)
-            state.remove_left(values[i]);
- 
-        for (int i = first.end - 1; i >= intersect_end; i--)
-            state.remove_right(values[i]);
- 
-        for (int i = intersect_start - 1; i >= second.start; i--)
-            state.add_left(values[i]);
- 
-        for (int i = intersect_end; i < second.end; i++)
-            state.add_right(values[i]);
+
+        for (int i = first.start - 1; i >= second.start; i--)
+            state.add_left(i);
+
+        for (int i = first.end; i < second.end; i++)
+            state.add_right(i);
+
+        for (int i = first.start; i < second.start; i++)
+            state.remove_left(i);
+
+        for (int i = first.end - 1; i >= second.end; i--)
+            state.remove_right(i);
     }
- 
+
     vector<mo_answer> solve(vector<mo_query> queries) const {
-        for (int i = 0; i < (int) queries.size(); i++) {
+        int block_size = int(1.5 * n / sqrt(max(int(queries.size()), 1)) + 1);
+
+        for (int i = 0; i < int(queries.size()); i++) {
             queries[i].index = i;
             queries[i].block = queries[i].start / block_size;
         }
- 
+
         sort(queries.begin(), queries.end());
-        mo_state state;
+        mo_state state(values);
         mo_query last_query;
         vector<mo_answer> answers(queries.size());
- 
+
         for (mo_query &q : queries) {
             update_state(state, last_query, q);
             answers[q.index] = state.get_answer();
             last_query = q;
         }
- 
+
         return answers;
     }
 };
 
+
 int main() {
-    ios::sync_with_stdio(false);
-#ifndef LOCAL
-    cin.tie(0);
-#endif
-
     int N, Q;
-    cin >> N >> Q;
-    vector<int> A(N);
+    scanf("%d %d", &N, &Q);
+    vector<mo_value> A(N);
 
-    for (int& a : A)
-        cin >> a;
+    for (mo_value &a : A)
+        scanf("%d", &a);
 
-    mo M(A);
+    mo solver(A);
     vector<mo_query> queries(Q);
 
-    for (auto& query : queries) {
-        cin >> query.start >> query.end;
-        --query.start;
+    for (mo_query &qry : queries) {
+        scanf("%d %d", &qry.start, &qry.end);
+        qry.start--;
     }
 
-    vector<mo_answer> answers = M.solve(queries);
+    vector<mo_answer> answers = solver.solve(queries);
 
-    for (mo_answer ans : answers)
-        cout << ans << '\n';
+    for (mo_answer &answer : answers)
+        printf("%lld\n", (long long) answer);
 }
