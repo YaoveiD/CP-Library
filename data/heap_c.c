@@ -1,13 +1,34 @@
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 
 #define SIZE 123456
-#define compare(a, b) a > b
+#define INF 1000000008
+#define N_MAX 2555
 
-typedef int value_t;
+struct node {
+    int to, cost;
+    struct node *next;
+} *adj[N_MAX];
+
+void add_edge(int a, int b, int c) {
+    struct node *n = (struct node*)malloc(sizeof(*n));
+    n->to = b;
+    n->cost = c;
+    n->next = adj[a];
+    adj[a] = n;
+}
+
+typedef struct dv {
+    long long d;
+    int node;
+} value_t;
 
 value_t heap[SIZE];
 int heap_size;
+
+int compare(value_t a, value_t b) {
+    return a.d < b.d;
+}
 
 void swim(int node) {
     for (int i = node; i > 1 && compare(heap[i], heap[i / 2]); i /= 2) {
@@ -46,13 +67,47 @@ void pop() {
     sink(1);
 }
 
-void build(value_t* initial, int start, int end) {
-    heap_size = end - start;
-    memcpy(heap + 1, initial + start, sizeof(value_t) * heap_size);
-
-    for (int i = heap_size / 2; i > 0; --i)
-        sink(i);
-}
+long long dist[N_MAX];
+int visited[N_MAX];
 
 int main() {
+    int N, M, S, T;
+    scanf("%d%d%d%d", &N, &M, &S, &T);
+    S--; T--;
+
+    for (int i = 0; i < M; ++i) {
+        int a, b, c;
+        scanf("%d%d%d", &a, &b, &c);
+        a--; b--;
+        add_edge(a, b, c);
+        add_edge(b, a, c);        
+    }
+
+    for (int i = 0; i < N; ++i)
+        dist[i] = INF;
+
+    dist[S] = 0;
+    struct dv v;
+    v.d = 0; v.node = S;
+    push(v);
+
+    while (heap_size > 0) {
+        int node = top().node;
+        pop();
+
+        if (visited[node])
+            continue;
+
+        visited[node] = 1;
+
+        for (struct node *n = adj[node]; n; n = n->next)
+            if (dist[n->to] > dist[node] + n->cost) {
+                dist[n->to] = dist[node] + n->cost;
+                v.d = dist[n->to];
+                v.node = n->to;
+                push(v);
+            }
+    }
+
+    printf("%lld\n", dist[T]);
 }

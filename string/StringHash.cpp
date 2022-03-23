@@ -15,7 +15,6 @@ using namespace std;
 
 typedef unsigned long long hash_t;
 
-const int MX = 1000001;
 const int base = 133;
 
 // a template for string hash based on unsigned long long
@@ -26,30 +25,26 @@ public:
     vector<hash_t> prefix_hash;
     int N;
 
-    Hash(const string& S) {
+    Hash(const string &S) {
         build(S);
     }
 
-    void build(const string& S) {
+    void build(const string &S) {
         N = (int) S.size();
         assert(N > 0);
         prefix_hash.assign(N + 1, 0);
-        for (int i = 0; i < N; ++i) {
+        for (int i = 0; i < N; ++i)
             prefix_hash[i + 1] = prefix_hash[i] * base + S[i];
-        }
-        if (pows.size() == 0) {
+        if (pows.size() == 0)
             pows.push_back(1);
-        }
         pows.reserve(N + N/32 + 1);
-        while ((int) pows.size() <= N + N/32) {
-            hash_t last = pows.back();
-            pows.push_back(last * base);
-        }
+        while ((int) pows.size() <= N + N/32)
+            pows.push_back(pows.back() * base);
     }
 
+    // [from, to)
     hash_t sub_hash(int from, int to) {
-        assert(0 <= from and to < N);
-        to += 1;
+        assert(0 <= from && to <= N && from < to);
         return prefix_hash[to] - prefix_hash[from] * pows[to - from];
     }
 };
@@ -65,9 +60,9 @@ int main() {
     Hash hasher(S);
     for (int k = 1; k <= N; ++k) if (N % k == 0) {
       bool failed = false;
-      const hash_t val = hasher.sub_hash(0, k - 1);
+      const hash_t val = hasher.sub_hash(0, k);
       for (int i = 0; i < N; i += k) {
-        if (hasher.sub_hash(i, i + k - 1) != val) {
+        if (hasher.sub_hash(i, i + k) != val) {
           failed = true;
           break;
         }

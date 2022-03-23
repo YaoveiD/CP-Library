@@ -70,7 +70,7 @@ int main() {
   KMP kmper;
   while (tt--) {
     string S, T;
-    cin >> T >> S;
+    cin >> S >> T;
     cout << kmper.kmp(S, T) << '\n';
   }
   return 0;
