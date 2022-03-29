@@ -195,3 +195,12 @@ bool angle_compare(const point &a, const point &b) {
 
     return cross_sign(a, b) > 0;
 }
+
+int cross2(const point &a, const point &b, const point &c) { return cross(b - a, c - a); }
+
+// Returns true if segment `ab` and `cd` intersects
+bool seg_seg_intersect(const point &a, const point &b, const point &c, const point &d) {
+    int64_t ca = cross2(c, d, a), cb = cross2(c, d, b);
+    int64_t cc = cross2(a, b, c), cd = cross2(a, b, d);
+    return ca * cb < 0 && cc * cd < 0;
+}
