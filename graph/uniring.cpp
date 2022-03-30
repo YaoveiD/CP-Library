@@ -16,20 +16,20 @@ template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { ce
 #endif
 
 // verfication : https://leetcode-cn.com/submissions/detail/254471413/
-struct base_ring {
+struct uniring {
     int n;
     vector<int> next;
     vector<vector<int>> circles;
     vector<int> circle_size;
-    vector<int> start_max; // longest path need_start with node. Note: including node
+    vector<int> start_max; // longest path start from node. Note: including node
     vector<int> end_max; // longest path end with node. Note: not include circle node, but including node itself.
 
-    base_ring(int _n = -1) {
+    uniring(int _n = -1) {
         if (_n != -1)
             init(_n);
     }
 
-    base_ring(vector<int>& _next) : n(_next.size()), next(_next) {}
+    uniring(vector<int>& _next) : n(_next.size()), next(_next) {}
 
     void init(int _n) {
         n = _n;
@@ -107,7 +107,7 @@ struct base_ring {
 class Solution {
 public:
     int maximumInvitations(vector<int>& next) {
-        base_ring A(next);
+        uniring A(next);
         A.process(false, true);
         int circle = 0, chain = 0;
 

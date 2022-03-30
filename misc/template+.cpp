@@ -11,6 +11,8 @@ typedef vector<LL> vl;
 #define sz(c) int(c.size())
 #define all(c) c.begin(), c.end()
 
+void gogo() {}
+
 int main() {
     ios::sync_with_stdio(false);
 #ifndef LOCAL

@@ -20,6 +20,7 @@ using namespace std;
 // DP with DFS O(n) time get the diameter of a tree
 struct dfs_tree_diameter {
     int n, d;
+    bool dfs_done = false;
     vector<vector<int>> tree;
     vector<int> D;
 
@@ -29,16 +30,21 @@ struct dfs_tree_diameter {
         d = 0;
     }
 
-    void dfs(int v, int p) {
-        for (int to : tree[v]) if (to != p) {
-            dfs(to, v);
-            d = max(d, D[v] + D[to] + 1);
-            D[v] = max(D[v], D[to] + 1);
-        }
+    void dfs(int node, int parent) {
+        for (int to : tree[node])
+            if (to != parent) {
+                dfs(to, node);
+                d = max(d, D[node] + D[to] + 1);
+                D[node] = max(D[node], D[to] + 1);
+            }
     }
 
     int get_diameter() {
-        dfs(0, -1);
+        if (!dfs_done) {
+            dfs(0, -1);
+            dfs_done = true;
+        }
+        
         return d;
     }
 };

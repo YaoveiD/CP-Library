@@ -104,48 +104,48 @@ struct kruskal {
 const int INF = int(1e9) + 442;
 
 template<typename T> struct Prim {
-  int n;
-  vector<T> d;
-  vector<bool> vis;
-  vector<vector<T>> g;
+    int n;
+    vector<T> d;
+    vector<bool> vis;
+    vector<vector<T>> g;
 
-  Prim(int _n) {
-    n = _n;
-    g.assign(n, vector<T>(n, INF));
+    Prim(int _n) {
+        n = _n;
+        g.assign(n, vector<T>(n, INF));
 
-    for (int i = 0; i < n; ++i)
-      g[i][i] = 0;
-  }
-
-  void add(int u, int v, int w) {
-    g[u][v] = min(g[u][v], w);
-  }
-  
-  int64_t mst(int src = 0) {
-    int64_t sum = 0;
-    vis.assign(n, false);
-    d.assign(n, INF);
-    d[src] = 0;
-
-    for (int i = 0; i < n; ++i) {
-      int k = -1;
-
-      for (int j = 0; j < n; ++j) {
-        if (!vis[j] && (k == 0 || d[j] < d[k])) {
-          k = j;
-        }
-      }
-
-      if (k == -1)
-        return -1; // Graph can't connect
-
-      vis[k] = 1;
-      sum += d[k];
-
-      for (int i = 0; i < n; ++i)
-        d[i] = min(d[i], g[k][i]);
+        for (int i = 0; i < n; ++i)
+            g[i][i] = 0;
     }
 
-    return sum;
-  }
+    void add(int u, int v, int w) {
+        g[u][v] = min(g[u][v], w);
+    }
+  
+    int64_t mst(int src = 0) {
+        int64_t sum = 0;
+        vis.assign(n, false);
+        d.assign(n, INF);
+        d[src] = 0;
+
+        for (int i = 0; i < n; ++i) {
+            int k = -1;
+
+            for (int j = 0; j < n; ++j) {
+                if (!vis[j] && (k == -1 || d[j] < d[k])) {
+                    k = j;
+                }
+            }
+
+            if (k == -1)
+                return -1; // Graph can't connect
+
+            vis[k] = 1;
+            sum += d[k];
+
+            for (int i = 0; i < n; ++i)
+                d[i] = min(d[i], g[k][i]);
+        }
+
+        return sum;
+    }
 };

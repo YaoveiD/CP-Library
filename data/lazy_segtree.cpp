@@ -1,304 +1,208 @@
 #include <algorithm>
+#include <array>
 #include <bitset>
 #include <cassert>
+#include <chrono>
 #include <cmath>
 #include <cstring>
+#include <functional>
 #include <iomanip>
 #include <iostream>
 #include <map>
+#include <numeric>
 #include <queue>
+#include <random>
 #include <set>
 #include <vector>
-
+ 
 using namespace std;
 
-template<typename T>
-class lazy_segtree {
-private:
-  //weird, global actually
-  #define ls i << 1 | 1
-  #define rs (i << 1) + 2
+// http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0200r0.html
+template<class Fun> class y_combinator_result {
+    Fun fun_;
 public:
-  int N;
-  struct node {
-    T val, lazy;
+    template<class T> explicit y_combinator_result(T &&fun): fun_(std::forward<T>(fun)) {}
+    template<class ...Args> decltype(auto) operator()(Args &&...args) { return fun_(std::ref(*this), std::forward<Args>(args)...); }
+};
+template<class Fun> decltype(auto) y_combinator(Fun &&fun) { return y_combinator_result<std::decay_t<Fun>>(std::forward<Fun>(fun)); }
 
-    inline void apply(int from, int to, T d) {
-      assert(from <= to);
-      val += d * (to - from + 1);
-      lazy += d;
+template<typename A, typename B> ostream& operator<<(ostream &os, const pair<A, B> &p) { return os << '(' << p.first << ", " << p.second << ')'; }
+template<typename T_container, typename T = typename enable_if<!is_same<T_container, string>::value, typename T_container::value_type>::type> ostream& operator<<(ostream &os, const T_container &v) { os << '['; string sep; for (const T &x : v) os << sep << x, sep = ", "; return os << ']'; }
+ 
+void debug_out() { cerr << endl; }
+template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { cerr << ' ' << H; debug_out(T...); }
+#ifdef LOCAL
+#define debug(...) cerr << "[" << #__VA_AendGS__ << "]:", debug_out(__VA_AendGS__)
+#else
+#define debug(...) 
+#endif
+
+// solution to https://codeforces.com/edu/course/2/lesson/5/3/practice/status
+// this data structure can handle the following two operations
+// 1. set v to to all elements on the segment from l to r
+// 2. find the segment with maximal sum
+
+const int SENTINEL = -1000000009;
+
+struct segment_change {
+    int64_t to_set;
+
+    segment_change(int64_t _set = SENTINEL) : to_set(_set) {}
+
+    bool has_change() const {
+        return to_set != SENTINEL;
     }
-  };
-  node identity;
-  vector<node> tree;
 
-  lazy_segtree(int n) {
-    identity.val = 0;
-    identity.lazy = 0;
-    N = n;
-    int _N = 1;
-    while (_N < n) _N *= 2;
-    tree.resize(_N * 2 - 1);
-    build(0, 0, n - 1);
-  }
-
-  lazy_segtree(int n, const vector<T>& A) {
-    identity.val = 0;
-    identity.lazy = 0;
-    assert(n > 0);
-    N = n;
-    int _N = 1;
-    while (_N < n) _N *= 2;
-    tree.resize(_N * 2 - 1);
-    build(0, 0, n - 1, A);
-  }
-
-  inline node combine(const node& A, const node& B) {
-    node C;
-    C.val = A.val + B.val;
-    return C;
-  }
-
-  inline void pull(int i) {
-    tree[i] = combine(tree[ls], tree[rs]);
-  }
-
-  inline void push(int i, int from, int to) {
-    if (tree[i].lazy != 0) {
-      int mid = from + (to - from) / 2;
-      tree[ls].apply(from, mid, tree[i].lazy);
-      tree[rs].apply(mid + 1, to, tree[i].lazy);
-      tree[i].lazy = 0;
+    void combine(const segment_change& other) {
+        to_set = other.to_set;
     }
-  }
-
-  void build(int i, int L, int R) {
-    tree[i].val = 0;
-    tree[i].lazy = 0;
-    if (L == R) {
-      return;
-    }
-    int mid = L + (R - L) / 2;
-    build(ls, L, mid);
-    build(rs, mid + 1, R);
-    // pull(i)
-  }
-
-  void build(int i, int L, int R, const vector<T>& A) {
-    tree[i].val = 0;
-    tree[i].lazy = 0;
-    if (L == R) {
-      tree[i].apply(L, R, A[L]);
-      return;
-    }
-    int mid = L + (R - L) / 2;
-    build(ls, L, mid, A);
-    build(rs, mid + 1, R, A);
-    pull(i);
-  }
-
-  void update(int i, int from, int to, int L, int R, T d) {
-    if (to < L or from > R) {
-      return;
-    }
-    if (L <= from and to <= R) {
-      tree[i].apply(from, to, d);
-      return;
-    }
-    push(i, from, to);
-    int mid = from + (to - from) / 2;
-    update(ls, from, mid, L, R, d);
-    update(rs, mid + 1, to, L, R, d);
-    pull(i);
-  }
-
-  void update(int L, int R, T d) {
-    update(0, 0, N - 1, L, R, d);
-  }
-
-  void update(int pos, int d) {
-    update(0, 0, N - 1, pos, pos, d);
-  }
-
-  node query(int i, int from, int to, int L, int R) {
-    if (to < L or from > R) {
-      return identity;
-    }
-    if (L <= from and to <= R) {
-      return tree[i];
-    }
-    push(i, from, to);
-    int mid = from + (to - from) / 2;
-    return combine(query(ls, from, mid, L, R), query(rs, mid + 1, to, L, R)); 
-  }
-
-  T query(int L, int R) {
-    return query(0, 0, N - 1, L, R).val;
-  }
-
 };
 
-int main() {
-  ios::sync_with_stdio(false);
-  cin.tie(0);
-  
-  int N, Q;
-  cin >> N >> Q;
-  vector<long long> A(N);
-  for (int i = 0; i < N; ++i) {
-    cin >> A[i];
-  }
+struct segment {
+    int64_t sum, prefix_max, suffix_max, mx;
 
-  lazy_segtree<long long> st(N, A);
-  
-  string op;
-  while (Q--) {
-    int A, B;
-    cin >> op >> A >> B;
-    if (op == "Q") {
-      cout << st.query(A - 1, B - 1) << '\n';
-    } else {
-      long long d;
-      cin >> d;
-      st.update(A - 1, B - 1, d);
+    segment(int64_t value = 0) : sum(value), prefix_max(value), suffix_max(value), mx(value) {}
+
+    void apply(int length, const segment_change& change) {
+        sum = change.to_set * length;
+        prefix_max = max<int64_t>(0, sum);
+        suffix_max = prefix_max;
+        mx = prefix_max;
     }
-  }
-  return 0;
+};
+
+// combine two segments
+// consider to rewrite this for better performance
+segment combine(const segment& a, const segment& b) {
+    segment c;
+    c.sum = a.sum + b.sum;
+    c.prefix_max = max(a.prefix_max, a.sum + b.prefix_max);
+    c.suffix_max = max(b.suffix_max, b.sum + a.suffix_max);
+    c.mx = max({a.suffix_max + b.prefix_max, a.mx, b.mx});
+    return c;
 }
 
-// verification : https://atcoder.jp/contests/practice2/submissions/26367162
+struct seg_tree {
+    int tree_n;
+    vector<segment> tree;
+    vector<segment_change> changes;
 
-template<typename T>
-class lazy_segtree {
-private:
-  //weird, global actually
-  #define ls i << 1 | 1
-  #define rs (i << 1) + 2
-public:
-  int N;
-  struct node {
-    int64_t zero = 0, one = 0;
-    int64_t invs = 0;
-    int has_change = 0;
-
-    inline void apply(int from, int to) {
-      assert(from <= to);
-      has_change = !has_change;
-      swap(zero, one);
-      invs = one * zero - invs;
+    seg_tree(int n = -1) {
+        if (n > 0)
+            init(n);
     }
 
-    friend ostream& operator<<(ostream& os, const node& x) {
-      os << x.zero << ' ' << x.one << ' ' << x.invs << ' ' << x.has_change;
-      return os;
+    // full 
+    void init(int _n) {
+        tree_n = 1;
+        while (tree_n < _n) tree_n *= 2;
+        tree.assign(tree_n * 2, segment());
+        changes.assign(tree_n, segment_change());
     }
-  };
-  node identity;
-  vector<node> tree;
 
-  lazy_segtree(int n, const vector<T>& A) {
-    assert(n > 0);
-    N = n;
-    int _N = 1;
-    while (_N < n) _N *= 2;
-    tree.resize(_N * 2 - 1);
-    build(0, 0, n - 1, A);
-  }
+    // apply the change on segment and combine the changes
+    void apply_and_combine(int p, int length, const segment_change& change) {
+        tree[p].apply(length, change);
 
-  inline node combine(const node& A, const node& B) {
-    node C;
-    C.zero = A.zero + B.zero;
-    C.one = A.one + B.one;
-    C.invs = A.invs + B.invs + A.one * B.zero;
-    return C;
-  }
-
-  inline void pull(int i) {
-    tree[i] = combine(tree[ls], tree[rs]);
-  }
-
-  inline void push(int i, int from, int to) {
-    if (tree[i].has_change) {
-      int mid = (from + to) / 2;
-      tree[ls].apply(from, mid);
-      tree[rs].apply(mid + 1, to);
-      tree[i].has_change = 0;
+        if (p < tree_n)
+            changes[p].combine(change);
     }
-  }
 
-  void build(int i, int L, int R, const vector<T>& A) {
-    if (L == R) {
-      if (A[L] == 0) {
-        tree[i].zero = 1;
-      } else {
-        tree[i].one = 1;
-      }
-      return;
+    // push up left and right segments
+    void pull(int p) {
+        tree[p] = combine(tree[p * 2], tree[p * 2 + 1]);
     }
-    int mid = L + (R - L) / 2;
-    build(ls, L, mid, A);
-    build(rs, mid + 1, R, A);
-    pull(i);
-  }
 
-  void update(int i, int from, int to, int L, int R) {
-    if (to < L or from > R) {
-      return;
-    }
-    if (L <= from and to <= R) {
-      tree[i].apply(from, to);
-      return;
-    }
-    push(i, from, to);
-    int mid = from + (to - from) / 2;
-    update(ls, from, mid, L, R);
-    update(rs, mid + 1, to, L, R);
-    pull(i);
-  }
-
-  void update(int L, int R) {
-    update(0, 0, N - 1, L, R);
-  }
-
-  node query(int i, int from, int to, int L, int R) {
-    if (to < L or from > R) {
-      return identity;
-    }
-    if (L <= from and to <= R) {
-      return tree[i];
-    }
-    push(i, from, to);
-    int mid = from + (to - from) / 2;
-    return combine(query(ls, from, mid, L, R), query(rs, mid + 1, to, L, R));
-  }
-
-  node query(int L, int R) {
-    return query(0, 0, N - 1, L, R);
-  }
-};
-
-void solve() {
-    int N, Q;
-    cin >> N >> Q;
-
-    vector<int> A(N);
-    for (int& a : A)
-        cin >> a;
-
-    lazy_segtree<int> st(N, A);
-
-    while (Q--) {
-        int type, L, R;
-        cin >> type >> L >> R;
-        --L; --R;
-
-        if (type == 1) {
-            st.update(L, R);
-        } else {
-            cout << st.query(L, R).invs << '\n';
+    // push down the segment change
+    void push(int p, int length) {
+        if (changes[p].has_change()) {
+            apply_and_combine(p * 2, length / 2, changes[p]);
+            apply_and_combine(p * 2 + 1, length / 2, changes[p]);
+            changes[p] = segment_change();
         }
     }
-}
+
+    // Builds our tree from an array in O(tree_n).
+    void build(const vector<segment> &initial) {
+        int n = int(initial.size());
+        init(n);
+        assert(n <= tree_n);
+
+        for (int i = 0; i < n; i++)
+            tree[tree_n + i] = initial[i];
+
+        for (int position = tree_n - 1; position > 0; position--)
+            tree[position] = combine(tree[2 * position], tree[2 * position + 1]);
+    }
+
+    void update(int p, int start, int end, int a, int b, const segment_change& change) {
+        if (a <= start && end <= b) {
+            apply_and_combine(p, end - start, change);
+            return;
+        }
+
+        if (b <= start || a >= end)
+            return;
+
+        push(p, end - start);
+        int mid = (start + end) / 2;
+        update(p * 2, start, mid, a, b, change);
+        update(p * 2 + 1, mid, end, a, b, change);
+        pull(p);
+    }
+
+    // Note: [a, b)
+    void update(int a, int b, const segment_change& change) {
+        update(1, 0, tree_n, a, b, change);
+    }
+
+    segment query(int p, int start, int end, int a, int b) {
+        if (a <= start && end <= b) {
+            return tree[p];
+        }
+
+        if (b <= start || a >= end)
+            return segment();
+
+        push(p, end - start);
+        int mid = (start + end) / 2;
+        return combine(query(p * 2, start, mid, a, b), query(p * 2 + 1, mid, end, a, b));
+    }
+
+    // Note: [a, b)
+    // consider to change the return type for better performance
+    segment query(int a, int b) {
+        return query(1, 0, tree_n - 1, a, b);
+    }
+
+// }; // basic lazy segment tree.
+
+    template<typename T_bool>
+    int find_first(int p, int start, int end, int a, T_bool&& pred) {
+        if (!pred(tree[p]) || end <= a)
+            return -1;
+
+        if (start == end - 1) 
+            return start;
+
+        push(p, end - start);
+        int mid = (start + end) / 2;
+        int index = -1;
+
+        if (pred(tree[p * 2]))
+            index = find_first(p * 2, start, mid, a, pred);
+        else
+            index = find_first(p * 2 + 1, mid, end, a, pred);
+
+        return index;
+    }
+
+    // find first element returns true on segment [a, tree_n)
+    template<typename T_bool>
+    int find_first(int a, T_bool&& pred) {
+        return find_first(1, 0, tree_n, a, pred);
+    }
+};
 
 int main() {
     ios::sync_with_stdio(false);
@@ -306,7 +210,14 @@ int main() {
     cin.tie(0);
 #endif
 
-    solve();
+    int N, M;
+    cin >> N >> M;
+    seg_tree segtree(N);
 
-    return 0;
+    while (M--) {
+        int a, b, v;
+        cin >> a >> b >> v;
+        segtree.update(a, b, segment_change(v));
+        cout << segtree.query(0, N).mx << '\n';
+    }
 }
