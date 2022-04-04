@@ -1,45 +1,42 @@
-// verification : https://atcoder.jp/contests/practice2/submissions/26032614
-// index is in [1, n]
+#include <bits/stdc++.h>
+using namespace std;
+
 template<typename T>
-class fenwick_tree {
- public:
-  int n;
-  vector<T> tree;
+struct fenwick_tree : public vector<T> {
+    int tree_n;
+    T tree_sum;
 
-  fenwick_tree(int _n) : n(_n), tree(_n + 1) {}
+    fenwick_tree(int n) : vector<T>(n + 1, 0), tree_n(n), tree_sum(0) {}
 
-  static constexpr int lowbit(int x) {
-    return x & -x;
-  }
+    void update(int index, T change) {
+        assert(0 <= index && index < tree_n);
+        tree_sum += change;
 
-  //x -> position, d -> delta
-  void update(int x, T d) {
-    assert(x > 0);
-    while (x <= n) {
-      tree[x] += d;
-      x += lowbit(x);
+        for (int i = index + 1; i <= tree_n; i += i & -i)
+            (*this)[i] += change;
     }
-  }
 
-  //(0, x]
-  T query(int x) const {
-    assert(x >= 0);
-    T ret = 0;
-    while (x > 0) {
-      ret += tree[x];
-      x -= lowbit(x);
+    // Returns the sum of range [0, count)
+    T query(int count) const {
+        assert(count <= tree_n);
+        T sum = 0;
+
+        for (int i = count; i > 0; i -= i & -i)
+            sum += (*this)[i];
+
+        return sum;
     }
-    return ret;
-  }
 
-  //[l, r]
-  T query(int l, int r) const {
-    if (r < l)
-      return 0;
-    return query(r) - query(l - 1);
-  }
+    // Returns the sum of range [start, tree_n)
+    T query_suffix(int start) const {
+        return tree_sum - query(start);
+    }
+
+    // Returns the sum of range [a, b)
+    T query(int a, int b) const {
+        return query(b) - query(a);
+    }
 };
-
 
 // https://codeforces.com/contest/1311/submission/71933816
 // Note: [0, n)

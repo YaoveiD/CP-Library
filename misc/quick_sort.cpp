@@ -20,10 +20,10 @@ using namespace std;
 class Solution {
 private:
     int partition(vector<int>& nums, int L, int R) {
-        int piovt = nums[R];
+        int pivot = nums[R];
         int i = L - 1;
         for (int j = L; j < R; ++j) {
-            if (nums[j] <= piovt) {
+            if (nums[j] <= pivot) {
                 i += 1;
                 swap(nums[j], nums[i]);
             }
