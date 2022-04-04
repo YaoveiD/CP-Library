@@ -2,24 +2,7 @@
 *  author:  yaoveil
 *  created: 2021-08-08 23:42:47
 */
-
-#include <algorithm>
-#include <array>
-#include <bitset>
-#include <cassert>
-#include <chrono>
-#include <cmath>
-#include <cstring>
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <random>
-#include <set>
-#include <vector>
-
+#include <bits/stdc++.h>
 using namespace std;
 
 class Trie {
