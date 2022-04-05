@@ -1,6 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 // source : https://github.com/nealwu/competitive-programming/blob/master/geometry/point.cc
 // TODO: set this to false if it's unnecessary and the time limit might be tight.
 // CHECK_OVERFLOW64 = true can run up to 2 times slower (particularly on CF).

@@ -1,8 +1,3 @@
-#include <iostream>
-#include <vector>
-#include <cassert>
-using namespace std;
-
 // 2D fenwick tree
 // source : https://github.com/the-tourist/algo/blob/master/data/fenwick2d.cpp
 // 0-indexed

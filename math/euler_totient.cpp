@@ -1,27 +1,3 @@
-/*
-* author:  yaoveil
-* created: 2021-08-17 18:03:18
-*/
-
-#include <algorithm>
-#include <array>
-#include <bitset>
-#include <cassert>
-#include <chrono>
-#include <cmath>
-#include <cstring>
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <random>
-#include <set>
-#include <vector>
-
-using namespace std;
-
 vector<bool> prime;
 vector<int> primes;
 vector<int64_t> phi;
@@ -50,11 +26,4 @@ void sieve(int maximum = 100000) {
       }
     }
   }
-}
- 
-int main() {
-  ios::sync_with_stdio(false);
-  cin.tie(0);
-  
-  return 0;
 }

@@ -1,24 +1,4 @@
-#include <algorithm>
-#include <array>
-#include <bitset>
-#include <cassert>
-#include <chrono>
-#include <cmath>
-#include <cstring>
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <random>
-#include <set>
-#include <vector>
- 
-using namespace std;
-
 // soruce : https://chenshouao.github.io/mkdocs/pages/Algorithm/math/CircleCrossArea.html
-
 // 利用余弦定理解三角形，时间复杂度O(1)。可将面积交转换为面积并。
 namespace Circle{
     const double PI = acos(-1);

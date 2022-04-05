@@ -1,21 +1,4 @@
-#include <algorithm>
-#include <array>
-#include <bitset>
-#include <cassert>
-#include <chrono>
-#include <cmath>
-#include <cstdint>
-#include <cstring>
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <random>
-#include <set>
-#include <vector>
- 
+#include <bits/stdc++.h>
 using namespace std;
 
 // source : https://github.com/nealwu/competitive-programming/blob/master/seg_tree/seg_tree.cc

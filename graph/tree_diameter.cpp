@@ -1,22 +1,3 @@
-#include <algorithm>
-#include <array>
-#include <bitset>
-#include <cassert>
-#include <chrono>
-#include <cmath>
-#include <cstring>
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <random>
-#include <set>
-#include <vector>
- 
-using namespace std;
-
 // DP with DFS O(n) time get the diameter of a tree
 struct dfs_tree_diameter {
     int n, d;

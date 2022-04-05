@@ -1,22 +1,3 @@
-#include <algorithm>
-#include <array>
-#include <bitset>
-#include <cassert>
-#include <chrono>
-#include <cmath>
-#include <cstring>
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <random>
-#include <set>
-#include <vector>
-
-using namespace std;
-
 // https://github.com/nealwu/competitive-programming/blob/master/bignum_fft/bignum_fft.cc
 
 struct bignum {
@@ -543,10 +524,3 @@ struct bignum {
         return true;
     }
 };
-
-int main() {
-    string A, B;
-    while (cin >> A >> B) {
-        cout << bignum(A) + bignum(B) << '\n';
-    }
-}

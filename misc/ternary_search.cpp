@@ -1,20 +1,4 @@
-#include <algorithm>
-#include <array>
-#include <bitset>
-#include <cassert>
-#include <chrono>
-#include <cmath>
-#include <cstring>
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <random>
-#include <set>
-#include <vector>
- 
+#include <bits/stdc++.h>
 using namespace std;
 
 // source : https://chenshouao.github.io/mkdocs/pages/Algorithm/math/ternary_search.html

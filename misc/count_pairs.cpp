@@ -1,23 +1,3 @@
-#include <algorithm>
-#include <array>
-#include <bitset>
-#include <cassert>
-#include <chrono>
-#include <cmath>
-#include <cstring>
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <random>
-#include <set>
-#include <vector>
-
-using namespace std;
-
-
 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0200r0.html
 template<class Fun> class y_combinator_result {
     Fun fun_;

@@ -1,12 +1,6 @@
 // TODO: pragmas may help make this faster.
 // #pragma GCC optimize("Ofast,unroll-loops,no-stack-protector,fast-math,inline")
-
-#include <algorithm>
-#include <array>
-#include <cassert>
-#include <cmath>
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
 
 // source : https://github.com/nealwu/competitive-programming/blob/master/sqrt/search_buckets.cc

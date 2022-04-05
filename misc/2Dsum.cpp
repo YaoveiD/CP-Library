@@ -1,23 +1,3 @@
-#include <algorithm>
-#include <array>
-#include <bitset>
-#include <cassert>
-#include <chrono>
-#include <cmath>
-#include <cstdint>
-#include <cstring>
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <numeric>
-#include <queue>
-#include <random>
-#include <set>
-#include <vector>
- 
-using namespace std;
-
 // 0 indexed
 // make sure T can handle the sum of elements
 template<typename T>
@@ -46,27 +26,3 @@ struct range_sum {
         return sum[r2][c2] - sum[r1][c2] - sum[r2][c1] + sum[r1][c1];
     }
 };
-
-const int _H = 2000;
-
-int main() {
-  ios::sync_with_stdio(false);
-  cin.tie(0);
-  vector<vector<int>> grid(_H + 1, vector<int>(_H + 1));
-  int N;
-  cin >> N;
-  for (int i = 0; i < N; ++i) {
-    int x, y, w;
-    cin >> x >> y >> w;
-    grid[x][y] += w;
-  }
-  int q;
-  cin >> q;
-  range_sum<int> rs(grid);
-  while (q--) {
-    int x1, y1, x2, y2;
-    cin >> x1 >> y1 >> x2 >> y2;
-    cout << rs.query(x1, y1, x2 + 1, y2 + 1) << '\n';
-  }
-  return 0;
-}
