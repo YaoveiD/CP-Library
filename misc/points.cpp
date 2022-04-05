@@ -1,3 +1,6 @@
+#include <bits/stdc++.h>
+using namespace std;
+
 // source : https://github.com/nealwu/competitive-programming/blob/master/geometry/point.cc
 // TODO: set this to false if it's unnecessary and the time limit might be tight.
 // CHECK_OVERFLOW64 = true can run up to 2 times slower (particularly on CF).
@@ -64,6 +67,10 @@ int cross_sign(const point &a, const point &b) {
     return (actual > 0) - (actual < 0);
 }
 
+inline int cross2(const point &a, const point &b, const point &c) {
+    return cross(b - a, c - a);
+}
+
 bool left_turn_strict(const point &a, const point &b, const point &c) {
     return cross_sign(b - a, c - a) > 0;
 }
@@ -107,8 +114,6 @@ bool angle_compare(const point &a, const point &b) {
     return cross_sign(a, b) > 0;
 }
 
-inline int cross2(const point &a, const point &b, const point &c) { return cross(b - a, c - a); }
-
 // Returns true if segment `ab` and `cd` intersects
 bool seg_seg_intersect(const point &a, const point &b, const point &c, const point &d) {
     int64_t ca = cross2(c, d, a), cb = cross2(c, d, b);
@@ -116,3 +121,4 @@ bool seg_seg_intersect(const point &a, const point &b, const point &c, const poi
     return ca * cb < 0 && cc * cd < 0;
     // ans = (a * ob - b * oa) / (ob - oa);
 }
+
