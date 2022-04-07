@@ -6,7 +6,7 @@ struct fenwick_tree : public vector<T> {
     int tree_n;
     T tree_sum;
 
-    fenwick_tree(int n) : vector<T>(n + 1, 0), tree_n(n), tree_sum(0) {}
+    fenwick_tree(int n = 0) : vector<T>(n + 1, 0), tree_n(n), tree_sum(0) {}
 
     void update(int index, T change) {
         assert(0 <= index && index < tree_n);

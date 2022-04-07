@@ -4,7 +4,7 @@
 
 template <typename T>
 class fenwick2d {
-  public:
+public:
   vector<vector<T>> fenw;
   int n, m;
   fenwick2d(int _n, int _m) : n(_n), m(_m) {
