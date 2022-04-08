@@ -53,6 +53,7 @@ struct union_find {
         components--;
         return true;
     }
+// }; // basic union_find
 
     vector<vector<int>> get_groups() {
         vector<int> parent(n), group_size(n);

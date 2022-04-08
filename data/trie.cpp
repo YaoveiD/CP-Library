@@ -5,90 +5,82 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Trie {
-public:
-  struct node {
-    int val, cnt;
-    int next[2];
-  };
-  vector<node> tree;
-  int node_count;
+struct Trie {
+    struct node {
+        array<int, 2> child;
+        int words = 0;
 
-  Trie(int n) {
-    tree.resize(n * 31);
-    node_count = 0;
-    for (auto& x : tree) {
-      x.val = x.cnt = x.next[1] = x.next[0] = 0;
+        node() {
+            child.fill(-1);
+        }
+    };
+
+    static const int BITS = 30;
+    static const int ROOT = 0;
+    vector<node> nodes = {node()};
+
+    Trie(int n = 0) {
+        nodes.reserve(BITS * n);
     }
-  }
 
-  void insert(int val, int delta) {
-    int p = 0;
-    for (int i = 30; i >= 0; --i) {
-      int bit = (val >> i) & 1;
-      if (!tree[p].next[bit]) {
-        tree[p].next[bit] = ++node_count;
-      }
-      p = tree[p].next[bit];
-      tree[p].cnt += delta;
+    int get_or_create_node(int node, int c) {
+        if (nodes[node].child[c] < 0) {
+            nodes[node].child[c] = int(nodes.size());
+            nodes.emplace_back();
+        }
+
+        return nodes[node].child[c];
     }
-  }
 
-  int query(int x) {
-    int ret = 0;
-    int p = 0;
-    for (int i = 30; i >= 0; --i) {
-      int bit = (x >> i) & 1;
-      if (tree[tree[p].next[!bit]].cnt) {
-        ret += (1 << i);
-        p = tree[p].next[!bit];
-      } else {
-        p = tree[p].next[bit];
-      }
+    int insert(int value) {
+        int node = ROOT;
+
+        for (int i = BITS; i >= 0; --i)
+            node = get_or_create_node(node, value >> i & 1);
+        
+        nodes[node].words++;
+        return node;
     }
-    return ret;
-  }
 
+    int query_max_xor(int value) {
+        int result = 0;
+        int node = ROOT;
+
+        for (int i = BITS; i >= 0 && node != -1; --i) {
+            int b = value >> i & 1;
+
+            if (nodes[node].child[!b] > 0) {
+                result |= 1 << i;
+                node = nodes[node].child[!b];
+            } else {
+                node = nodes[node].child[b];
+            }
+        }
+
+        return result;
+    }
 };
 
-/*
-  the maximum xor segment with the length at most M
-*/
-
-// make sure to intialize all global vars
-// uncomment cin >> tt?
-void solve() {
-  int N, M;
-  cin >> N >> M;
-  vector<int> A(N);
-  vector<int> prefix_xor(N + 1);
-  for (int i = 0; i < N; ++i) {
-    cin >> A[i];
-    prefix_xor[i + 1] = prefix_xor[i] ^ A[i];
-  }
-
-  Trie trie(N);
-  trie.insert(0, 1);
-  int ans = 0;
-  for (int i = 1; i <= N; ++i) {
-    if (i > M) {
-      trie.insert(prefix_xor[i - M - 1], -1);
-    }
-    ans = max(ans, trie.query(prefix_xor[i]));
-    trie.insert(prefix_xor[i], 1);
-  }
-  cout << ans << '\n';
-}
+// Solution to : https://www.acwing.com/problem/content/3488/
+// Maximum xor of two numbers in an array.
 
 int main() {
-  ios::sync_with_stdio(false);
-  cin.tie(0);
+    ios::sync_with_stdio(false);
+#ifndef LOCAL
+    cin.tie(0);
+#endif
 
-  int tt = 1;
-  // cin >> tt;
-  while (tt--) {
-    solve();
-  }
+    int N;
+    cin >> N;
+    Trie trie;
+    int ans = 0;
 
-  return 0;
+    for (int i = 0; i < N; ++i) {
+        int a;
+        cin >> a;
+        ans = max(ans, trie.query_max_xor(a));
+        trie.insert(a);
+    }
+
+    cout << ans << '\n';
 }
