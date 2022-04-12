@@ -136,7 +136,7 @@ struct seg_tree {
     // Note: [a, b)
     // consider to change the return type for better performance
     segment query(int a, int b) {
-        return query(1, 0, tree_n - 1, a, b);
+        return query(1, 0, tree_n, a, b);
     }
 
 // }; // basic lazy segment tree.
