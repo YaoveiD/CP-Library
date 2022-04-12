@@ -155,7 +155,8 @@ struct seg_tree {
 
         if (pred(tree[p * 2]))
             index = find_first(p * 2, start, mid, a, pred);
-        else
+        
+        if (index == -1) // I don't know
             index = find_first(p * 2 + 1, mid, end, a, pred);
 
         return index;

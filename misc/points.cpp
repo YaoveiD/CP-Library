@@ -119,3 +119,22 @@ bool seg_seg_intersect(const point &a, const point &b, const point &c, const poi
     // ans = (a * ob - b * oa) / (ob - oa);
 }
 
+bool point_on_seg(point a, point b, point p) {
+    if (cross(p - b, a - b) == 0) {
+        if (p.x < min(a.x, b.x) || p.x > max(a.x, b.x)) return false;
+        if (p.y < min(a.y, b.y) || p.y > max(a.y, b.y)) return false;
+        return true;
+    }
+ 
+    return false;
+}
+
+// intersection point between ab and cd assuming unique intersection exists
+bool line_line_intersection(point a, point b, point c, point d, point &ans) {
+    double a1 = a.y - b.y, b1 = b.x - a.x, c1 = cross(a, b);
+    double a2 = c.y - d.y, b2 = d.x - c.x, c2 = cross(c, d);
+    double det = a1 * b2 - a2 * b1;
+    if (det == 0) return 0;
+    ans = point((b1 * c2 - b2 * c1) / det, (c1 * a2 - a1 * c2) / det);
+    return 1;
+}
