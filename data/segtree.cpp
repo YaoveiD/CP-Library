@@ -96,7 +96,7 @@ struct seg_tree {
             tree[tree_n + i] = initial[i];
 
         for (int position = tree_n - 1; position > 0; position--)
-            tree[position] = combine(tree[2 * position], tree[2 * position + 1]);
+            pull(position);
     }
 
     void update(int p, int start, int end, int a, int b, const segment_change& change) {

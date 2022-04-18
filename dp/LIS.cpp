@@ -1,5 +1,5 @@
-template<typename iterable_T>
-vector<int> LIS(const iterable_T sequence) {
+template<typename T_array>
+vector<int> LIS(const T_array &sequence) {
     int n = int(sequence.size());
     assert(n > 0);
     vector<int> d(n + 1, int(1e9));
