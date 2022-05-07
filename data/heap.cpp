@@ -1,9 +1,71 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
+using namespace std;
 
 #define SIZE 123456
 #define INF 1000000008
 #define N_MAX 2555
+
+template<typename T> struct min_heap {
+    vector<T> heap;
+    int heap_size;
+
+    min_heap() : heap_size(0) {
+        heap.emplace_back();
+    }
+
+    void push(const T& value) {
+        heap_size++;
+
+        if (heap_size < int(heap.size()))
+            heap[heap_size] = value;
+        else
+            heap.push_back(value);
+
+        swim(heap_size);
+    }
+
+    const T& top() const {
+        return heap[1];
+    }
+
+    int size() const {
+        return heap_size;
+    }
+
+    bool empty() const {
+        return heap_size == 0;
+    } 
+
+    void pop() {
+        swap(heap[1], heap[heap_size--]);
+        sink(1);
+    }
+
+    void build(vector<T>& initial, int start, int end) {
+        heap_size = end - start;
+        copy(initial.begin() + start, initial.begin() + end, heap.beign() + 1);
+
+        for (int i = heap_size / 2; i > 0; --i)
+            sink(i);
+    }
+private:
+    void swim(int node) {
+        for (int i = node; i > 1 && heap[i] < heap[i / 2]; i /= 2)
+            swap(heap[i], heap[i / 2]);
+    }
+
+    int get_child(int node) const {
+        return node * 2 + (node * 2 + 1 <= heap_size && heap[node * 2 + 1] < heap[node * 2]);
+    }
+
+    void sink(int node) {
+        for (int i = node, c = get_child(i); c <= heap_size && heap[c] < heap[i];
+            i = c, c = get_child(c))
+            swap(heap[c], heap[i]);
+    }
+};
 
 struct node {
     int to, cost;

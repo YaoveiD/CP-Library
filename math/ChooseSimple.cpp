@@ -1,14 +1,10 @@
-
 const int MOD = 1000000007; // 998244353;
-const int MX = 1000005;
 
 vector<int64_t> fact = {1, 1};
 vector<int64_t> inv = {1, 1};
 vector<int64_t> inv_fact = {1, 1};
 
-// O(n)
-void prepare_factorials(int maximum = MX - 1) {
-    assert(maximum < MX);
+void prepare_factorials(int maximum) {
     fact.resize(maximum + 1);
     inv.resize(maximum + 1);
     inv_fact.resize(maximum + 1);
