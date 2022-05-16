@@ -18,25 +18,22 @@ template<typename T> struct min_heap {
     void push(const T& value) {
         heap_size++;
 
-        if (heap_size < int(heap.size()))
+        if (heap_size < int(heap.size())) {
             heap[heap_size] = value;
-        else
+        } else {
+            // Prevent increasing capacity by only 1 each time. Havn't tested.
+            heap.reserve(heap_size/16 + heap_size);
             heap.push_back(value);
+        }
 
         swim(heap_size);
     }
 
-    const T& top() const {
-        return heap[1];
-    }
+    const T& top() const { return heap[1]; }
 
-    int size() const {
-        return heap_size;
-    }
+    int size() const { return heap_size; }
 
-    bool empty() const {
-        return heap_size == 0;
-    } 
+    bool empty() const { return heap_size == 0; } 
 
     void pop() {
         swap(heap[1], heap[heap_size--]);

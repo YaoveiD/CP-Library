@@ -1,7 +1,8 @@
-template<typename T, char sep = ' '>
-void output_vector(const vector<T>& v, bool add_one = false, int start = -1, int end = -1) {
+template<typename T_vector, char sep = ' '>
+void output_vector(const T_vector& v, bool add_one = false, int start = -1, int end = -1) {
     if (start < 0) start = 0;
     if (end < 0) end = int(v.size());
+
     for (int i = start; i != end; ++i)
-        cout << (add_one ? v[i] + 1 : v[i]) << (i != end - 1 ? sep : '\n');
+        cout << v[i] + (add_one ? 1 : 0) << (i != end - 1 ? sep : '\n');
 }

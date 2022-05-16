@@ -67,8 +67,7 @@ vector<pair<int64_t, int>> prime_factorize(int64_t n) {
     return result;
 }
 
-// don't need to run `sieve`, set sieved to false
-vector<pair<int64_t, int>> prime_factorize(int64_t n, bool sieved) {
+vector<pair<int64_t, int>> prime_factorize(int64_t n) {
     vector<pair<int64_t, int>> result;
 
     for (int64_t i = 2; i * i <= n; ++i) {

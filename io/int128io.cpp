@@ -1,6 +1,6 @@
-using i128 = __int128;
- 
-istream &operator>>(istream &is, i128 &n) {
+using int128_t = __int128;
+
+istream &operator>>(istream &is, int128_t &n) {
     n = 0;
     string s;
     is >> s;
@@ -11,7 +11,7 @@ istream &operator>>(istream &is, i128 &n) {
     return is;
 }
  
-ostream &operator<<(ostream &os, i128 n) {
+ostream &operator<<(ostream &os, int128_t n) {
     if (n == 0)
         return os << 0;
 
@@ -26,6 +26,6 @@ ostream &operator<<(ostream &os, i128 n) {
     return os << s;
 }
  
-i128 gcd(i128 a, i128 b) {
+int128_t gcd(int128_t a, int128_t b) {
     return b ? gcd(b, a % b) : a;
 }

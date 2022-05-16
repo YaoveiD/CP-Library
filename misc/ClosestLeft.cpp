@@ -22,7 +22,7 @@ vector<int> closest_left(const vector<T> &values, T_compare &&compare) {
     int n = int(values.size());
     vector<int> closest(n);
     vector<int> stack;
- 
+
     for (int i = 0; i < n; i++) {
         while (!stack.empty() && !compare(values[stack.back()], values[i]))
             stack.pop_back();
@@ -30,7 +30,7 @@ vector<int> closest_left(const vector<T> &values, T_compare &&compare) {
         closest[i] = stack.empty() ? -1 : stack.back();
         stack.push_back(i);
     }
- 
+
     return closest;
 }
 
