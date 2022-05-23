@@ -6,12 +6,12 @@ using namespace std;
 // 1. set v to to all elements on the segment from l to r
 // 2. find the segment with maximal sum
 
-const int SENTINEL = -1000000009;
 
 struct segment_change {
     int64_t to_set;
+    static const auto SENTINEL = numeric_limits<decltype(to_set)>::lowest();
 
-    segment_change(int64_t _set = SENTINEL) : to_set(_set) {}
+    explicit segment_change(int64_t _set = SENTINEL) : to_set(_set) {}
 
     bool has_change() const {
         return to_set != SENTINEL;
@@ -25,7 +25,7 @@ struct segment_change {
 struct segment {
     int64_t sum, prefix_max, suffix_max, mx;
 
-    segment(int64_t value = 0) : sum(value), prefix_max(value), suffix_max(value), mx(value) {}
+    explicit segment(int64_t value = 0) : sum(value), prefix_max(value), suffix_max(value), mx(value) {}
 
     void apply(int length, const segment_change& change) {
         sum = change.to_set * length;
@@ -47,6 +47,10 @@ segment combine(const segment& a, const segment& b) {
 }
 
 struct seg_tree {
+    static int highest_bit(unsigned x) {
+        return x == 0 ? -1 : 31 - __builtin_clz(x);
+    }
+
     int tree_n;
     vector<segment> tree;
     vector<segment_change> changes;
@@ -56,12 +60,16 @@ struct seg_tree {
             init(n);
     }
 
-    // full 
     void init(int _n) {
         tree_n = 1;
         while (tree_n < _n) tree_n *= 2;
         tree.assign(tree_n * 2, segment());
         changes.assign(tree_n, segment_change());
+    }
+
+    // push up left and right segments
+    void pull(int p) {
+        tree[p] = combine(tree[p * 2], tree[p * 2 + 1]);
     }
 
     // apply the change on segment and combine the changes
@@ -70,11 +78,6 @@ struct seg_tree {
 
         if (p < tree_n)
             changes[p].combine(change);
-    }
-
-    // push up left and right segments
-    void pull(int p) {
-        tree[p] = combine(tree[p * 2], tree[p * 2 + 1]);
     }
 
     // push down the segment change
@@ -120,10 +123,24 @@ struct seg_tree {
         update(1, 0, tree_n, a, b, change);
     }
 
-    segment query(int p, int start, int end, int a, int b) {
-        if (a <= start && end <= b) {
-            return tree[p];
+    void update_single(int index, const segment &seg) {
+        assert(0 <= index && index < tree_n);
+        int position = tree_n + index;
+
+        for (int up = highest_bit(tree_n); up > 0; up--)
+            push(position >> up, 1 << up);
+
+        tree[position] = seg;
+
+        while (position > 1) {
+            position /= 2;
+            pull(position);
         }
+    }
+
+    segment query(int p, int start, int end, int a, int b) {
+        if (a <= start && end <= b)
+            return tree[p];
 
         if (b <= start || a >= end)
             return segment();
@@ -139,7 +156,7 @@ struct seg_tree {
         return query(1, 0, tree_n, a, b);
     }
 
-// }; // basic lazy segment tree.
+// };
 
     template<typename T_bool>
     int find_first(int p, int start, int end, int a, T_bool&& pred) {

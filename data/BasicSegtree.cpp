@@ -4,13 +4,13 @@
 // TODO: segment_change can be eliminated entirely in favor of just updating with a new segment instead.
 struct segment_change {
     // Use a sentinel value rather than a boolean to save significant memory (4-8 bytes per object).
-    static const int SENTINEL = ;
+    static const int SENTINEL = numeric_limits<int>::lowest();
 
     // TODO: check if these values can overflow int.
     int to_set, to_add;
 
     // TODO: make sure the default constructor is the identity segment_change.
-    segment_change(int _to_add = 0, int _to_set = SENTINEL) : to_set(_to_set), to_add(_to_add) {}
+    explicit segment_change(int _to_add = 0, int _to_set = SENTINEL) : to_set(_to_set), to_add(_to_add) {}
 
     bool has_set() const {
         return to_set != SENTINEL;
@@ -22,7 +22,7 @@ struct segment {
     int maximum;
 
     // TODO: make sure the default constructor is the identity segment.
-    segment() {}
+    explicit segment() {}
 
     bool empty() const {
         return ;
@@ -121,7 +121,7 @@ struct basic_seg_tree {
         return tree[1];
     }
 
-    segment query(int index) const {
+    segment query_single(int index) const {
         assert(0 <= index && index < tree_n);
         return tree[tree_n + index];
     }
