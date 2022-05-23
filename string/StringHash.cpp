@@ -1,79 +1,132 @@
-#include <algorithm>
-#include <bitset>
-#include <cassert>
-#include <cmath>
-#include <cstring>
-#include <functional>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <queue>
-#include <set>
-#include <vector>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-typedef unsigned long long hash_t;
+#define sz(c) int(c.size())
+#define all(c) c.begin(), c.end()
 
-const int base = 133;
+auto random_address = [] { char *p = new char; delete p; return uint64_t(p); };
+mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count() * (random_address() | 1));
 
-// a template for string hash based on unsigned long long
-vector<hash_t> pows;
+// P = 2^32 - 13337 is a safe prime: both P and (P - 1) / 2 are prime.
+const unsigned HASH_P = unsigned(-13337);
+using hash_t = uint64_t;
 
-class Hash {
-public:
+// Avoid multiplication bases near 0 or P - 1.
+uniform_int_distribution<unsigned> MULT_DIST(unsigned(0.1 * HASH_P), unsigned(0.9 * HASH_P));
+const unsigned HASH_MUL = MULT_DIST(rng);
+
+template<unsigned mod>
+struct string_hash {
+    static const bool BUILD_REVERSE = true;
+    static vector<hash_t> pows;
+
     vector<hash_t> prefix_hash;
-    int N;
+    vector<hash_t> suffix_hash;
 
-    Hash(const string &S) {
-        build(S);
+    string_hash() {}
+
+    string_hash(const string &str) {
+        build(str);
     }
 
-    void build(const string &S) {
-        N = (int) S.size();
-        assert(N > 0);
-        prefix_hash.assign(N + 1, 0);
-        for (int i = 0; i < N; ++i)
-            prefix_hash[i + 1] = prefix_hash[i] * base + S[i];
-        if (pows.size() == 0)
-            pows.push_back(1);
-        pows.reserve(N + N/32 + 1);
-        while ((int) pows.size() <= N + N/32)
-            pows.push_back(pows.back() * base);
+    void build(const string &str) {
+        int n = int(str.size());
+        prefix_hash.assign(n + 1, 0);
+
+        for (int i = 0; i < n; ++i)
+            prefix_hash[i + 1] = (prefix_hash[i] * HASH_MUL + str[i]) % mod;
+
+        if (BUILD_REVERSE) {
+            suffix_hash.assign(n + 1, 0);
+            
+            for (int i = n - 1; i >= 0; --i)
+                suffix_hash[i] = (suffix_hash[i + 1] * HASH_MUL + str[i]) % mod;
+        }
+
+        while (int(pows.size()) <= n)
+            pows.push_back(pows.back() * HASH_MUL % mod);
     }
 
-    // [from, to)
-    hash_t sub_hash(int from, int to) {
-        assert(0 <= from && to <= N && from < to);
-        return prefix_hash[to] - prefix_hash[from] * pows[to - from];
+    int length() const {
+        return int(prefix_hash.size()) - 1;
+    }
+
+    hash_t complete_hash() const {
+        return prefix_hash.back();
+    }
+
+    hash_t sub_hash(int start, int end) const {
+        assert(0 <= start && start <= end && end <= length());
+        hash_t value = prefix_hash[end] + mod - prefix_hash[start] * pows[end - start] % mod;
+        return value >= mod ? value - mod : value;
+    }
+
+    hash_t rev_sub_hash(int start, int end) const {
+        assert(BUILD_REVERSE && 0 <= start && start <= end && end <= length());
+        hash_t value = suffix_hash[start] + mod - suffix_hash[end] * pows[end - start] % mod;
+        return value >= mod ? value - mod : value;
+    }
+
+    bool is_palindrome(int start, int end) const {
+        return sub_hash(start, end) == rev_sub_hash(start, end);
     }
 };
 
-int main() {
-  ios::sync_with_stdio(false);
-  cin.tie(0);
+template<>
+struct string_hash<0> {
+    static const bool BUILD_REVERSE = true;
+    static vector<hash_t> pows;
 
-  string S;
-  while (cin >> S and S != ".") {
-    int N = (int) S.size();
-    int ans = 1;
-    Hash hasher(S);
-    for (int k = 1; k <= N; ++k) if (N % k == 0) {
-      bool failed = false;
-      const hash_t val = hasher.sub_hash(0, k);
-      for (int i = 0; i < N; i += k) {
-        if (hasher.sub_hash(i, i + k) != val) {
-          failed = true;
-          break;
-        }
-      }
-      if (!failed) {
-        ans = N / k;
-        break;
-      }
+    vector<hash_t> prefix_hash;
+    vector<hash_t> suffix_hash;
+
+    string_hash() {}
+
+    string_hash(const string &str) {
+        build(str);
     }
-    cout << ans << '\n';
-  }
 
-  return 0;
-}
+    void build(const string &str) {
+        int n = int(str.size());
+        prefix_hash.assign(n + 1, 0);
+
+        for (int i = 0; i < n; ++i)
+            prefix_hash[i + 1] = prefix_hash[i] * HASH_MUL + str[i];
+
+        if (BUILD_REVERSE) {
+            suffix_hash.assign(n + 1, 0);
+            
+            for (int i = n - 1; i >= 0; --i)
+                suffix_hash[i] = suffix_hash[i + 1] * HASH_MUL + str[i];
+        }
+
+        while (int(pows.size()) <= n)
+            pows.push_back(pows.back() * HASH_MUL);
+    }
+
+    int length() const {
+        return int(prefix_hash.size()) - 1;
+    }
+
+    hash_t complete_hash() const {
+        return prefix_hash.back();
+    }
+
+    hash_t sub_hash(int start, int end) const {
+        assert(0 <= start && start <= end && end <= length());
+        return prefix_hash[end] - prefix_hash[start] * pows[end - start];
+    }
+
+    hash_t rev_sub_hash(int start, int end) const {
+        assert(BUILD_REVERSE && 0 <= start && start <= end && end <= length());
+        return suffix_hash[start] - suffix_hash[end] * pows[end - start];
+    }
+
+    bool is_palindrome(int start, int end) const {
+        return sub_hash(start, end) == rev_sub_hash(start, end);
+    }
+};
+
+template<unsigned mod>
+vector<hash_t> string_hash<mod>::pows = {1};
+vector<hash_t> string_hash<0>::pows = {1};
