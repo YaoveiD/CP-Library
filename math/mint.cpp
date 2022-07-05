@@ -6,7 +6,7 @@ public:
 
     _mod_int(int64_t v = 0) {
         if (v < 0)
-        v = v % md + md;
+            v = v % md + md;
         if (v >= md)
             v %= md;
         val = int(v);
@@ -96,7 +96,7 @@ public:
 
         while (p > 0) {
             if (p & 1)
-            result *= a;
+                result *= a;
 
             p >>= 1;
 

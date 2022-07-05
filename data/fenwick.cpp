@@ -2,18 +2,19 @@
 using namespace std;
 
 template<typename T>
-struct fenwick_tree : public vector<T> {
+struct fenwick_tree {
+    vector<T> tree;
     int tree_n;
     T tree_sum;
 
-    fenwick_tree(int n = 0) : vector<T>(n + 1, 0), tree_n(n), tree_sum(0) {}
+    fenwick_tree(int n = 0) : tree(n + 1, 0), tree_n(n), tree_sum(0) {}
 
     void update(int index, T change) {
         assert(0 <= index && index < tree_n);
         tree_sum += change;
 
         for (int i = index + 1; i <= tree_n; i += i & -i)
-            (*this)[i] += change;
+            tree[i] += change;
     }
 
     // Returns the sum of range [0, count)
@@ -22,7 +23,7 @@ struct fenwick_tree : public vector<T> {
         T sum = 0;
 
         for (int i = count; i > 0; i -= i & -i)
-            sum += (*this)[i];
+            sum += tree[i];
 
         return sum;
     }

@@ -1,16 +1,16 @@
-template<typename T_array>
-vector<int> LIS(const T_array &sequence) {
-    int n = int(sequence.size());
-    assert(n > 0);
-    vector<int> d(n + 1, int(1e9));
-    vector<int> result(n);
-    d[0] = -int(1e9);
+template<typename T>
+int LIS(const vector<T> &sequence) {
+    vector<T> d;
 
-    for (int i = 0; i < n; ++i) {
-        auto it = lower_bound(d.begin(), d.end(), sequence[i]);
-        result[i] = int(it - d.begin());
-        *it = sequence[i];
+    for (const auto &x : sequence) {
+        auto it = lower_bound(d.begin(), d.end(), x);
+
+        if (it == d.end()) {
+            d.push_back(x);
+        } else {
+            *it = x;
+        }
     }
 
-    return result;
+    return int(d.size());
 }

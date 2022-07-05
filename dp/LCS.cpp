@@ -1,20 +1,3 @@
-
-template<typename T_array>
-int LCS(const T_array& S, const T_array& T) {
-    int N = int(S.size()), M = int(T.size());
-    vector<vector<int>> dp(N + 1, vector<int>(M + 1));
-
-    for (int i = 0; i < N; ++i)
-        for (int j = 0; j < M; ++j)
-            if (S[i] == T[j]) {
-                dp[i + 1][j + 1] = dp[i][j] + 1;
-            } else {
-                dp[i + 1][j + 1] = max(dp[i + 1][j], dp[i][j + 1]);
-            }
-
-    return dp[N][M];
-}
-
 template<typename T_array>
 string LCS(const T_array& S, const T_array& T) {
     int N = int(S.size()), M = int(T.size());

@@ -4,7 +4,6 @@ using namespace std;
 auto random_address = [] { char *p = new char; delete p; return uint64_t(p); };
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count() * (random_address() | 1));
 mt19937_64 rng64(chrono::steady_clock::now().time_since_epoch().count() * (random_address() | 1));
-#define URD(L, R) uniform_real_distribution<double>(L, R)(rng)
 
 template<typename integer_t>
 inline integer_t rand(integer_t from, integer_t to) {
@@ -16,15 +15,17 @@ inline int64_t rand(int64_t from, int64_t to) {
   return uniform_int_distribution<int64_t>(from, to)(rng64);
 }
 
+template<>
+inline double rand(double from, double to) {
+  return uniform_real_distribution<double>(from, to)(rng);
+}
 
 inline namespace generator {
   string gen_string(int len, int CAP = 0, int from = 1, int to = 26) {
     assert(len >= 0);
     string str(len, (CAP ? 'A' : 'a'));
-
     for (char &ch : str)
       ch += rand(from, to) - 1;
-    
     return str;
   }
 
@@ -33,10 +34,8 @@ inline namespace generator {
     string str;
     int n = int(base.size());
     str.reserve(len);
-
     for (int i = 0; i < len; ++i)
       str.push_back(base[rand(0, n - 1)]);
-
     return str;
   }
   

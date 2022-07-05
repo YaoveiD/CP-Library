@@ -67,23 +67,3 @@ vector<pair<int64_t, int>> prime_factorize(int64_t n) {
     return result;
 }
 
-vector<pair<int64_t, int>> prime_factorize(int64_t n) {
-    vector<pair<int64_t, int>> result;
-
-    for (int64_t i = 2; i * i <= n; ++i) {
-        int exponent = 0;
-    
-        while (n % i == 0) {
-            n /= i;
-            exponent++;
-        }
-    
-        if (exponent > 0)
-            result.emplace_back(i, exponent);
-    }
-  
-    if (n != 1)
-        result.emplace_back(n, 1);
-
-    return result;
-}

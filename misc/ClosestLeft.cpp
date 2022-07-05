@@ -38,18 +38,18 @@ vector<int> closest_left(const vector<T> &values, T_compare &&compare) {
 template<typename T, typename T_compare>
 vector<int> closest_right(vector<T> values, T_compare &&compare) {
     int n = int(values.size());
-    vector<int> cloest(n);
+    vector<int> closest(n);
     vector<int> stack;
 
     for (int i = n - 1; i >= 0; --i) {
         while (!stack.empty() && !compare(values[stack.back()], values[i]))
             stack.pop_back();
 
-        cloest[i] = stack.empty() ? n : stack.back();
+        closest[i] = stack.empty() ? n : stack.back();
         stack.push_back(i);
     }
 
-    return cloest;
+    return closest;
 }
 
 // problem: given an array A of size n.

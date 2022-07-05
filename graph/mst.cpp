@@ -101,16 +101,18 @@ struct kruskal {
 
 // source : https://chenshouao.github.io/mkdocs/pages/Algorithm/graph/prim.html
 
-const int INF = int(1e9) + 442;
+const int64_t INF = int64_t(1e18) + 4242;
 
 template<typename T> struct Prim {
     int n;
     vector<T> d;
     vector<bool> vis;
     vector<vector<T>> g;
+    vector<int> parent;
 
     Prim(int _n) {
         n = _n;
+        // Make sure INF won't overflow.
         g.assign(n, vector<T>(n, INF));
 
         for (int i = 0; i < n; ++i)
@@ -121,29 +123,31 @@ template<typename T> struct Prim {
         g[u][v] = min(g[u][v], w);
     }
   
-    int64_t mst(int src = 0) {
-        int64_t sum = 0;
+    T mst(int src = 0) {
+        T sum = 0;
         vis.assign(n, false);
         d.assign(n, INF);
+        parent.assign(n, -1);
         d[src] = 0;
 
         for (int i = 0; i < n; ++i) {
             int k = -1;
 
-            for (int j = 0; j < n; ++j) {
-                if (!vis[j] && (k == -1 || d[j] < d[k])) {
+            for (int j = 0; j < n; ++j)
+                if (!vis[j] && (k == -1 || d[j] < d[k]))
                     k = j;
-                }
-            }
 
             if (k == -1)
                 return -1; // Graph can't connect
 
-            vis[k] = 1;
+            vis[k] = true;
             sum += d[k];
 
-            for (int i = 0; i < n; ++i)
-                d[i] = min(d[i], g[k][i]);
+            for (int j = 0; j < n; ++j)
+                if (!vis[j] && g[k][j] < d[j]) {
+                    d[j] = g[k][j];
+                    parent[j] = k;
+                }
         }
 
         return sum;

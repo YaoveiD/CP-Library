@@ -1,12 +1,3 @@
-/*
-*  author: yaoveil
-*  date:   2021-06-22 23:13:08
-*/
-
-#include <bits/stdc++.h>
-
-using namespace std;
-
 // source : https://github.com/nealwu/competitive-programming
 // verification : https://atcoder.jp/contests/practice2/submissions/26032473
 struct union_find {
@@ -77,83 +68,5 @@ struct union_find {
             result.end());
 
         return result;
-    }
-};
-
-struct bi_union_find {
-    int n;
-    vector<int> parent;
-
-    bi_union_find(int _n) : n(_n), parent(n * 2) {
-        iota(parent.begin(), parent.end(), 0);
-    }
-
-    int find(int x) {
-        return x == parent[x] ? x : parent[x] = find(parent[x]);
-    }
-
-    bool same(int x, int y) {
-        return find(x) == find(y);
-    }
-
-    bool diff(int x, int y) {
-        return find(x) == find(y + n);
-    }
-
-    bool connected(int x, int y) {
-        return same(x, y) || diff(x, y);
-    }
-
-    bool unite(int x, int y) {
-        x = find(x);
-        y = find(y);
-
-        if (x == y)
-            return false;
-
-        parent[x] = y;
-        return true;
-    }
-
-    bool unite(int x, int y, bool same) {
-        if (same)
-            return unite(x, y) && unite(x + n, y + n);
-        else
-            return unite(x, y + n) && unite(x + n, y);
-    }
-};
-
-//weighted, I don't know.
-class Dsu {
-public:
-    int n;
-    vector<int> p;
-    vector<int> weight;
-
-    Dsu(int _n) : n(_n) {
-        p.resize(n);
-        weight.resize(n);
-        iota(p.begin(), p.end(), 0);
-    }
-
-    inline int get(int x) {
-        if (x != p[x]) {
-            int t = p[x];
-            p[x] = get(p[x]);
-            weight[x] += weight[t];
-        }
-        return p[x];
-    }
-
-    inline bool unite(int x, int y, int w = 0) {
-        int px = get(x);
-        int py = get(y);
-        if (px != py) {
-            p[px] = py;
-            weight[px] = -weight[x] + weight[y] + w;
-            return true;
-        }
-        // here should be some constraints
-        return false;
     }
 };
