@@ -6,7 +6,6 @@ using namespace std;
 // 1. set v to to all elements on the segment from l to r
 // 2. find the segment with maximal sum
 
-
 struct segment_change {
     int64_t to_set;
     static const auto SENTINEL = numeric_limits<decltype(to_set)>::lowest();
