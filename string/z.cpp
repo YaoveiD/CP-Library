@@ -1,9 +1,9 @@
 // source : https://github.com/nealwu/competitive-programming/blob/master/strings/z_algorithm.cc
 template<typename T>
-vector<int> z_algorithm(const T &pattern) {
+std::vector<int> z_algorithm(const T &pattern) {
     // Z[i] = for the suffix [i, n) of pattern, the longest prefix that is also a prefix of pattern.
     int n = int(pattern.size());
-    vector<int> Z(n, 0);
+    std::vector<int> Z(n, 0);
     Z[0] = n;
     int loc = 1;
 

@@ -26,7 +26,6 @@ int v[RESERVE_SIZE];
 node* version[RESERVE_SIZE];
 
 // Constructs Version-0
-// Time Complexity : O(nlogn)
 // Note : [low, high)
 void build(node* n, int low, int high) {
     if (low + 1 == high)
@@ -65,7 +64,7 @@ void upgrade(node* prev, node* cur, int low, int high,
         cur->right = prev->right;
         // create new node in current version
         cur->left = new node(nullptr, nullptr, 0);
-        upgrade(prev->left,cur->left, low, mid, idx, value);
+        upgrade(prev->left, cur->left, low, mid, idx, value);
     } else {
         // link to left child of previous version
         cur->left = prev->left;

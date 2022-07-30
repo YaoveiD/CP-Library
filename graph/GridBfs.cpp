@@ -49,7 +49,7 @@ struct grid_bfs {
         }
     }
     
-    void bfs(const vector<state> &source) {
+    void bfs(const vector<state> &sources) {
         if (R == 0 || C == 0) return;
  
         // Two queues are needed for 0-1 BFS.
@@ -57,7 +57,7 @@ struct grid_bfs {
         dist.assign(R, vector<int>(C, INF));
         parent.assign(R, vector<state>(C, state()));
  
-        for (const state &src : source)
+        for (const state &src : sources)
             bfs_check(q, next_q, src, state(), 0, 0);
  
         int level = 0;
@@ -89,6 +89,5 @@ struct grid_bfs {
     void bfs(const state& src) {
         bfs(vector<state>(1, src));
     }
-
 };
  

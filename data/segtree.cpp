@@ -169,7 +169,7 @@ struct seg_tree {
         int mid = (start + end) / 2;
         int index = -1;
 
-        if (pred(tree[p * 2]))
+        if (pred(tree[p * 2]) && a < mid)
             index = find_first(p * 2, start, mid, a, pred);
         
         if (index == -1) // I don't know

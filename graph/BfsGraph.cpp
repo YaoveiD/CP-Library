@@ -40,25 +40,21 @@ struct BFS {
         }
     }
  
-    void bfs(const vector<int> &source, int stop = -1) {
+    void bfs(const vector<int> &sources) {
         if (n == 0) return;
- 
+
         queue<int> q;
         dist.assign(n, INF);
         parent.assign(n, -1);
  
-        for (int src : source)
+        for (int src : sources)
             bfs_check(q, src, -1, 0);
  
          while (!q.empty()) {
             int top = q.front(); q.pop();
- 
-            if (top == stop)
-                return;
 
-            for (int next_node : adj[top]) {
+            for (int next_node : adj[top])
                 bfs_check(q, next_node, top, dist[top] + 1);
-            }
         }
     }
 };

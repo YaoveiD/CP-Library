@@ -6,8 +6,6 @@
 #include <ext/pb_ds/assoc_container.hpp>
 using namespace std;
 
-const int N = 200005;
-
 // runs much faster especially on codeforces, but solwer on my PC, why?
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
@@ -29,6 +27,8 @@ using hash_map = __gnu_pbds::gp_hash_table<K, V, Hash>;
  
 template <typename K, typename Hash = custom_hash>
 using hash_set = hash_map<K, __gnu_pbds::null_type, Hash>;
+
+const int N = 200005;
 
 void safe_insert(long long x) {
     clock_t begin = clock();

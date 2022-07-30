@@ -1,4 +1,3 @@
-
 // source : https://github.com/nealwu/competitive-programming/blob/master/strings/trie.cc
 template<char MIN_CHAR = 'a', int ALPHABET = 26>
 struct array_trie {

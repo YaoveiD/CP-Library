@@ -5,7 +5,7 @@ struct sparse_table {
     T_func func;
  
     sparse_table(const vector<T> &a, const T_func &f) : table(1, a), func(f) {
-        n = static_cast<int>(a.size());
+        n = int(a.size());
         int levels = 32 - __builtin_clz(n);
 
         for (int j = 1; j < levels; j++) {

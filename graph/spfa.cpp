@@ -5,7 +5,6 @@ template <typename edge_t, typename dist_t>
 struct SPFA {
     int n;
     vector<vector<pair<int, edge_t>>> adj;
-    vector<int> parent;
     vector<int> times;
     vector<bool> inque;
     vector<dist_t> dist;
@@ -32,11 +31,10 @@ struct SPFA {
         adj[a].emplace_back(b, c);
     }
 
-    // returns true if negtive circle detected
+    // Returns `true` if negtive circle detected.
     bool solve(int src) {
         static const dist_t INF = numeric_limits<dist_t>::max() / 2; // Note: dummy
         dist.assign(n, INF);
-        parent.assign(n, -1);
         times.assign(n, 0);
         inque.assign(n, false);
         queue<int> q;
@@ -54,7 +52,6 @@ struct SPFA {
 
                 if (dist[to] > dist[node] + e.second) {
                     dist[to] = dist[node] + e.second;
-                    parent[to] = node;
 
                     if (!inque[to]) {
                         if (++times[to] > n)

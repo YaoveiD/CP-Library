@@ -1,6 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 template <typename dist_t, typename edge_t>
 vector<dist_t> dijkstra(vector<vector<pair<int, edge_t>>>& adj, int src = 0) {
     priority_queue<pair<dist_t, int>, vector<pair<dist_t, int>>, greater<pair<dist_t, int>>> pq;

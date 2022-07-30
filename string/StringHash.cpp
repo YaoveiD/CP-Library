@@ -1,9 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define sz(c) int(c.size())
-#define all(c) c.begin(), c.end()
-
 auto random_address = [] { char *p = new char; delete p; return uint64_t(p); };
 mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count() * (random_address() | 1));
 

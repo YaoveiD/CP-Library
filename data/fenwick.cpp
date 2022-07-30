@@ -1,46 +1,4 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-template<typename T>
-struct fenwick_tree {
-    vector<T> tree;
-    int tree_n;
-    T tree_sum;
-
-    fenwick_tree(int n = 0) : tree(n + 1, 0), tree_n(n), tree_sum(0) {}
-
-    void update(int index, T change) {
-        assert(0 <= index && index < tree_n);
-        tree_sum += change;
-
-        for (int i = index + 1; i <= tree_n; i += i & -i)
-            tree[i] += change;
-    }
-
-    // Returns the sum of range [0, count)
-    T query(int count) const {
-        assert(count <= tree_n);
-        T sum = 0;
-
-        for (int i = count; i > 0; i -= i & -i)
-            sum += tree[i];
-
-        return sum;
-    }
-
-    // Returns the sum of range [start, tree_n)
-    T query_suffix(int start) const {
-        return tree_sum - query(start);
-    }
-
-    // Returns the sum of range [a, b)
-    T query(int a, int b) const {
-        return query(b) - query(a);
-    }
-};
-
-// https://codeforces.com/contest/1311/submission/71933816
-// Note: [0, n)
+// source : https://github.com/nealwu/competitive-programming/blob/master/seg_tree/fenwick_tree.cc
 template<typename T>
 struct fenwick_tree {
     int tree_n = 0;
