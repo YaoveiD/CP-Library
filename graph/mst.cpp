@@ -1,15 +1,9 @@
-/*
- *  author: yaoveil
- *  date:   2021-06-22 23:19:00
- */
-
 #include <bits/stdc++.h>
-using namespace std;
 
 // source : https://github.com/nealwu/competitive-programming/blob/master/union_find/kruskal.cc
 struct union_find {
     // When data[x] < 0, x is a root and -data[x] is its tree size. When data[x] >= 0, data[x] is x's parent.
-    vector<int> data;
+    std::vector<int> data;
     int components = 0;
 
     union_find(int n = -1) {
@@ -38,7 +32,7 @@ struct union_find {
             return false;
 
         if (-data[x] < -data[y])
-            swap(x, y);
+            std::swap(x, y);
 
         data[x] += data[y];
         data[y] = x;
@@ -65,8 +59,8 @@ struct kruskal {
     };
 
     union_find UF;
-    vector<edge> edges;
-    vector<bool> original_in_tree;
+    std::vector<edge> edges;
+    std::vector<bool> original_in_tree;
 
     kruskal(int n = -1) {
         if (n >= 0)
@@ -85,7 +79,7 @@ struct kruskal {
 
     template<typename T_sum>
     T_sum solve() {
-        sort(edges.begin(), edges.end());
+        std::sort(edges.begin(), edges.end());
         T_sum total = 0;
 
         for (edge &e : edges)
@@ -105,15 +99,15 @@ const int64_t INF = int64_t(1e18) + 4242;
 
 template<typename T> struct Prim {
     int n;
-    vector<T> d;
-    vector<bool> vis;
-    vector<vector<T>> g;
-    vector<int> parent;
+    std::vector<T> d;
+    std::vector<bool> vis;
+    std::vector<std::vector<T>> g;
+    std::vector<int> parent;
 
     Prim(int _n) {
         n = _n;
         // Make sure INF won't overflow.
-        g.assign(n, vector<T>(n, INF));
+        g.assign(n, std::vector<T>(n, INF));
 
         for (int i = 0; i < n; ++i)
             g[i][i] = 0;

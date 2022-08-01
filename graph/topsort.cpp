@@ -1,12 +1,12 @@
-vector<int> toposort(const vector<vector<int>>& adj) {
+std::vector<int> toposort(const std::vector<std::vector<int>>& adj) {
     int n = int(adj.size());
-    vector<int> indeg(n);
+    std::vector<int> indeg(n);
 
     for (int v = 0; v < n; ++v)
         for (int to : adj[v])
             indeg[to]++;
 
-    vector<int> q;
+    std::vector<int> q;
 
     for (int v = 0; v < n; ++v) if (indeg[v] == 0)
         q.push_back(v);

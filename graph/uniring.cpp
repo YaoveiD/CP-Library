@@ -1,18 +1,19 @@
+#include <bits/stdc++.h>
 // verfication : https://leetcode-cn.com/submissions/detail/254471413/
 struct uniring {
     int n;
-    vector<int> next;
-    vector<vector<int>> circles;
-    vector<int> circle_size;
-    vector<int> start_max; // longest path start from node. Note: including node
-    vector<int> end_max; // longest path end with node. Note: not include circle node, but including node itself.
+    std::vector<int> next;
+    std::vector<std::vector<int>> circles;
+    std::vector<int> circle_size;
+    std::vector<int> start_max; // longest path start from node. Note: including node
+    std::vector<int> end_max; // longest path end with node. Note: not include circle node, but including node itself.
 
     uniring(int _n = -1) {
         if (_n != -1)
             init(_n);
     }
 
-    uniring(vector<int>& _next) : n(_next.size()), next(_next) {}
+    uniring(std::vector<int>& _next) : n(_next.size()), next(_next) {}
 
     void init(int _n) {
         n = _n;
@@ -24,13 +25,13 @@ struct uniring {
     }
 
     void process(bool need_start = false, bool need_end = false) {
-        vector<int> indeg(n);
+        std::vector<int> indeg(n);
         
         for (int node : next)
             if (node != -1)
                 indeg[node]++;
 
-        vector<int> que;
+        std::vector<int> que;
 
         for (int node = 0; node < n; ++node)
             if (indeg[node] == 0)
@@ -89,27 +90,18 @@ struct uniring {
 
 class Solution {
 public:
-    int maximumInvitations(vector<int>& next) {
+    int maximumInvitations(std::vector<int>& next) {
         uniring A(next);
         A.process(false, true);
         int circle = 0, chain = 0;
 
         for (auto &c : A.circles) {
-            circle = max(int(c.size()), circle);
+            circle = std::max(int(c.size()), circle);
 
             if (c.size() == 2)
                 chain += A.end_max[c.back()] + A.end_max[c.front()];
         }
 
-        return max(circle, chain);
+        return std::max(circle, chain);
     }
 };
-
-int main() {
-    ios::sync_with_stdio(false);
-#ifndef LOCAL
-    cin.tie(0);
-#endif
-
-    
-}

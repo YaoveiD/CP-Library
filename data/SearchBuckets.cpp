@@ -1,7 +1,6 @@
 // TODO: pragmas may help make this faster.
 // #pragma GCC optimize("Ofast,unroll-loops,no-stack-protector,fast-math,inline")
 #include <bits/stdc++.h>
-using namespace std;
 
 // source : https://github.com/nealwu/competitive-programming/blob/master/sqrt/search_buckets.cc
 // search_buckets provides two operations on an array:
@@ -13,9 +12,9 @@ template<typename T>
 struct search_buckets {
     // values are just the values in order. buckets are sorted in segments of bucket_size (last segment may be smaller)
     int n, bucket_size;
-    vector<T> values, buckets;
+    std::vector<T> values, buckets;
 
-    search_buckets(const vector<T> &initial = {}) {
+    search_buckets(const std::vector<T> &initial = {}) {
         init(initial);
     }
 
@@ -24,14 +23,14 @@ struct search_buckets {
     }
 
     int get_bucket_end_from_start(int bucket_start) const {
-        return min(bucket_start + bucket_size, n);
+        return std::min(bucket_start + bucket_size, n);
     }
 
-    void init(const vector<T> &initial) {
+    void init(const std::vector<T> &initial) {
         values = buckets = initial;
         n = int(values.size());
         bucket_size = int(3 * sqrt(n * log(n + 1)) + 1);
-        cerr << "Bucket size: " << bucket_size << endl;
+        std::cerr << "Bucket size: " << bucket_size << std::endl;
 
         for (int start = 0; start < n; start += bucket_size)
             sort(buckets.begin() + start, buckets.begin() + get_bucket_end_from_start(start));
@@ -105,7 +104,7 @@ struct search_buckets {
 int main() {
     int N, Q;
     scanf("%d %d", &N, &Q);
-    vector<int> initial(N);
+    std::vector<int> initial(N);
 
     for (int &a : initial)
         scanf("%d", &a);

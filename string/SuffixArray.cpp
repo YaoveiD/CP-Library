@@ -21,15 +21,15 @@ struct suffix_array {
     int n;
     std::vector<int> suffix, rank;
     std::vector<int> lcp;
-    string str;
+    std::string str;
     RMQ<int> rmq;
 
-    suffix_array(const string &_str) {
+    suffix_array(const std::string &_str) {
         build(_str);
         rmq.build(lcp);
     }
 
-    void build(const string &_str) {
+    void build(const std::string &_str) {
         str = _str;
         n = int(str.size());
         suffix.resize(n);
@@ -114,7 +114,7 @@ struct suffix_array {
             return n - a;
 
         a = rank[a], b = rank[b];
-        if (a > b) swap(a, b);
+        if (a > b) std::swap(a, b);
         return rmq.query(a + 1, b + 1);
     }
 

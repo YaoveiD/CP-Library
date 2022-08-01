@@ -1,5 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
 
 // solution to https://codeforces.com/edu/course/2/lesson/5/3/practice/status
 // this data structure can handle the following two operations
@@ -8,7 +6,7 @@ using namespace std;
 
 struct segment_change {
     int64_t to_set;
-    static const auto SENTINEL = numeric_limits<decltype(to_set)>::lowest();
+    static const auto SENTINEL = std::numeric_limits<decltype(to_set)>::lowest();
 
     explicit segment_change(int64_t _set = SENTINEL) : to_set(_set) {}
 
@@ -28,7 +26,7 @@ struct segment {
 
     void apply(int length, const segment_change& change) {
         sum = change.to_set * length;
-        prefix_max = max<int64_t>(0, sum);
+        prefix_max = std::max<int64_t>(0, sum);
         suffix_max = prefix_max;
         mx = prefix_max;
     }
@@ -39,9 +37,9 @@ struct segment {
 segment combine(const segment& a, const segment& b) {
     segment c;
     c.sum = a.sum + b.sum;
-    c.prefix_max = max(a.prefix_max, a.sum + b.prefix_max);
-    c.suffix_max = max(b.suffix_max, b.sum + a.suffix_max);
-    c.mx = max({a.suffix_max + b.prefix_max, a.mx, b.mx});
+    c.prefix_max = std::max(a.prefix_max, a.sum + b.prefix_max);
+    c.suffix_max = std::max(b.suffix_max, b.sum + a.suffix_max);
+    c.mx = std::max({a.suffix_max + b.prefix_max, a.mx, b.mx});
     return c;
 }
 
@@ -51,8 +49,8 @@ struct seg_tree {
     }
 
     int tree_n;
-    vector<segment> tree;
-    vector<segment_change> changes;
+    std::vector<segment> tree;
+    std::vector<segment_change> changes;
 
     seg_tree(int n = -1) {
         if (n > 0)
@@ -89,7 +87,7 @@ struct seg_tree {
     }
 
     // Builds our tree from an array in O(tree_n).
-    void build(const vector<segment> &initial) {
+    void build(const std::vector<segment> &initial) {
         int n = int(initial.size());
         init(n);
         assert(n <= tree_n);
@@ -184,21 +182,3 @@ struct seg_tree {
         return find_first(1, 0, tree_n, a, pred);
     }
 };
-
-int main() {
-    ios::sync_with_stdio(false);
-#ifndef LOCAL
-    cin.tie(0);
-#endif
-
-    int N, M;
-    cin >> N >> M;
-    seg_tree segtree(N);
-
-    while (M--) {
-        int a, b, v;
-        cin >> a >> b >> v;
-        segtree.update(a, b, segment_change(v));
-        cout << segtree.query(0, N).mx << '\n';
-    }
-}

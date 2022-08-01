@@ -2,7 +2,7 @@
 // verification : https://atcoder.jp/contests/practice2/submissions/26032473
 struct union_find {
     // When data[x] < 0, x is a root and -data[x] is its tree size. When data[x] >= 0, data[x] is x's parent.
-    vector<int> data;
+    std::vector<int> data;
     int n;
     int components = 0;
 
@@ -37,7 +37,7 @@ struct union_find {
             return false;
 
         if (-data[x] < -data[y])
-            swap(x, y);
+            std::swap(x, y);
 
         data[x] += data[y];
         data[y] = x;
@@ -46,15 +46,15 @@ struct union_find {
     }
 // }; // basic union_find
 
-    vector<vector<int>> get_groups() {
-        vector<int> parent(n), group_size(n);
+    std::vector<std::vector<int>> get_groups() {
+        std::vector<int> parent(n), group_size(n);
 
         for (int i = 0; i < n; ++i) {
             parent[i] = find(i);
             group_size[parent[i]]++;
         }
 
-        vector<vector<int>> result(n);
+        std::vector<std::vector<int>> result(n);
 
         for (int i = 0; i < n; ++i)
             result[i].reserve(group_size[i]);

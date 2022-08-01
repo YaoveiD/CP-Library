@@ -1,8 +1,4 @@
 #include <bits/stdc++.h>
-using namespace std;
-
-#define sz(c) int(c.size())
-#define all(c) c.begin(), c.end()
 
 struct mo_query {
     int start, end, index, block;
@@ -55,7 +51,7 @@ namespace mo {
     }
 
     void update_state(int qstart, int qend) {
-        if (max(start, qstart) >= min(end, qend)) {
+        if (std::max(start, qstart) >= std::min(end, qend)) {
             for (int i = start; i < end; ++i)
                 remove_left(i);
             for (int i = qstart; i < qend; ++i)
@@ -73,14 +69,14 @@ namespace mo {
             remove_left(i);
     }
 
-    void init(const vector<int> &A) {
+    void init(const std::vector<int> &A) {
         n = int(A.size());
         copy(A.begin(), A.end(), values);
         start = end = 0;
     }
 
-    vector<mo_answer> solve(vector<mo_query> queries) {
-        int block_size = int(1.5 * n / sqrt(max(int(queries.size()), 1)) + 1);
+    std::vector<mo_answer> solve(std::vector<mo_query> queries) {
+        int block_size = int(1.5 * n / sqrt(std::max(int(queries.size()), 1)) + 1);
 
         for (int i = 0; i < int(queries.size()); i++) {
             queries[i].index = i;
@@ -88,7 +84,7 @@ namespace mo {
         }
 
         sort(queries.begin(), queries.end());
-        vector<mo_answer> answers(queries.size());
+        std::vector<mo_answer> answers(queries.size());
 
         for (mo_query &q : queries) {
             update_state(q.start, q.end);
@@ -105,6 +101,7 @@ namespace mo {
 }
 
 int main() {
+    using namespace std;
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
@@ -116,11 +113,11 @@ int main() {
         cin >> a;
 
     vector<int> sorted(A);
-    sort(all(sorted));
-    sorted.erase(unique(all(sorted)), sorted.end());
+    sort(sorted.begin(), sorted.end());
+    sorted.erase(unique(sorted.begin(), sorted.end()), sorted.end());
 
     for (int &a : A)
-        a = int(lower_bound(all(sorted), a) - sorted.begin());
+        a = int(lower_bound(sorted.begin(), sorted.end(), a) - sorted.begin());
 
     vector<mo_query> queries(Q);
     

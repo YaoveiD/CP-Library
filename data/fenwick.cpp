@@ -3,7 +3,7 @@ template<typename T>
 struct fenwick_tree {
     int tree_n = 0;
     T tree_sum = 0;
-    vector<T> tree;
+    std::vector<T> tree;
  
     fenwick_tree(int n = -1) {
         if (n >= 0)

@@ -1,10 +1,10 @@
-template <typename T, typename T_func = function<T(const T&, const T&)>>
+template <typename T, typename T_func = std::function<T(const T&, const T&)>>
 struct sparse_table {
     int n;
-    vector<vector<T>> table;
+    std::vector<std::vector<T>> table;
     T_func func;
  
-    sparse_table(const vector<T> &a, const T_func &f) : table(1, a), func(f) {
+    sparse_table(const std::vector<T> &a, const T_func &f) : table(1, a), func(f) {
         n = int(a.size());
         int levels = 32 - __builtin_clz(n);
 

@@ -1,28 +1,25 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 template <typename edge_t, typename dist_t>
 struct SPFA {
     int n;
-    vector<vector<pair<int, edge_t>>> adj;
-    vector<int> times;
-    vector<bool> inque;
-    vector<dist_t> dist;
+    std::vector<std::vector<std::pair<int, edge_t>>> adj;
+    std::vector<int> times;
+    std::vector<bool> inque;
+    std::vector<dist_t> dist;
 
     SPFA(int _n = -1) {
         if (_n > 0)
             init(_n);
     }
 
-    SPFA(const vector<vector<pair<int, edge_t>>> &_adj)
+    SPFA(const std::vector<std::vector<std::pair<int, edge_t>>> &_adj)
         : n(int(_adj.size())), adj(_adj) {}
 
     void init(int _n) {
         n = _n;
-        adj.assign(n, vector<pair<int, edge_t>>());
+        adj.assign(n, std::vector<std::pair<int, edge_t>>());
     }
 
-    void init(const vector<vector<pair<int, edge_t>>> &_adj) {
+    void init(const std::vector<std::vector<std::pair<int, edge_t>>> &_adj) {
         n = int(_adj.size());
         adj = _adj;
     }
@@ -33,11 +30,11 @@ struct SPFA {
 
     // Returns `true` if negtive circle detected.
     bool solve(int src) {
-        static const dist_t INF = numeric_limits<dist_t>::max() / 2; // Note: dummy
+        static const dist_t INF = std::numeric_limits<dist_t>::max() / 2; // Note: dummy
         dist.assign(n, INF);
         times.assign(n, 0);
         inque.assign(n, false);
-        queue<int> q;
+        std::queue<int> q;
         dist[src] = 0;
         times[src] = 1;
         q.push(src);

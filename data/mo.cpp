@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-using namespace std;
 
 // solution to https://codeforces.com/problemset/problem/86/D
 // source : https://codeforces.com/contest/86/submission/46163034
@@ -9,12 +8,12 @@ using mo_answer = int64_t;
 
 // TODO: re-implement this struct.
 struct mo_state {
-    const vector<mo_value> &values;
+    const std::vector<mo_value> &values;
 
-    vector<int> freq;
+    std::vector<int> freq;
     int64_t sum;
 
-    mo_state(const vector<mo_value> &_values) : values(_values) {
+    mo_state(const std::vector<mo_value> &_values) : values(_values) {
         int maximum = values.empty() ? 0 : *max_element(values.begin(), values.end());
         freq.assign(maximum + 1, 0);
         sum = 0;
@@ -62,14 +61,14 @@ struct mo_query {
 
 struct mo {
     int n;
-    vector<mo_value> values;
+    std::vector<mo_value> values;
 
-    mo(const vector<mo_value> &_values = {}) : values(_values) {
+    mo(const std::vector<mo_value> &_values = {}) : values(_values) {
         n = int(values.size());
     }
 
     void update_state(mo_state &state, const mo_query &first, const mo_query &second) const {
-        if (max(first.start, second.start) >= min(first.end, second.end)) {
+        if (std::max(first.start, second.start) >= std::min(first.end, second.end)) {
             for (int i = first.start; i < first.end; i++)
                 state.remove_left(i);
 
@@ -92,8 +91,8 @@ struct mo {
             state.remove_right(i);
     }
 
-    vector<mo_answer> solve(vector<mo_query> queries) const {
-        int block_size = int(1.5 * n / sqrt(max(int(queries.size()), 1)) + 1);
+    std::vector<mo_answer> solve(std::vector<mo_query> queries) const {
+        int block_size = int(1.5 * n / sqrt(std::max(int(queries.size()), 1)) + 1);
 
         for (int i = 0; i < int(queries.size()); i++) {
             queries[i].index = i;
@@ -103,7 +102,7 @@ struct mo {
         sort(queries.begin(), queries.end());
         mo_state state(values);
         mo_query last_query;
-        vector<mo_answer> answers(queries.size());
+        std::vector<mo_answer> answers(queries.size());
 
         for (mo_query &q : queries) {
             update_state(state, last_query, q);
@@ -118,20 +117,20 @@ struct mo {
 int main() {
     int N, Q;
     scanf("%d %d", &N, &Q);
-    vector<mo_value> A(N);
+    std::vector<mo_value> A(N);
 
     for (mo_value &a : A)
         scanf("%d", &a);
 
     mo solver(A);
-    vector<mo_query> queries(Q);
+    std::vector<mo_query> queries(Q);
 
     for (mo_query &qry : queries) {
         scanf("%d %d", &qry.start, &qry.end);
         qry.start--;
     }
 
-    vector<mo_answer> answers = solver.solve(queries);
+    std::vector<mo_answer> answers = solver.solve(queries);
 
     for (mo_answer &answer : answers)
         printf("%lld\n", (long long) answer);

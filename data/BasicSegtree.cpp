@@ -4,7 +4,7 @@
 // TODO: segment_change can be eliminated entirely in favor of just updating with a new segment instead.
 struct segment_change {
     // Use a sentinel value rather than a boolean to save significant memory (4-8 bytes per object).
-    static const int SENTINEL = numeric_limits<int>::lowest();
+    static const int SENTINEL = std::numeric_limits<int>::lowest();
 
     // TODO: check if these values can overflow int.
     int to_set, to_add;
@@ -63,7 +63,7 @@ struct basic_seg_tree {
     static const bool POWER_OF_TWO_MODE = true;
 
     int tree_n = 0;
-    vector<segment> tree;
+    std::vector<segment> tree;
 
     basic_seg_tree(int n = -1) {
         if (n >= 0)
@@ -84,7 +84,7 @@ struct basic_seg_tree {
     }
 
     // Builds our tree from an array in O(n).
-    void build(const vector<segment> &initial) {
+    void build(const std::vector<segment> &initial) {
         int n = int(initial.size());
         init(n);
         assert(n <= tree_n);

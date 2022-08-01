@@ -6,5 +6,5 @@ int main() {
 #ifndef LOCAL
     cin.tie(nullptr);
 #endif
-    
+
 }

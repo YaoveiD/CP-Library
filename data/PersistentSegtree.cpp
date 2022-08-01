@@ -1,8 +1,4 @@
 #include <bits/stdc++.h>
-using namespace std;
-
-#define sz(c) int(c.size())
-#define all(c) c.begin(), c.end()
 
 const int RESERVE_SIZE = 200005;
 
@@ -92,6 +88,7 @@ int query(node* n, int low, int high, int l, int r) {
 }
 
 int main() {
+    using namespace std;
     int N; cin >> N; getchar();
     version[0] = new node();
     build(version[0], 0, N);

@@ -1,11 +1,13 @@
+#include <bits/stdc++.h>
+
 // DP with DFS O(n) time get the diameter of a tree
 struct dfs_tree_diameter {
     int n, d;
     bool dfs_done = false;
-    vector<vector<int>> tree;
-    vector<int> D;
+    std::vector<std::vector<int>> tree;
+    std::vector<int> D;
 
-    dfs_tree_diameter(const vector<vector<int>>& _tree) : tree(_tree) {
+    dfs_tree_diameter(const std::vector<std::vector<int>>& _tree) : tree(_tree) {
         n = int(_tree.size());
         D.resize(n);
         d = 0;
@@ -15,8 +17,8 @@ struct dfs_tree_diameter {
         for (int to : tree[node])
             if (to != parent) {
                 dfs(to, node);
-                d = max(d, D[node] + D[to] + 1);
-                D[node] = max(D[node], D[to] + 1);
+                d = std::max(d, D[node] + D[to] + 1);
+                D[node] = std::max(D[node], D[to] + 1);
             }
     }
 
@@ -33,16 +35,16 @@ struct dfs_tree_diameter {
 // do BFS twice to get the diameter of a tree in O(n) time
 struct bfs_tree_diameter {
     int n;
-    vector<vector<int>> tree;
-    vector<int> D;
+    std::vector<std::vector<int>> tree;
+    std::vector<int> D;
 
-    bfs_tree_diameter(const vector<vector<int>>& _tree) : tree(_tree) {
+    bfs_tree_diameter(const std::vector<std::vector<int>>& _tree) : tree(_tree) {
         n = int(_tree.size());
     }
 
     int bfs(int src) {
         D.assign(n, -1);
-        queue<int> q;
+        std::queue<int> q;
         q.push(src);
         D[src] = 0;
 
@@ -67,6 +69,7 @@ struct bfs_tree_diameter {
 };
 
 int main() {
+    using namespace std;
     ios::sync_with_stdio(false);
 #ifndef LOCAL
     cin.tie(0);
@@ -74,7 +77,7 @@ int main() {
 
     int N;
     cin >> N;
-    vector<vector<int>> tree(N);
+    std::vector<std::vector<int>> tree(N);
 
     for (int i = 0; i < N - 1; ++i) {
         int u, v;
