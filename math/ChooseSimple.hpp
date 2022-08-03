@@ -1,8 +1,8 @@
 const int MOD = 1000000007; // 998244353;
 
-vector<int64_t> fact = {1, 1};
-vector<int64_t> inv = {1, 1};
-vector<int64_t> inv_fact = {1, 1};
+std::vector<int64_t> fact = {1, 1};
+std::vector<int64_t> inv = {1, 1};
+std::vector<int64_t> inv_fact = {1, 1};
 
 void prepare_factorials(int maximum) {
     fact.resize(maximum + 1);

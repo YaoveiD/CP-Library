@@ -1,32 +1,29 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 auto random_address = [] { char *p = new char; delete p; return uint64_t(p); };
-mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count() * (random_address() | 1));
+std::mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count() * (random_address() | 1));
 
 // P = 2^32 - 13337 is a safe prime: both P and (P - 1) / 2 are prime.
 extern const unsigned HASH_P = unsigned(-13337);
 using hash_t = uint64_t;
 
 // Avoid multiplication bases near 0 or P - 1.
-uniform_int_distribution<unsigned> MULT_DIST(unsigned(0.1 * HASH_P), unsigned(0.9 * HASH_P));
+std::uniform_int_distribution<unsigned> MULT_DIST(unsigned(0.1 * HASH_P), unsigned(0.9 * HASH_P));
 const unsigned HASH_MUL = MULT_DIST(rng);
 
 template<unsigned mod = HASH_P>
 struct string_hash {
     static const bool BUILD_REVERSE = true;
-    static vector<hash_t> pows;
+    static std::vector<hash_t> pows;
 
-    vector<hash_t> prefix_hash;
-    vector<hash_t> suffix_hash;
+    std::vector<hash_t> prefix_hash;
+    std::vector<hash_t> suffix_hash;
 
     string_hash() {}
 
-    string_hash(const string &str) {
+    string_hash(const std::string &str) {
         build(str);
     }
 
-    void build(const string &str) {
+    void build(const std::string &str) {
         int n = int(str.size());
         prefix_hash.assign(n + 1, 0);
 
@@ -75,4 +72,4 @@ struct string_hash {
 };
 
 template<unsigned mod>
-vector<hash_t> string_hash<mod>::pows = {1};
+std::vector<hash_t> string_hash<mod>::pows = {1};

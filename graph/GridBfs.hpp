@@ -21,15 +21,15 @@ struct state {
 template<typename T_row>
 struct grid_bfs {
     int R, C;
-    vector<T_row> grid;
-    vector<vector<int>> dist;
-    vector<vector<state>> parent;
+	std::vector<T_row> grid;
+	std::vector<std::vector<int>> dist;
+	std::vector<std::vector<state>> parent;
  
-    grid_bfs(const vector<T_row> &_grid = {}) {
+    grid_bfs(const std::vector<T_row> &_grid = {}) {
         init(_grid);
     }
  
-    void init(const vector<T_row> &_grid = {}) {
+    void init(const std::vector<T_row> &_grid = {}) {
         grid = _grid;
         R = int(grid.size());
         C = grid.empty() ? 0 : int(grid[0].size());
@@ -39,7 +39,7 @@ struct grid_bfs {
         return 0 <= r && r < R && 0 <= c && c < C;
     }
  
-    void bfs_check(queue<state> &q, queue<state> &next_q, const state &s, const state &from_s, int new_dist, int add) {
+    void bfs_check(std::queue<state> &q, std::queue<state> &next_q, const state &s, const state &from_s, int new_dist, int add) {
         assert(add == 0 || add == 1);
  
         if (new_dist < dist[s.row][s.col]) {
@@ -49,13 +49,13 @@ struct grid_bfs {
         }
     }
     
-    void bfs(const vector<state> &sources) {
+    void bfs(const std::vector<state> &sources) {
         if (R == 0 || C == 0) return;
  
         // Two queues are needed for 0-1 BFS.
-        queue<state> q, next_q;
-        dist.assign(R, vector<int>(C, INF));
-        parent.assign(R, vector<state>(C, state()));
+		std::queue<state> q, next_q;
+        dist.assign(R, std::vector<int>(C, INF));
+        parent.assign(R, std::vector<state>(C, state()));
  
         for (const state &src : sources)
             bfs_check(q, next_q, src, state(), 0, 0);
@@ -81,13 +81,13 @@ struct grid_bfs {
                 }
             }
  
-            swap(q, next_q);
+			std::swap(q, next_q);
             level++;
         }
     }
 
     void bfs(const state& src) {
-        bfs(vector<state>(1, src));
+        bfs(std::vector<state>(1, src));
     }
 };
  

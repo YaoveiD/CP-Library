@@ -2,6 +2,7 @@
 using namespace std;
 const double EPS = 1e-9;
 
+// I even forget.
 // solution to https://www.luogu.com.cn/problem/P3389
 // Note: the size of A is N*N
 // sum(A(row, i) * x_i) = B_row

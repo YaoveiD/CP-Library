@@ -22,9 +22,9 @@ public:
         while (r != 0) {
             int q = g / r;
             g %= r;
-            swap(g, r);
+			std::swap(g, r);
             x -= q * y;
-            swap(x, y);
+			std::swap(x, y);
         }
 
         return x < 0 ? x + m : x;
@@ -107,7 +107,7 @@ public:
         return result;
     }
 
-    friend ostream &operator<<(ostream &os, const _mod_int &m) {
+    friend std::ostream &operator<<(std::ostream &os, const _mod_int &m) {
         return os << m.val;
     }
 };

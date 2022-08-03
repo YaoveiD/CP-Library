@@ -1,10 +1,10 @@
 #include <bits/stdc++.h>
-using namespace std;
 
 int main() {
-    ios::sync_with_stdio(false);
+	using namespace std;
+	ios::sync_with_stdio(false);
 #ifndef LOCAL
-    cin.tie(nullptr);
+	cin.tie(nullptr);
 #endif
 
 }

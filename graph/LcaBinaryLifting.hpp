@@ -1,21 +1,21 @@
 // build lca in O(n logn) time and get lca in O(log n) time using binary lifting
 struct LCA {
     int n, levels;
-    vector<vector<int>> tree;
-    vector<int> depth;
-    vector<vector<int>> parent;
+	std::vector<std::vector<int>> tree;
+	std::vector<int> depth;
+	std::vector<std::vector<int>> parent;
 
     static constexpr int highest_bit(int x) {
         return x == 0 ? -1 : 31 - __builtin_clz(x);
     }
 
-    LCA(const vector<vector<int>>& _tree = {}) {
+    LCA(const std::vector<std::vector<int>>& _tree = {}) {
         int _n = int(_tree.size());
         if (_n > 0)
             init(_n, _tree);
     }
 
-    void init(int _n, const vector<vector<int>>& _tree) {
+    void init(int _n, const std::vector<std::vector<int>>& _tree) {
         n = _n;
         levels = highest_bit(n) + 1;
         tree = _tree;
@@ -31,7 +31,7 @@ struct LCA {
     }
 
     void build(int root = 0) {
-        parent.assign(levels, vector<int>(n, root));
+        parent.assign(levels, std::vector<int>(n, root));
         dfs(root, -1);
 
         for (int i = 1; i < levels; ++i)
@@ -44,7 +44,7 @@ struct LCA {
         assert(0 <= u && u < n && 0 <= v && v < n);
 
         if (depth[u] < depth[v])
-            swap(u, v);
+            std::swap(u, v);
 
         for (int i = levels - 1; i >= 0; --i)
             if (depth[parent[i][u]] >= depth[v])
@@ -67,7 +67,7 @@ struct LCA {
         return depth[u] + depth[v] - 2 * depth[lca];
     }
 
-    int go_up(int v, int step) {
+    int go_up(int v, int step) const {
         int bit = 1;
 
         while (step) {

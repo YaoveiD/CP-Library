@@ -1,7 +1,7 @@
 struct KMP {
-    vector<int> next;
+    std::vector<int> next;
 
-    void get_next(const string& S) {
+    void get_next(const std::string& S) {
         int N = int(S.size());
         next.resize(N);
         int cur = 0, i = 1;
@@ -19,7 +19,7 @@ struct KMP {
     }
 
     // Count how many substrings in `S` equal `T` in O(|S| + |T|).
-    int kmp(const string& S, const string& T) {
+    int kmp(const std::string& S, const std::string& T) {
         int matches = 0;
         int N = int(S.size()), M = int(T.size());
         int i = 0, j = 0;

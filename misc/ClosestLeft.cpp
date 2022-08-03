@@ -1,27 +1,13 @@
-#include <algorithm>
-#include <cassert>
-#include <iostream>
-#include <vector> 
+#include <bits/stdc++.h>
 using namespace std;
-
-template<typename A, typename B> ostream& operator<<(ostream &os, const pair<A, B> &p) { return os << '(' << p.first << ", " << p.second << ')'; }
-template<typename T_container, typename T = typename enable_if<!is_same<T_container, string>::value, typename T_container::value_type>::type> ostream& operator<<(ostream &os, const T_container &v) { os << '['; string sep; for (const T &x : v) os << sep << x, sep = ", "; return os << ']'; }
- 
-void debug_out() { cerr << endl; }
-template<typename Head, typename... Tail> void debug_out(Head H, Tail... T) { cerr << ' ' << H; debug_out(T...); }
-#ifdef LOCAL
-#define debug(...) cerr << "[" << #__VA_ARGS__ << "]:", debug_out(__VA_ARGS__)
-#else
-#define debug(...) 
-#endif
 
 // source : https://github.com/nealwu/competitive-programming/blob/master/miscellaneous/closest_left_right.cc
 // For every i, finds the largest j < i such that `compare(values[j], values[i])` is true, or -1 if no such j exists.
 template<typename T, typename T_compare>
-vector<int> closest_left(const vector<T> &values, T_compare &&compare) {
+std::vector<int> closest_left(const std::vector<T> &values, T_compare &&compare) {
     int n = int(values.size());
-    vector<int> closest(n);
-    vector<int> stack;
+    std::vector<int> closest(n);
+    std::vector<int> stack;
 
     for (int i = 0; i < n; i++) {
         while (!stack.empty() && !compare(values[stack.back()], values[i]))
@@ -36,10 +22,10 @@ vector<int> closest_left(const vector<T> &values, T_compare &&compare) {
 
 // For every i, finds the smallest j > i such that `compare(values[j], values[i])` is true, or `n` if no such j exists.
 template<typename T, typename T_compare>
-vector<int> closest_right(vector<T> values, T_compare &&compare) {
+std::vector<int> closest_right(std::vector<T> values, T_compare &&compare) {
     int n = int(values.size());
-    vector<int> closest(n);
-    vector<int> stack;
+    std::vector<int> closest(n);
+    std::vector<int> stack;
 
     for (int i = n - 1; i >= 0; --i) {
         while (!stack.empty() && !compare(values[stack.back()], values[i]))

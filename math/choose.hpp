@@ -169,7 +169,7 @@ template <const int &MOD> struct _m_int {
         return result;
     }
 
-    friend ostream &operator<<(ostream &os, const _m_int &m) {
+    friend std::ostream &operator<<(std::ostream &os, const _m_int &m) {
         return os << m.val;
     }
 };
@@ -180,7 +180,7 @@ _m_int<MOD> _m_int<MOD>::save_inv[_m_int<MOD>::SAVE_INV];
 extern const int MOD = 998244353;
 using mod_int = _m_int<MOD>;
 
-vector<mod_int> _factorial = {1, 1}, _inv_factorial = {1, 1};
+std::vector<mod_int> _factorial = {1, 1}, _inv_factorial = {1, 1};
 
 void prepare_factorials(int64_t maximum) {
     static int64_t prepared_maximum = 1;

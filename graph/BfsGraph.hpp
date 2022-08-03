@@ -5,11 +5,11 @@ const int INF = (int) 1e9 + 5;
 
 struct BFS {
     int n;
-    vector<vector<int>> adj;
-    vector<int> dist;
-    vector<int> parent;
+	std::vector<vector<int>> adj;
+	std::vector<int> dist;
+	std::vector<int> parent;
  
-    BFS(int _n, const vector<vector<int>>& _adj) : adj(_adj) {
+    BFS(int _n, const std::vector<std::vector<int>>& _adj) : adj(_adj) {
         n = _n;
         assert(_n == (int) _adj.size());
     }
@@ -32,7 +32,7 @@ struct BFS {
         adj[b].push_back(a);
     }
  
-    void bfs_check(queue<int> &q, int node, int from, int new_dist) {
+    void bfs_check(std::queue<int> &q, int node, int from, int new_dist) {
         if (new_dist < dist[node]) {
             dist[node] = new_dist;
             parent[node] = from;
@@ -40,10 +40,10 @@ struct BFS {
         }
     }
  
-    void bfs(const vector<int> &sources) {
+    void bfs(const std::vector<int> &sources) {
         if (n == 0) return;
 
-        queue<int> q;
+		std::queue<int> q;
         dist.assign(n, INF);
         parent.assign(n, -1);
  

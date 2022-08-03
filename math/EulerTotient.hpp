@@ -1,6 +1,6 @@
-vector<bool> prime;
-vector<int> primes;
-vector<int64_t> phi;
+std::vector<bool> prime;
+std::vector<int> primes;
+std::vector<int64_t> phi;
 
 void sieve(int maximum) {
     maximum = max(maximum, 1);

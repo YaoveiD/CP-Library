@@ -18,6 +18,7 @@ int power(long long n, long long k) {
 }
 
 // source : https://github.com/ShahjalalShohag/code-library/blob/master/Math/Determinant%20under%20Prime%20Modulo.cpp
+// I don't know
 // returns the determinant of a under prime MODular.
 
 int Gauss(vector<vector<int>> a) {

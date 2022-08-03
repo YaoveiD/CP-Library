@@ -3,9 +3,9 @@
 
 struct check_bipartite {
     int V;
-    vector<vector<int>> adj;
-    vector<int> depth;
-    vector<bool> visited;
+	std::vector<std::vector<int>> adj;
+	std::vector<int> depth;
+	std::vector<bool> visited;
  
     check_bipartite(int v = -1) {
         if (v >= 0)
@@ -22,7 +22,7 @@ struct check_bipartite {
         adj[b].push_back(a);
     }
  
-    vector<array<vector<int>, 2>> components;
+	std::vector<std::array<std::vector<int>, 2>> components;
  
     bool dfs(int node, int parent) {
         assert(!visited[node]);

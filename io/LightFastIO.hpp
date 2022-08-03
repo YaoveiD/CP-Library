@@ -1,6 +1,3 @@
-#include <iostream>
-
-// fast input light version
 // source : https://www.luogu.com.cn/problem/solution/P3870 Juan_feng
 // verification : https://www.luogu.com.cn/problem/P1001
 
@@ -23,8 +20,3 @@ inline void read(T& num) {
         num = num * 10 + digit - '0';
 }
 
-int main() {
-    int A, B;
-    read(A); read(B);
-    std::cout << A + B << '\n';
-}

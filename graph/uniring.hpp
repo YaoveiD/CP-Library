@@ -1,4 +1,3 @@
-#include <bits/stdc++.h>
 // verfication : https://leetcode-cn.com/submissions/detail/254471413/
 struct uniring {
     int n;
@@ -55,6 +54,7 @@ struct uniring {
                     s++;
 
                 circles.emplace_back();
+				circles.back().reserve(s);
                 circles.back().push_back(node);
 
                 for (int to = next[node]; to != node; to = next[to])
@@ -85,23 +85,5 @@ struct uniring {
                     end_max[to] = end_max[node] + 1;
             }
         }
-    }
-};
-
-class Solution {
-public:
-    int maximumInvitations(std::vector<int>& next) {
-        uniring A(next);
-        A.process(false, true);
-        int circle = 0, chain = 0;
-
-        for (auto &c : A.circles) {
-            circle = std::max(int(c.size()), circle);
-
-            if (c.size() == 2)
-                chain += A.end_max[c.back()] + A.end_max[c.front()];
-        }
-
-        return std::max(circle, chain);
     }
 };

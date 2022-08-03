@@ -1,9 +1,11 @@
+#define sz(c) int(c.size())
+
 // source : https://github.com/kth-competitive-programming/kactl/blob/main/content/graph/LCA.h
 template<typename T>
 struct RMQ {
-    vector<vector<T>> mat;
+	std::vector<std::vector<T>> mat;
     
-    RMQ(const vector<T>& V) : mat(1, V) {
+    RMQ(const std::vector<T>& V) : mat(1, V) {
         for (int pw = 1, k = 1; pw * 2 <= sz(V); pw *= 2, ++k) {
             mat.emplace_back(sz(V) - pw * 2 + 1);
             for (int j = 0; j < sz(mat[k]); ++j)
@@ -20,14 +22,14 @@ struct RMQ {
  
 struct LCA {
     int T = 0;
-    vector<int> time, path, ret;
-    vector<int> parent, depth;
+	std::vector<int> time, path, ret;
+	std::vector<int> parent, depth;
     RMQ<int> rmq;
  
-    LCA(vector<vector<int>>& C)
+    LCA(std::vector<std::vector<int>>& C)
         : time(sz(C)), parent(sz(C)), depth(sz(C)), rmq((dfs(C,0,-1), ret)) {}
     
-    void dfs(vector<vector<int>>& C, int v, int par) {
+    void dfs(std::vector<std::vector<int>>& C, int v, int par) {
         parent[v] = par;
         time[v] = T++;
         for (auto y : C[v]) if (y != par) {
@@ -39,7 +41,7 @@ struct LCA {
  
     int get_lca(int a, int b) const {
         if (a == b) return a;
-        tie(a, b) = minmax(time[a], time[b]);
+		std::tie(a, b) = std::minmax(time[a], time[b]);
         return path[rmq.query(a, b)];
     }
 

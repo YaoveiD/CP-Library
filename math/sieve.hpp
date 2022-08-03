@@ -1,8 +1,8 @@
 // source : https://github.com/nealwu/competitive-programming/blob/master/number_theory/sieve_factor.cc
 
-vector<int> smallest_factor;
-vector<bool> prime;
-vector<int> primes;
+std::vector<int> smallest_factor;
+std::vector<bool> prime;
+std::vector<int> primes;
 
 void sieve(int maximum) {
     maximum = max(maximum, 1);
@@ -26,10 +26,10 @@ void sieve(int maximum) {
 
 // Prime factorizes n in worst case O(sqrt n / log n). Requires having run `sieve` up to at least sqrt(n).
 // If we've run `sieve` up to at least n, takes O(log n) time.
-vector<pair<int64_t, int>> prime_factorize(int64_t n) {
+std::vector<std::pair<int64_t, int>> prime_factorize(int64_t n) {
     int64_t sieve_max = int64_t(smallest_factor.size()) - 1;
     assert(1 <= n && n <= sieve_max * sieve_max);
-    vector<pair<int64_t, int>> result;
+	std::vector<std::pair<int64_t, int>> result;
 
     if (n <= sieve_max) {
         while (n != 1) {

@@ -11,7 +11,7 @@ template<typename T> struct RMQ {
     }
 
     T query(int a, int b) const {
-        assert(a < b); // or return inf if a == b
+        assert(a < b); // or return `inf` if a == b
         int dep = 31 - __builtin_clz(b - a);
         return std::min(mat[dep][a], mat[dep][b - (1 << dep)]);
     }

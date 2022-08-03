@@ -2,7 +2,7 @@
 template<char MIN_CHAR = 'a', int ALPHABET = 26>
 struct array_trie {
     struct trie_node {
-        array<int, ALPHABET> child;
+        std::array<int, ALPHABET> child;
         int words = 0, starting_with = 0;
 
         trie_node() {
@@ -12,7 +12,7 @@ struct array_trie {
 
     static const int ROOT = 0;
 
-    vector<trie_node> nodes = {trie_node()};
+    std::vector<trie_node> nodes = {trie_node()};
 
     int get_or_create_child(int node, int c) {
         if (nodes[node].child[c] < 0) {
@@ -23,7 +23,7 @@ struct array_trie {
         return nodes[node].child[c];
     }
 
-    int add_word(const string &word) {
+    int add_word(const std::string &word) {
         int node = ROOT;
 
         for (char c : word) {
@@ -36,7 +36,7 @@ struct array_trie {
         return node;
     }
 
-    int find(const string &word) {
+    int find(const std::string &word) {
         int node = ROOT;
 
         for (char c : word) {
@@ -50,7 +50,7 @@ struct array_trie {
     }
 
     // Given a string, how many words in the trie are prefixes of the string?
-    int count_prefixes(const string &word, bool include_word) {
+    int count_prefixes(const std::string &word, bool include_word) {
         int node = ROOT, count = 0;
 
         for (char c : word) {
@@ -68,7 +68,7 @@ struct array_trie {
     }
 
     // Given a string, how many words in the trie start with the given string?
-    int count_starting_with(const string &word, bool include_full) const {
+    int count_starting_with(const std::string &word, bool include_full) const {
         int node = find(word);
  
         if (node < 0)

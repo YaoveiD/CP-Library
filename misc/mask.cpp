@@ -1,8 +1,8 @@
 // For every mask, computes the sum of `values[sub]` where `sub` is a submask of mask.
 template<typename T_out, typename T_in>
-vector<T_out> submask_sums(int n, const vector<T_in> &values) {
+std::vector<T_out> submask_sums(int n, const std::vector<T_in> &values) {
     assert(int(values.size()) == 1 << n);
-    vector<T_out> dp(values.begin(), values.end());
+    std::vector<T_out> dp(values.begin(), values.end());
 
     // Broken profile DP where the intermediate DP state consists of the i-th suffix of the previous row and the i-th
     // prefix of the current row.
@@ -16,9 +16,9 @@ vector<T_out> submask_sums(int n, const vector<T_in> &values) {
 
 // For every mask, computes the sum of `values[sup]` where mask is a submask of `sup`.
 template<typename T_out, typename T_in>
-vector<T_out> supermask_sums(int n, vector<T_in> values) {
+std::vector<T_out> supermask_sums(int n, std::vector<T_in> values) {
     reverse(values.begin(), values.end());
-    vector<T_out> result = submask_sums<T_out>(n, values);
+    std::vector<T_out> result = submask_sums<T_out>(n, values);
     reverse(result.begin(), result.end());
     return result;
 }
@@ -28,14 +28,12 @@ vector<T_out> supermask_sums(int n, vector<T_in> values) {
 void submasks(int mask) {
     for (int s = mask; s != 0; s = (s - 1) & mask) {
         int submask = mask ^ s;
-        debug(submask, s);
     }
 }
 
 // suppermask of mask in [mask, 1 << n) from small to big
 void superrmasks(int mask, int n) {
     for (int s = mask; s < 1 << n; s = (s + 1) | mask) {
-        debug(s);
     }
 }
 
