@@ -154,48 +154,6 @@ template<typename T>
 vector<T> gen_partition(int size, T sum) {
     return gen_partition(size, sum, T(1));
 }
-
-vector<pair<int, int>> gen_tree(int n){
-    assert(n >= 0);
-    static const int P_SIZE = 1000005;
-    static int permutation[P_SIZE];
-    vector<pair<int, int>> res(n ? n - 1 : 0);
-    iota(permutation, permutation + 1 + n, 0);
-    shuffle(permutation + 1, permutation + 1 + n, rng);
-
-    for(int i = 2; i <= n; ++i){
-        int u = i, v = rand(1 , i - 1);
-        u = permutation[u], v = permutation[v];
-        res[i - 2] = minmax(u, v); // u < v, just for convenience while debugging
-    }
-
-    shuffle(res.begin() , res.end() , rng);
-    return res;
-}
-
-vector<pair<int, int>> gen_simple_graph(int n, int m) {
-    assert(n > 0 && m >= n);
-    int max_edges = n * (n - 1) / 2;
-    assert(m <= max_edges);
-    vector<pair<int, int>> res = gen_tree(n);
-    set<pair<int, int>> edge(res.begin(), res.end());
-
-    for (int i = n; i <= m; ++i)
-        while (true) {
-            int u = rand(1, n), v = rand(1, n);
-        
-            if (u == v)
-                continue;
-        
-            auto it = edge.insert(minmax(u, v));
-        
-            if (it.second)
-                break;
-        }
-
-    res.assign(edge.begin(), edge.end());
-    return res;
-}
 } // namespace generator
 
 template<typename T, typename U>

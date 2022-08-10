@@ -1,5 +1,5 @@
 // source : https://github.com/nealwu/competitive-programming
-// if we use write, make sure to call `init`
+// Make sure to call `init` if we use `write`
 namespace IO {
     const int BUFFER_SIZE = 1 << 15;
 
