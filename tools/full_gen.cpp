@@ -86,7 +86,7 @@ vector<T> gen_distinct(int size, T from = 0, T to = numeric_limits<T>::max()) {
 
     if (expected < double(n)) {
         set<T> vals;
-        
+
         while (int(vals.size()) < size) {
             T x = rand(from, to);
 
@@ -107,7 +107,7 @@ template<typename T>
 vector<T> gen_partition(int size, T sum, T min_part) {
     assert(size >= 0);
     assert(size != 0 || sum == 0);
-    assert(min_part * size <= sum); 
+    assert(min_part * size <= sum);
 
     if (size == 0 && sum == 0)
           return vector<T>();
@@ -168,7 +168,7 @@ ostream& operator<<(ostream &os, const vector<T> &v) {
         os << v[i];
         if (i != n - 1) os << ' ';
     }
-      
+
     return os;
 }
 
@@ -177,7 +177,7 @@ template<typename T, typename U>
 ostream& operator<<(ostream &os, const vector<pair<T, U>> &v) {
     for (size_t i = 0, n = v.size(); i < n; ++i)
         os << v[i] << '\n';
-  
+
     return os;
 }
 

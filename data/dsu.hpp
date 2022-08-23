@@ -21,17 +21,12 @@ struct union_find {
         return data[x] < 0 ? x : data[x] = find(data[x]);
     }
 
-    bool connected(int x, int y) {
-        return find(x) == find(y);
-    }
-
-    int get_size(int x) {
+    int size(int x) {
         return -data[find(x)];
     }
 
     bool unite(int x, int y) {
-        x = find(x);
-        y = find(y);
+        x = find(x), y = find(y);
 
         if (x == y)
             return false;

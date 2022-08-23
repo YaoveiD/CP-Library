@@ -7,7 +7,7 @@ using hash_t = uint64_t;
 
 // Avoid multiplication bases near 0 or P - 1.
 std::uniform_int_distribution<unsigned> MULT_DIST(unsigned(0.1 * HASH_P), unsigned(0.9 * HASH_P));
-const unsigned HASH_MUL = MULT_DIST(rng);
+const unsigned HASH_MUL = MULT_DIST(rng) | 1;
 
 template<unsigned mod = HASH_P>
 struct string_hash {

@@ -29,9 +29,8 @@ struct segment {
     }
 
     void apply(const segment_change &change) {
-        if (change.has_set()) {
+        if (change.has_set())
             maximum = change.to_set;
-        }
 
         maximum += change.to_add;
     }
@@ -55,7 +54,7 @@ struct segment {
 };
 
 // Note: ensures segs join in right order
-// unnecessary when the order of join doesn't matter
+// unnecessary when the order of joining doesn't matter
 int right_half[32];
 
 struct basic_seg_tree {
@@ -133,7 +132,7 @@ struct basic_seg_tree {
         }
     }
 
-    void update(int index, const segment &seg) {
+    void set(int index, const segment &seg) {
         assert(0 <= index && index < tree_n);
         int position = tree_n + index;
         tree[position] = seg;

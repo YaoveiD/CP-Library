@@ -18,7 +18,7 @@ struct custom_hash {
 
 template <typename K, typename V, typename Hash = custom_hash>
 using hash_map = __gnu_pbds::gp_hash_table<K, V, Hash>;
- 
+
 template <typename K, typename Hash = custom_hash>
 using hash_set = hash_map<K, __gnu_pbds::null_type, Hash>;
 

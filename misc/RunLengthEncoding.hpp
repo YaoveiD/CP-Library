@@ -1,7 +1,7 @@
 
 template<typename T, typename T_iterable>
 std::vector<pair<T, int>> run_length_encoding(const T_iterable& items) {
-	std::vector<pair<T, int>> encoding;
+    std::vector<pair<T, int>> encoding;
     T previous;
     int count = 0;
 
@@ -11,11 +11,11 @@ std::vector<pair<T, int>> run_length_encoding(const T_iterable& items) {
         } else {
             if (count > 0)
                 encoding.emplace_back(previous, count);
- 
+
             previous = item;
             count = 1;
         }
- 
+
     if (count > 0)
         encoding.emplace_back(previous, count);
 

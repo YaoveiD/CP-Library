@@ -31,35 +31,33 @@ struct LCA {
     }
 
     void build(int root = 0) {
-        parent.assign(levels, std::vector<int>(n, root));
+        parent.assign(n, std::vector<int>(levels, root));
         dfs(root, -1);
 
-        for (int i = 1; i < levels; ++i)
-            for (int j = 0; j < n; ++j)
-                parent[i][j] = parent[i - 1][parent[i - 1][j]];
+        for (int i = 0; i < n; ++i)
+            for (int j = 1; j < levels; ++j)
+                parent[i][j] = parent[parent[i][j - 1]][j - 1];
     }
 
     // make sure to run `build`
     int get_lca(int u, int v) const {
         assert(0 <= u && u < n && 0 <= v && v < n);
 
-        if (depth[u] < depth[v])
-            std::swap(u, v);
+        if (depth[u] < depth[v]) std::swap(u, v);
 
         for (int i = levels - 1; i >= 0; --i)
-            if (depth[parent[i][u]] >= depth[v])
-                u = parent[i][u];
+            if (depth[parent[u][i]] >= depth[v])
+                u = parent[u][i];
 
-        if (u == v)
-            return u;
+        if (u == v) return u;
 
         for (int i = levels - 1; i >= 0; --i)
-            if (parent[i][u] != parent[i][v]) {
-                u = parent[i][u];
-                v = parent[i][v];
+            if (parent[u][i] != parent[v][i]) {
+                u = parent[u][i];
+                v = parent[v][i];
             }
 
-        return parent[0][u];
+        return parent[u][0];
     }
 
     int get_dist(int u, int v) const {
@@ -67,16 +65,12 @@ struct LCA {
         return depth[u] + depth[v] - 2 * depth[lca];
     }
 
-    int go_up(int v, int step) const {
-        int bit = 1;
+    int go_up(int v, int steps) const {
+        assert(steps >= 0 && steps < n);
 
-        while (step) {
-            if (step & 1)
-                v = parent[bit-1][v];
-
-            bit += 1;
-            step >>= 1;
-        }
+        for (int i = 0; i < levels; ++i)
+            if (steps & (1 << i))
+                v = parent[v][i];
 
         return v;
     }

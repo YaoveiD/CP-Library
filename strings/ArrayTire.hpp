@@ -70,10 +70,10 @@ struct array_trie {
     // Given a string, how many words in the trie start with the given string?
     int count_starting_with(const std::string &word, bool include_full) const {
         int node = find(word);
- 
+
         if (node < 0)
             return 0;
- 
+
         return nodes[node].starting_with - (include_full ? 0 : nodes[node].words_here);
     }
 };

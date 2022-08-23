@@ -152,7 +152,6 @@ struct seg_tree {
     segment query(int a, int b) {
         return query(1, 0, tree_n, a, b);
     }
-
 // };
 
     template<typename T_bool>
@@ -160,7 +159,7 @@ struct seg_tree {
         if (!pred(tree[p]) || end <= a)
             return -1;
 
-        if (start == end - 1) 
+        if (start == end - 1)
             return start;
 
         push(p, end - start);
@@ -169,7 +168,7 @@ struct seg_tree {
 
         if (pred(tree[p * 2]) && a < mid)
             index = find_first(p * 2, start, mid, a, pred);
-        
+
         if (index == -1) // I don't know
             index = find_first(p * 2 + 1, mid, end, a, pred);
 

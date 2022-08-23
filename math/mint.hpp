@@ -22,9 +22,9 @@ public:
         while (r != 0) {
             int q = g / r;
             g %= r;
-			std::swap(g, r);
+            std::swap(g, r);
             x -= q * y;
-			std::swap(x, y);
+            std::swap(x, y);
         }
 
         return x < 0 ? x + m : x;
@@ -114,3 +114,4 @@ public:
 
 const int MOD = int(1e9) + 7;
 using mint = _mod_int<MOD>;
+

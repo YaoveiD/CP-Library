@@ -5,11 +5,12 @@ std::vector<int64_t> inv = {1, 1};
 std::vector<int64_t> inv_fact = {1, 1};
 
 void prepare_factorials(int maximum) {
+    int before = int(fact.size());
     fact.resize(maximum + 1);
     inv.resize(maximum + 1);
     inv_fact.resize(maximum + 1);
 
-    for (int i = 2; i <= maximum; ++i) {
+    for (int i = before; i <= maximum; ++i) {
         fact[i] = fact[i - 1] * i % MOD;
         inv[i] = (MOD - MOD / i) * inv[MOD % i] % MOD;
         inv_fact[i] = inv_fact[i - 1] * inv[i] % MOD;

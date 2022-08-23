@@ -29,7 +29,7 @@ void sieve(int maximum) {
 std::vector<std::pair<int64_t, int>> prime_factorize(int64_t n) {
     int64_t sieve_max = int64_t(smallest_factor.size()) - 1;
     assert(1 <= n && n <= sieve_max * sieve_max);
-	std::vector<std::pair<int64_t, int>> result;
+    std::vector<std::pair<int64_t, int>> result;
 
     if (n <= sieve_max) {
         while (n != 1) {

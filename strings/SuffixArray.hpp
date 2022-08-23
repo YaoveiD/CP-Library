@@ -1,12 +1,12 @@
 template<typename T> struct RMQ {
     std::vector<std::vector<T>> mat;
-    
+
     void build(const std::vector<T> &V) {
         mat.assign(1, V);
         for (int pw = 1, k = 1; pw * 2 <= int(V.size()); pw *= 2, ++k) {
             mat.emplace_back(int(V.size()) - pw * 2 + 1);
             for (int j = 0; j < int(mat[k].size()); ++j)
-                mat[k][j] = min(mat[k - 1][j], mat[k - 1][j + pw]);
+                mat[k][j] = std::min(mat[k - 1][j], mat[k - 1][j + pw]);
         }
     }
 
@@ -38,7 +38,7 @@ struct suffix_array {
 
         for (int c = 1; c < 128; ++c)
             freq[c] += freq[c-1];
-        
+
         for (int i = 0; i < n; ++i)
             suffix[--freq[str[i]]] = i;
 
@@ -47,7 +47,7 @@ struct suffix_array {
 
         for (int i = 1; i < n; ++i)
             rank[suffix[i]] = str[suffix[i]] == str[suffix[i-1]] ? rank[suffix[i-1]] : i;
-    
+
         for (int len = 1; len < n; len *= 2) {
             std::vector<int> next_index(n);
             std::iota(next_index.begin(), next_index.end(), 0);
@@ -91,7 +91,7 @@ struct suffix_array {
         // iterate over the suffixes from the longest to the shortest
         for (int i = 0; i < n; ++i) {
             if (rank[i] == 0)
-                continue; 
+                continue;
 
             int a = suffix[rank[i]] + match;
             int b = suffix[rank[i] - 1] + match;

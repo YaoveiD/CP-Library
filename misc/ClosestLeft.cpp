@@ -12,7 +12,7 @@ std::vector<int> closest_left(const std::vector<T> &values, T_compare &&compare)
     for (int i = 0; i < n; i++) {
         while (!stack.empty() && !compare(values[stack.back()], values[i]))
             stack.pop_back();
- 
+
         closest[i] = stack.empty() ? -1 : stack.back();
         stack.push_back(i);
     }
@@ -47,7 +47,7 @@ int main() {
 #ifndef LOCAL
     cin.tie(0);
 #endif
-    
+
     int N;
     cin >> N;
     vector<int> A(N);
