@@ -1,134 +1,34 @@
-#include <bits/stdc++.h>
+/**
+ * Author: Simon Lindholm
+ * Date: 2019-12-28
+ * License: CC0
+ * Source: https://github.com/hoke-t/tamu-kactl/blob/master/content/data-structures/MoQueries.h
+ * Description: Answer interval or tree path queries by finding an approximate TSP through the queries,
+ * and moving from one query to the next by adding/removing points at the ends.
+ * If values are on tree edges, change \texttt{step} to add/remove the edge $(a, c)$ and remove the initial \texttt{add} call (but keep \texttt{in}).
+ * Time: O(N \sqrt Q)
+ * Status: stress-tested
+ */
 
-struct mo_query {
-    int start, end, index, block;
+void add(int ind, int end) {} // add a[ind] (end = 0 or 1)
+void del(int ind, int end) {} // remove a[ind]
+ans_t calc() {} // compute current answer
 
-    bool operator<(const mo_query &other) const {
-        if (other.block != block)
-            return block < other.block;
-
-        return block % 2 == 0 ? end < other.end : end > other.end;
+// queries are [inclusive, exclusive)
+std::vector<ans_t> mo(const std::vector<std::pair<int, int>> &Q) {
+    int L = 0, R = 0, blk = 350; // ~N/sqrt(Q)
+    std::vector<int> s(Q.size());
+    std::vector<ans_t> res(Q.size());
+#define K(x) make_pair(x.first/blk, x.second ^ -(x.first/blk & 1))
+    iota(s.begin(), s.end(), 0);
+    sort(s.begin(), s.end(), [&](int a, int b){ return K(Q[a]) < K(Q[b]); });
+    for (int qi : s) {
+        auto &q = Q[qi];
+        while (L > q.first) add(--L, 0);
+        while (R < q.second) add(R++, 1);
+        while (L < q.first) del(L++, 0);
+        while (R > q.second) del(--R, 1);
+        res[qi] = calc();
     }
-};
-
-namespace mo {
-    using mo_value = int;
-    using mo_answer = int;
-    const int N_MAX = 100005;
-    int n;
-    mo_value values[N_MAX];
-    int freq[N_MAX];
-    int fcnt[N_MAX];
-    int start, end;
-    mo_answer answer;
-
-    inline void add_left(int index) {
-        int x = values[index];
-        fcnt[freq[x]]--;
-        freq[x]++;
-        fcnt[freq[x]]++;
-
-        if (fcnt[answer+1] > 0)
-            answer++;
-    }
-
-    inline void add_right(int index) {
-        add_left(index);
-    }
-
-    inline void remove_left(int index) {
-        int x = values[index];
-        fcnt[freq[x]]--;
-        freq[x]--;
-        fcnt[freq[x]]++;
-
-        if (fcnt[answer] == 0)
-            answer--;
-    }
-
-    inline void remove_right(int index) {
-        remove_left(index);
-    }
-
-    void update_state(int qstart, int qend) {
-        if (std::max(start, qstart) >= std::min(end, qend)) {
-            for (int i = start; i < end; ++i)
-                remove_left(i);
-            for (int i = qstart; i < qend; ++i)
-                add_right(i);
-            return;
-        }
-
-        for (int i = start - 1; i >= qstart; --i)
-            add_left(i);
-        for (int i = end; i < qend; ++i)
-            add_right(i);
-        for (int i = start; i < qstart; ++i)
-            remove_right(i);
-        for (int i = end - 1; i >= qend; --i)
-            remove_left(i);
-    }
-
-    void init(const std::vector<int> &A) {
-        n = int(A.size());
-        copy(A.begin(), A.end(), values);
-        start = end = 0;
-    }
-
-    std::vector<mo_answer> solve(std::vector<mo_query> queries) {
-        int block_size = int(1.5 * n / sqrt(std::max(int(queries.size()), 1)) + 1);
-
-        for (int i = 0; i < int(queries.size()); i++) {
-            queries[i].index = i;
-            queries[i].block = queries[i].start / block_size;
-        }
-
-        sort(queries.begin(), queries.end());
-        std::vector<mo_answer> answers(queries.size());
-
-        for (mo_query &q : queries) {
-            update_state(q.start, q.end);
-            answers[q.index] = answer;
-            start = q.start; end = q.end;
-        }
-
-        // clear
-        while (start < end)
-            remove_left(start++);
-
-        return answers;
-    }
-}
-
-int main() {
-    using namespace std;
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    int N, Q;
-    cin >> N >> Q;
-    vector<int> A(N);
-
-    for (int &a : A)
-        cin >> a;
-
-    vector<int> sorted(A);
-    sort(sorted.begin(), sorted.end());
-    sorted.erase(unique(sorted.begin(), sorted.end()), sorted.end());
-
-    for (int &a : A)
-        a = int(lower_bound(sorted.begin(), sorted.end(), a) - sorted.begin());
-
-    vector<mo_query> queries(Q);
-    
-    for (int q = 0; q < Q; ++q) {
-        cin >> queries[q].start >> queries[q].end;
-        queries[q].start--;
-    }
-
-    mo::init(A);
-    vector<mo::mo_answer> answers = mo::solve(queries);
-
-    for (int answer : answers)
-        cout << answer << '\n';
+    return res;
 }
