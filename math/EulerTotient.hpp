@@ -1,10 +1,11 @@
 std::vector<bool> prime;
 std::vector<int> primes;
-std::vector<int64_t> phi;
+std::vector<int> phi;
 
 void sieve(int maximum) {
-    maximum = max(maximum, 1);
+    maximum = std::max(maximum, 1);
     prime.assign(maximum + 1, true);
+    phi.resize(maximum + 1);
     prime[0] = prime[1] = false;
     primes = {};
     phi[1] = 1;

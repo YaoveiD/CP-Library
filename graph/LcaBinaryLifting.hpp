@@ -1,9 +1,9 @@
 // build lca in O(n logn) time and get lca in O(log n) time using binary lifting
 struct LCA {
     int n, levels;
-	std::vector<std::vector<int>> tree;
-	std::vector<int> depth;
-	std::vector<std::vector<int>> parent;
+    std::vector<std::vector<int>> tree;
+    std::vector<int> depth;
+    std::vector<std::vector<int>> parent;
 
     static constexpr int highest_bit(int x) {
         return x == 0 ? -1 : 31 - __builtin_clz(x);
@@ -25,7 +25,7 @@ struct LCA {
     void dfs(int v, int p) {
         for (int to : tree[v]) if (to != p) {
             depth[to] = depth[v] + 1;
-            parent[0][to] = v;
+            parent[to][0] = v;
             dfs(to, v);
         }
     }

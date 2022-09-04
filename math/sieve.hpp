@@ -5,7 +5,7 @@ std::vector<bool> prime;
 std::vector<int> primes;
 
 void sieve(int maximum) {
-    maximum = max(maximum, 1);
+    maximum = std::max(maximum, 1);
     smallest_factor.assign(maximum + 1, 0);
     prime.assign(maximum + 1, true);
     prime[0] = prime[1] = false;

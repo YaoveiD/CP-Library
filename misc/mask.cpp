@@ -37,22 +37,22 @@ void superrmasks(int mask, int n) {
     }
 }
 
-// flip i-th bit
+// flip the i-th bit
 inline int flip(int mask, int k) {
     return mask ^ (1 << k);
 }
 
-// set k-th bit
+// set the k-th bit
 inline int set(int mask, int k) {
     return mask | (1 << k);
 }
 
-// reset k-th bit
+// reset the k-th bit
 inline int reset(int mask, int k) {
     return mask & (~(1 << k));
 }
 
-// minus the lowest bit `1` from mask
+// subtract the lowest bit `1` from mask
 inline int reset_last(int mask) {
     return mask & (mask - 1);
 }
