@@ -67,3 +67,26 @@ std::vector<std::pair<int64_t, int>> prime_factorize(int64_t n) {
     return result;
 }
 
+template<typename T>
+std::vector<T> generate_factors(const std::vector<std::pair<T, int>> &prime_factors) {
+    // See http://oeis.org/A066150 and http://oeis.org/A036451 for upper bounds on number of factors.
+    int product = 1;
+
+    for (auto &pf : prime_factors)
+        product *= pf.second + 1;
+
+    std::vector<T> factors = {1};
+    factors.reserve(product);
+
+    for (auto &pf : prime_factors) {
+        T p = pf.first;
+        int exponent = pf.second;
+        int before_size = int(factors.size());
+
+        for (int i = 0; i < exponent * before_size; i++)
+            factors.push_back(factors[factors.size() - before_size] * p);
+    }
+
+    assert(int(factors.size()) == product);
+    return factors;
+}

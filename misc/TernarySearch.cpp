@@ -2,34 +2,12 @@
 using namespace std;
 
 // source : https://chenshouao.github.io/mkdocs/pages/Algorithm/math/ternary_search.html
-
 using LL = long long;
 
-const double eps = 1e-8;
-const LL INF = 100000000000000;
-
-double evaluate(LL x) {
-    //this is a function whose value was determine by x
-    return 0;
-}
-
-// I don't konw if it works better.
-LL ternary_search_min(LL low, LL high) {
-    while (low < high) {
-        LL mid = low + (high - low) / 2;
-
-        if (evaluate(mid) < evaluate(mid + 1))
-            high = mid;
-        else
-            low = mid + 1;
-    }
-
-    return evaluate(low);
-}
-
-double ternary_search_min(LL low, LL high) {
+template<typename res_t, typename F>
+res_t ternary_search_min(LL low, LL high, F &&evaluate) {
     //求凹函数最小值
-    double ans = INF;
+    res_t ans = numeric_limits<res_t>::max;
     while (low < high) {
         LL m1 = (2 * low + high) / 3;
         LL m2 = (2 * high + low + 2) / 3;
@@ -44,9 +22,10 @@ double ternary_search_min(LL low, LL high) {
     return ans;
 }
 
-double ternary_search_max(LL low, LL high) {
+template<typename res_t, typename F>
+res_t ternary_search_max(LL low, LL high, F &&evaluate) {
     //求凸函数最大值
-    double ans = -INF;
+    res_t ans = numeric_limits<res_t>::lowest;
     while (low < high) {
         LL m1 = (2 * low + high) / 3;
         LL m2 = (2 * high + low + 2) / 3;
@@ -61,8 +40,10 @@ double ternary_search_max(LL low, LL high) {
     return ans;
 }
 
-double ternary_search(double low, double high) {
+template<typename F>
+double ternary_search(double low, double high, F &&evaluate) {
     //求凸函数最大值
+    const double eps = 1e-8;
     double rmid, mid;
     while (fabs(high - low) > eps) {
         mid = (low + high) / 2;
@@ -73,5 +54,20 @@ double ternary_search(double low, double high) {
             low = mid;
         }
     }
+    return evaluate(low);
+}
+
+// I don't konw if it works better.
+template<typename F>
+LL ternary_search_min(LL low, LL high, F &&evaluate) {
+    while (low < high) {
+        LL mid = low + (high - low) / 2;
+
+        if (evaluate(mid) < evaluate(mid + 1))
+            high = mid;
+        else
+            low = mid + 1;
+    }
+
     return evaluate(low);
 }

@@ -18,6 +18,9 @@ template<typename T> inline void read(T& num) {
 
     for (; isdigit(digit); digit = nc())
         num = num * 10 + digit - '0';
+
+    if (negtive)
+        num = -num;
 }
 
 template<typename T, typename... Ts>

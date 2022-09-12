@@ -2,10 +2,10 @@
 struct uniring {
     int n;
     std::vector<int> next;
-    std::vector<std::vector<int>> circles;
-    std::vector<int> circle_size;
+    std::vector<std::vector<int>> cycles;
+    std::vector<int> cycle_size;
     std::vector<int> start_max; // longest path start from node. Note: including node
-    std::vector<int> end_max; // longest path end with node. Note: not include circle node, but including node itself.
+    std::vector<int> end_max; // longest path end with node. Note: not include cycle node, but including node itself.
 
     uniring(int _n = -1) {
         if (_n != -1)
@@ -44,24 +44,24 @@ struct uniring {
                 que.push_back(to);
         }
 
-        circle_size.assign(n, 0);
+        cycle_size.assign(n, 0);
 
         for (int node = 0; node < n; ++node)
-            if (indeg[node] > 0 && circle_size[node] == 0) {
+            if (indeg[node] > 0 && cycle_size[node] == 0) {
                 int s = 1;
 
                 for (int to = next[node]; to != node; to = next[to])
                     s++;
 
-                circles.emplace_back();
-				circles.back().reserve(s);
-                circles.back().push_back(node);
+                cycles.emplace_back();
+				cycles.back().reserve(s);
+                cycles.back().push_back(node);
 
                 for (int to = next[node]; to != node; to = next[to])
-                    circles.back().push_back(to);
+                    cycles.back().push_back(to);
 
-                for (int c : circles.back())
-                    circle_size[c] = s;
+                for (int c : cycles.back())
+                    cycle_size[c] = s;
             }
 
         if (need_start) {

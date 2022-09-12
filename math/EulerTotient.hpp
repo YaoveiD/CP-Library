@@ -18,7 +18,7 @@ void sieve(int maximum) {
 
         for (int j = 0; j < int(primes.size()) && int64_t(primes[j]) * p <= maximum; ++j) {
             prime[primes[j] * p] = false;
-      
+
             if (p % primes[j]) {
                 phi[primes[j] * p] = (primes[j] - 1) * phi[p];
             } else {
