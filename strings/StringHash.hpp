@@ -11,64 +11,64 @@ const unsigned HASH_MUL = MULT_DIST(rng) | 1;
 
 template<unsigned mod = HASH_P>
 struct string_hash {
-    static const bool BUILD_REVERSE = true;
-    static std::vector<hash_t> pows;
+	static const bool BUILD_REVERSE = true;
+	static std::vector<hash_t> pows;
 
-    std::vector<hash_t> prefix_hash;
-    std::vector<hash_t> suffix_hash;
+	std::vector<hash_t> prefix_hash;
+	std::vector<hash_t> suffix_hash;
 
-    string_hash() {}
+	string_hash() {}
 
-    string_hash(const std::string &str) {
-        build(str);
-    }
+	string_hash(const std::string &str) {
+		build(str);
+	}
 
-    void build(const std::string &str) {
-        int n = int(str.size());
-        prefix_hash.assign(n + 1, 0);
+	void build(const std::string &str) {
+		int n = int(str.size());
+		prefix_hash.assign(n + 1, 0);
 
-        // Note: we add `1` to fix strings that start with 0.
-        for (int i = 0; i < n; ++i)
-            prefix_hash[i + 1] = (prefix_hash[i] * HASH_MUL + str[i] + 1) % mod;
+		// Note: we add `1` to fix strings that start with 0.
+		for (int i = 0; i < n; ++i)
+			prefix_hash[i + 1] = (prefix_hash[i] * HASH_MUL + str[i] + 1) % mod;
 
-        if (BUILD_REVERSE) {
-            suffix_hash.assign(n + 1, 0);
-            
-            for (int i = n - 1; i >= 0; --i)
-                suffix_hash[i] = (suffix_hash[i + 1] * HASH_MUL + str[i] + 1) % mod;
-        }
+		if (BUILD_REVERSE) {
+			suffix_hash.assign(n + 1, 0);
+			
+			for (int i = n - 1; i >= 0; --i)
+				suffix_hash[i] = (suffix_hash[i + 1] * HASH_MUL + str[i] + 1) % mod;
+		}
 
-        while (int(pows.size()) <= n)
-            pows.push_back(pows.back() * HASH_MUL % mod);
-    }
+		while (int(pows.size()) <= n)
+			pows.push_back(pows.back() * HASH_MUL % mod);
+	}
 
-    int length() const {
-        return int(prefix_hash.size()) - 1;
-    }
+	int length() const {
+		return int(prefix_hash.size()) - 1;
+	}
 
-    hash_t complete_hash() const {
-        return prefix_hash.back();
-    }
+	hash_t complete_hash() const {
+		return prefix_hash.back();
+	}
 
-    hash_t sub_hash(int start, int end) const {
-        assert(0 <= start && start <= end && end <= length());
-        hash_t value = prefix_hash[end] + mod - prefix_hash[start] * pows[end - start] % mod;
-        return value >= mod ? value - mod : value;
-    }
+	hash_t sub_hash(int start, int end) const {
+		assert(0 <= start && start <= end && end <= length());
+		hash_t value = prefix_hash[end] + mod - prefix_hash[start] * pows[end - start] % mod;
+		return value >= mod ? value - mod : value;
+	}
 
-    hash_t rev_sub_hash(int start, int end) const {
-        assert(BUILD_REVERSE && 0 <= start && start <= end && end <= length());
-        hash_t value = suffix_hash[start] + mod - suffix_hash[end] * pows[end - start] % mod;
-        return value >= mod ? value - mod : value;
-    }
+	hash_t rev_sub_hash(int start, int end) const {
+		assert(BUILD_REVERSE && 0 <= start && start <= end && end <= length());
+		hash_t value = suffix_hash[start] + mod - suffix_hash[end] * pows[end - start] % mod;
+		return value >= mod ? value - mod : value;
+	}
 
-    bool equal(int start1, int start2, int len) const {
-        return sub_hash(start1, start1 + len) == sub_hash(start2, start2 + len);
-    }
+	bool equal(int start1, int start2, int len) const {
+		return sub_hash(start1, start1 + len) == sub_hash(start2, start2 + len);
+	}
 
-    bool is_palindrome(int start, int end) const {
-        return sub_hash(start, end) == rev_sub_hash(start, end);
-    }
+	bool is_palindrome(int start, int end) const {
+		return sub_hash(start, end) == rev_sub_hash(start, end);
+	}
 };
 
 template<unsigned mod>
